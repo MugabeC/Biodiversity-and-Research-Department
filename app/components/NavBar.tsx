@@ -45,10 +45,11 @@ export default function NavBar() {
         left: 0,
         right: 0,
         zIndex: 1000,
-        backgroundColor: 'var(--meadow-green)',
+        backgroundColor: '#ffffff',
         transform: visible ? 'translateY(0)' : 'translateY(-100%)',
         transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-        boxShadow: '0 2px 16px rgba(12,96,56,0.25)',
+        boxShadow: '0 2px 16px rgba(12,96,56,0.12)',
+        borderBottom: '1px solid rgba(12,96,56,0.08)',
       }}
     >
       <div
@@ -56,27 +57,44 @@ export default function NavBar() {
           maxWidth: '1280px',
           margin: '0 auto',
           padding: '0 2rem',
-          height: '68px',
+          height: '86px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
         }}
       >
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
+        {/* Logo + Brand name */}
+        <Link
+          href="/"
+          style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', textDecoration: 'none' }}
+        >
           <Image
             src="/images/nep-logo.png"
             alt="Nyandungu Eco-Park"
-            width={48}
-            height={48}
+            width={70}
+            height={70}
             style={{ objectFit: 'contain' }}
             priority
           />
+          <span
+            style={{
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 600,
+              fontSize: '16px',
+              color: 'var(--meadow-green)',
+              lineHeight: 1.25,
+              maxWidth: '220px',
+            }}
+          >
+            Biodiversity and Research Department
+          </span>
         </Link>
 
+        {/* Nav links */}
         <ul
           style={{
             display: 'flex',
-            gap: '0.25rem',
+            gap: '0.15rem',
             listStyle: 'none',
             margin: 0,
             padding: 0,
@@ -89,22 +107,22 @@ export default function NavBar() {
                 href={link.href}
                 style={{
                   display: 'block',
-                  padding: '0.45rem 1rem',
+                  padding: '0.45rem 0.9rem',
                   borderRadius: '6px',
-                  color: 'var(--peach)',
+                  color: 'var(--outerspace)',
                   textDecoration: 'none',
                   fontFamily: 'Poppins, sans-serif',
                   fontWeight: 500,
-                  fontSize: '0.9rem',
-                  letterSpacing: '0.02em',
+                  fontSize: '0.88rem',
+                  letterSpacing: '0.01em',
                   transition: 'background 0.2s, color 0.2s',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'var(--golden)';
-                  e.currentTarget.style.background = 'rgba(241,210,161,0.1)';
+                  e.currentTarget.style.color = 'var(--meadow-green)';
+                  e.currentTarget.style.background = 'rgba(12,96,56,0.06)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--peach)';
+                  e.currentTarget.style.color = 'var(--outerspace)';
                   e.currentTarget.style.background = 'transparent';
                 }}
               >
