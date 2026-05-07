@@ -13,10 +13,15 @@ const TAXA_CARDS = [
 
 export default function HomePage() {
   return (
-    <div style={{ minHeight: '100vh', background: '#F7F5EF', paddingBottom: '5rem' }}>
-
-      {/* ── Dark green header band ── */}
-      <section style={{ background: '#2D4C39', padding: '3rem 2rem 2.75rem', textAlign: 'center' }}>
+    <div
+      style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #e8f5e9 0%, #F7F5EF 30%, #f0f7f0 60%, #e8f2eb 100%)',
+        paddingBottom: '5rem',
+      }}
+    >
+      {/* ── Title section — no dark band ── */}
+      <section style={{ textAlign: 'center', padding: '3rem 2rem 0' }}>
         <h1
           className="font-comforter"
           style={{
@@ -28,17 +33,27 @@ export default function HomePage() {
         >
           Biodiversity and Research Department
         </h1>
+        <p
+          style={{
+            fontFamily: 'Poppins, sans-serif',
+            fontWeight: 500,
+            fontSize: '16px',
+            color: '#4A5E4F',
+            margin: '8px 0 0',
+          }}
+        >
+          Nyandungu Eco-Park
+        </p>
       </section>
 
       <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem' }}>
 
-        {/* ── 870 hero number ── */}
+        {/* ── 870 hero — 24px gap from title ── */}
         <section
           style={{
             textAlign: 'center',
-            padding: '4rem 1rem 3rem',
-            borderBottom: '1px solid #E0E8E2',
-            marginBottom: '3rem',
+            marginTop: '24px',
+            marginBottom: '32px',
           }}
         >
           <p
@@ -59,7 +74,7 @@ export default function HomePage() {
               fontWeight: 600,
               fontSize: '20px',
               color: '#4A5E4F',
-              margin: '0.6rem 0 0.3rem',
+              margin: '0.5rem 0 0.25rem',
             }}
           >
             Total Species Recorded
@@ -71,85 +86,108 @@ export default function HomePage() {
               fontSize: '15px',
               color: '#4A5E4F',
               margin: 0,
-              opacity: 0.75,
+              opacity: 0.7,
             }}
           >
             across 7 taxa groups · Nyandungu Eco-Park · 2025 Biodiversity Survey
           </p>
         </section>
 
-        {/* ── Taxa cards — 3 columns desktop, 2 tablet, 1 mobile ── */}
-        <section style={{ marginBottom: '4rem' }}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* ── Taxa cards — glassmorphism + floating icons ── */}
+        <section style={{ marginBottom: '40px' }}>
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+            style={{
+              position: 'relative',
+              overflow: 'visible',
+              paddingTop: '36px',
+              columnGap: '1.5rem',
+              rowGap: '3rem',
+            }}
+          >
             {TAXA_CARDS.map((card) => (
               <div
                 key={card.taxa}
                 className="taxa-card"
                 style={{
-                  background: '#FFFFFF',
-                  border: '1px solid #E0E8E2',
-                  borderRadius: '16px',
-                  padding: '24px',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                  position: 'relative',
+                  background: 'rgba(255,255,255,0.45)',
+                  backdropFilter: 'blur(16px)',
+                  WebkitBackdropFilter: 'blur(16px)',
+                  border: '1px solid rgba(255,255,255,0.6)',
+                  borderRadius: '20px',
+                  boxShadow: '0 8px 32px rgba(12,96,56,0.10)',
+                  padding: '48px 24px 24px',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '12px',
+                  gap: '8px',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                {/* Floating icon — overflows card top edge */}
+                <div style={{ position: 'absolute', top: '-28px', left: '24px' }}>
                   <Image
                     src={card.icon}
                     alt={card.taxa}
-                    width={48}
-                    height={48}
-                    style={{ objectFit: 'contain' }}
+                    width={64}
+                    height={64}
+                    style={{
+                      objectFit: 'contain',
+                      filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.15))',
+                      display: 'block',
+                    }}
                   />
+                </div>
+
+                {/* Badge — top-right */}
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                   <span
                     style={{
-                      background: card.stable ? '#F0F4F1' : '#E8F5EE',
+                      background: card.stable ? 'rgba(74,94,79,0.1)' : 'rgba(12,96,56,0.12)',
                       color: card.stable ? '#4A5E4F' : '#0C6038',
                       borderRadius: '9999px',
-                      padding: '4px 12px',
+                      padding: '3px 10px',
                       fontFamily: 'Poppins, sans-serif',
                       fontWeight: 700,
-                      fontSize: '13px',
+                      fontSize: '12px',
                       whiteSpace: 'nowrap',
                     }}
                   >
                     {card.badge}
                   </span>
                 </div>
-                <div>
-                  <p
-                    style={{
-                      fontFamily: 'Poppins, sans-serif',
-                      fontWeight: 600,
-                      fontSize: '16px',
-                      color: '#4A5E4F',
-                      margin: '0 0 4px',
-                    }}
-                  >
-                    {card.taxa}
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: 'Poppins, sans-serif',
-                      fontWeight: 600,
-                      fontSize: '40px',
-                      color: '#0C6038',
-                      margin: 0,
-                      lineHeight: 1,
-                    }}
-                  >
-                    {card.count}
-                  </p>
-                </div>
+
+                {/* Taxa name */}
+                <p
+                  style={{
+                    fontFamily: 'Poppins, sans-serif',
+                    fontWeight: 600,
+                    fontSize: '14px',
+                    color: '#4A5E4F',
+                    margin: 0,
+                  }}
+                >
+                  {card.taxa}
+                </p>
+
+                {/* Count */}
+                <p
+                  style={{
+                    fontFamily: 'Poppins, sans-serif',
+                    fontWeight: 700,
+                    fontSize: '42px',
+                    color: '#0C6038',
+                    margin: 0,
+                    lineHeight: 1,
+                  }}
+                >
+                  {card.count}
+                </p>
               </div>
             ))}
           </div>
         </section>
 
-        {/* ── Charts ── */}
+        {/* ── Charts — 40px gap from cards ── */}
         <BiodiversityCharts />
       </div>
     </div>

@@ -108,11 +108,13 @@ function WQTooltip({ active, payload }: { active?: boolean; payload?: any[] }) {
 // ── Shared style constants ─────────────────────────────────────────────────────
 
 const CARD: React.CSSProperties = {
-  background: '#FFFFFF',
-  border: '1px solid #E0E8E2',
-  borderRadius: '16px',
+  background: 'rgba(255,255,255,0.45)',
+  backdropFilter: 'blur(16px)',
+  WebkitBackdropFilter: 'blur(16px)',
+  border: '1px solid rgba(255,255,255,0.6)',
+  borderRadius: '20px',
   padding: '24px',
-  boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+  boxShadow: '0 8px 32px rgba(12,96,56,0.10)',
 };
 
 const HEADING: React.CSSProperties = {

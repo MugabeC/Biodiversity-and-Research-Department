@@ -41,12 +41,14 @@ body {
   }
 }
 
-/* Taxa card hover — server-component-safe */
+/* Glassmorphism taxa card hover */
 .taxa-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, backdrop-filter 0.2s ease;
   cursor: default;
 }
 .taxa-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(12, 96, 56, 0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(12, 96, 56, 0.18);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
 }

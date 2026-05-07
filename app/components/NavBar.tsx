@@ -70,11 +70,13 @@ export default function NavBar() {
           style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none', flexShrink: 0 }}
         >
           <Image
+            key="nep-logo-v2"
             src="/images/nep-logo.png"
             alt="Nyandungu Eco-Park"
             width={60}
             height={60}
             style={{ objectFit: 'contain' }}
+            unoptimized
             priority
           />
           <span
