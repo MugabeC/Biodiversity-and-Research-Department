@@ -18,12 +18,18 @@
   --peach: #F1D2A1;
   --golden: #F5A623;
   --bg-main: #F7F5EF;
+  --crimson: #6C2728;
+  --mustard-green: #808847;
+  --surface: #FFFFFF;
+  --text-primary: #1A2E1F;
+  --text-secondary: #4A5E4F;
+  --border: #E0E8E2;
 }
 
 body {
   background-color: var(--bg-main);
   font-family: 'Poppins', sans-serif;
-  color: #1a1a1a;
+  color: var(--text-primary);
 }
 
 @layer utilities {
@@ -33,4 +39,14 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* Taxa card hover — server-component-safe */
+.taxa-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: default;
+}
+.taxa-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(12, 96, 56, 0.12);
 }

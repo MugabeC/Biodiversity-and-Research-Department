@@ -1,37 +1,27 @@
 import Image from 'next/image';
 import BiodiversityCharts from './components/BiodiversityCharts';
 
-// ─── Taxa card config ─────────────────────────────────────────────────────────
-
 const TAXA_CARDS = [
-  { taxa: 'Birds',                 count: 251, icon: '/images/icons/bird-icon.png',       count2023: 83  },
-  { taxa: 'Plants',                count: 468, icon: '/images/icons/plant-icon.png',      count2023: 260 },
-  { taxa: 'Butterflies',           count: 57,  icon: '/images/icons/butterfly-icon.png',  count2023: 56  },
-  { taxa: 'Aquatic Inverts',       count: 52,  icon: '/images/icons/aquatic-icon.png',    count2023: 29  },
-  { taxa: 'Amphibians & Reptiles', count: 22,  icon: '/images/icons/amphibian-icon.png',  count2023: 12  },
-  { taxa: 'Mammals',               count: 13,  icon: '/images/icons/mammal-icon.png',     count2023: 9   },
-  { taxa: 'Fish',                  count: 7,   icon: '/images/icons/fish-icon.png',       count2023: 7   },
+  { taxa: 'Birds',                 count: 251, icon: '/images/icons/bird-icon.png',       badge: '▲ +202%', stable: false },
+  { taxa: 'Plants',                count: 468, icon: '/images/icons/plant-icon.png',      badge: '▲ +80%',  stable: false },
+  { taxa: 'Butterflies',           count: 57,  icon: '/images/icons/butterfly-icon.png',  badge: '▲ +2%',   stable: false },
+  { taxa: 'Aquatic Inverts',       count: 52,  icon: '/images/icons/aquatic-icon.png',    badge: '▲ +79%',  stable: false },
+  { taxa: 'Amphibians & Reptiles', count: 22,  icon: '/images/icons/amphibian-icon.png',  badge: '▲ +83%',  stable: false },
+  { taxa: 'Mammals',               count: 13,  icon: '/images/icons/mammal-icon.png',     badge: '▲ +44%',  stable: false },
+  { taxa: 'Fish',                  count: 7,   icon: '/images/icons/fish-icon.png',       badge: 'stable',  stable: true  },
 ];
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg-main)', paddingBottom: '5rem' }}>
+    <div style={{ minHeight: '100vh', background: '#F7F5EF', paddingBottom: '5rem' }}>
 
-      {/* ── ComforterBrush hero banner ── */}
-      <section
-        style={{
-          background: 'var(--meadow-green)',
-          padding: '3rem 2rem 2.75rem',
-          textAlign: 'center',
-        }}
-      >
+      {/* ── Dark green header band ── */}
+      <section style={{ background: '#2D4C39', padding: '3rem 2rem 2.75rem', textAlign: 'center' }}>
         <h1
           className="font-comforter"
           style={{
-            fontSize: 'clamp(2.2rem, 5vw, 4rem)',
-            color: 'var(--golden)',
+            fontSize: 'clamp(36px, 5vw, 64px)',
+            color: '#F5A623',
             lineHeight: 1.15,
             margin: 0,
           }}
@@ -40,82 +30,73 @@ export default function HomePage() {
         </h1>
       </section>
 
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '2.5rem 1.5rem' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem' }}>
 
-        {/* ── 870 hero stat ── */}
+        {/* ── 870 hero number ── */}
         <section
           style={{
             textAlign: 'center',
-            padding: '2.5rem 1rem 2.75rem',
-            borderBottom: '1px solid rgba(12,96,56,0.1)',
-            marginBottom: '2.5rem',
+            padding: '4rem 1rem 3rem',
+            borderBottom: '1px solid #E0E8E2',
+            marginBottom: '3rem',
           }}
         >
           <p
             style={{
-              fontSize: 'clamp(5rem, 12vw, 8rem)',
-              fontWeight: 800,
-              color: 'var(--meadow-green)',
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 900,
+              fontSize: '96px',
+              color: '#0C6038',
               lineHeight: 1,
               margin: 0,
-              fontFamily: 'Poppins, sans-serif',
             }}
           >
             870
           </p>
           <p
             style={{
-              fontSize: '1.25rem',
-              fontWeight: 600,
-              color: 'var(--outerspace)',
-              marginTop: '0.6rem',
               fontFamily: 'Poppins, sans-serif',
+              fontWeight: 600,
+              fontSize: '20px',
+              color: '#4A5E4F',
+              margin: '0.6rem 0 0.3rem',
             }}
           >
             Total Species Recorded
           </p>
           <p
             style={{
-              fontSize: '0.9rem',
-              color: '#777',
-              marginTop: '0.25rem',
               fontFamily: 'Poppins, sans-serif',
+              fontWeight: 400,
+              fontSize: '15px',
+              color: '#4A5E4F',
+              margin: 0,
+              opacity: 0.75,
             }}
           >
-            across 7 taxa groups · Nyandungu Eco-Park 2025
+            across 7 taxa groups · Nyandungu Eco-Park · 2025 Biodiversity Survey
           </p>
         </section>
 
-        {/* ── Taxa summary cards ── */}
-        <section style={{ marginBottom: '3rem' }}>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(155px, 1fr))',
-              gap: '1rem',
-            }}
-          >
-            {TAXA_CARDS.map((card) => {
-              const delta = card.count - card.count2023;
-              const pct = card.count2023 > 0
-                ? Math.round((delta / card.count2023) * 100)
-                : 0;
-              return (
-                <div
-                  key={card.taxa}
-                  style={{
-                    background: '#ffffff',
-                    borderRadius: '14px',
-                    padding: '1.5rem 1rem 1.25rem',
-                    boxShadow: '0 2px 14px rgba(12,96,56,0.08)',
-                    borderTop: '4px solid var(--meadow-green)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: '0.4rem',
-                    textAlign: 'center',
-                  }}
-                >
+        {/* ── Taxa cards — 3 columns desktop, 2 tablet, 1 mobile ── */}
+        <section style={{ marginBottom: '4rem' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {TAXA_CARDS.map((card) => (
+              <div
+                key={card.taxa}
+                className="taxa-card"
+                style={{
+                  background: '#FFFFFF',
+                  border: '1px solid #E0E8E2',
+                  borderRadius: '16px',
+                  padding: '24px',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <Image
                     src={card.icon}
                     alt={card.taxa}
@@ -125,41 +106,46 @@ export default function HomePage() {
                   />
                   <span
                     style={{
+                      background: card.stable ? '#F0F4F1' : '#E8F5EE',
+                      color: card.stable ? '#4A5E4F' : '#0C6038',
+                      borderRadius: '9999px',
+                      padding: '4px 12px',
+                      fontFamily: 'Poppins, sans-serif',
+                      fontWeight: 700,
+                      fontSize: '13px',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {card.badge}
+                  </span>
+                </div>
+                <div>
+                  <p
+                    style={{
+                      fontFamily: 'Poppins, sans-serif',
                       fontWeight: 600,
-                      fontSize: '0.78rem',
-                      color: 'var(--outerspace)',
-                      letterSpacing: '0.02em',
-                      lineHeight: 1.3,
+                      fontSize: '16px',
+                      color: '#4A5E4F',
+                      margin: '0 0 4px',
                     }}
                   >
                     {card.taxa}
-                  </span>
-                  <span
+                  </p>
+                  <p
                     style={{
-                      fontSize: '2.4rem',
-                      fontWeight: 700,
-                      color: 'var(--meadow-green)',
+                      fontFamily: 'Poppins, sans-serif',
+                      fontWeight: 600,
+                      fontSize: '40px',
+                      color: '#0C6038',
+                      margin: 0,
                       lineHeight: 1,
                     }}
                   >
                     {card.count}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: '0.72rem',
-                      fontWeight: 500,
-                      color: pct > 0 ? '#0C6038' : pct < 0 ? '#c0392b' : '#888',
-                    }}
-                  >
-                    {pct > 0
-                      ? `▲ +${pct}% since 2023`
-                      : pct < 0
-                      ? `▼ ${pct}% since 2023`
-                      : 'stable since 2023'}
-                  </span>
+                  </p>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </section>
 

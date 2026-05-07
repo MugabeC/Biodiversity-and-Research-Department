@@ -1,8 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  ResponsiveContainer, ReferenceLine, PieChart, Pie, Cell,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
+  Legend, ResponsiveContainer, ReferenceLine,
+  PieChart, Pie, Cell, Sector,
 } from 'recharts';
 
 // ── Chart 1: Species Count 2023 vs 2025 ──────────────────────────────────────
@@ -29,6 +31,30 @@ const TAXA_DONUT = [
   { taxa: 'Fish',                  count: 7,   color: '#52b788' },
 ];
 
+const renderActiveShape = (props: any) => {
+  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload, value, percent } = props;
+  return (
+    <g>
+      <Sector cx={cx} cy={cy} innerRadius={innerRadius} outerRadius={outerRadius + 8}
+        startAngle={startAngle} endAngle={endAngle} fill={fill} />
+      <Sector cx={cx} cy={cy} innerRadius={innerRadius - 5} outerRadius={innerRadius - 1}
+        startAngle={startAngle} endAngle={endAngle} fill={fill} />
+      <text x={cx} y={cy - 16} textAnchor="middle" fill="#1A2E1F"
+        fontSize={22} fontWeight={900} fontFamily="Poppins, sans-serif">
+        {value}
+      </text>
+      <text x={cx} y={cy + 8} textAnchor="middle" fill="#4A5E4F"
+        fontSize={11} fontFamily="Poppins, sans-serif">
+        {payload.taxa}
+      </text>
+      <text x={cx} y={cy + 26} textAnchor="middle" fill="#4A5E4F"
+        fontSize={11} fontFamily="Poppins, sans-serif">
+        {(percent * 100).toFixed(1)}%
+      </text>
+    </g>
+  );
+};
+
 // ── Chart 3: Student Visits 2026 ──────────────────────────────────────────────
 
 const STUDENT_VISITS = [
@@ -40,152 +66,112 @@ const STUDENT_VISITS = [
 
 // ── Chart 4: Water Quality Compliance ─────────────────────────────────────────
 
-type Site = 'R1' | 'R2' | 'Outlet' | 'S5';
-const WQ_SITES: Site[] = ['R1', 'R2', 'Outlet', 'S5'];
+type WQSite = 'R1' | 'R2' | 'Outlet' | 'S5';
+const WQ_SITES: WQSite[] = ['R1', 'R2', 'Outlet', 'S5'];
 
-type WQEntry = {
-  param: string;
-  limitDisplay: string;
-  unit: string;
-  R1: number;     R1_raw: number;     R1_pass: boolean;
-  R2: number;     R2_raw: number;     R2_pass: boolean;
-  Outlet: number; Outlet_raw: number; Outlet_pass: boolean;
-  S5: number;     S5_raw: number;     S5_pass: boolean;
+type WQParamData = { unit: string; limit: number; R1: number; R2: number; Outlet: number; S5: number };
+
+const WQ_PARAMS_DATA: Record<string, WQParamData> = {
+  'Iron':                    { unit: 'mg/L', limit: 3.5,  R1: 6.06,  R2: 5.87,  Outlet: 0.42, S5: 1.03  },
+  'Manganese':               { unit: 'mg/L', limit: 0.1,  R1: 0.784, R2: 0.905, Outlet: 0.199,S5: 0.387 },
+  'Oil & Grease':            { unit: 'mg/L', limit: 10,   R1: 105,   R2: 12,    Outlet: 8,    S5: 91    },
+  'Total Suspended Solids':  { unit: 'mg/L', limit: 50,   R1: 750,   R2: 39,    Outlet: 1,    S5: 419   },
+  'Phosphates':              { unit: 'mg/L', limit: 2.2,  R1: 3.47,  R2: 0.81,  Outlet: 0.15, S5: 1.40  },
 };
 
-const WQ_RAW = [
-  { param: 'pH',           unit: '',      limitLow: 5,   limitHigh: 9,    R1: 7.5,   R2: 7.5,   Outlet: 7.5,  S5: 7.5   },
-  { param: 'Iron',         unit: 'mg/L',  limitLow: 0,   limitHigh: 3.5,  R1: 6.06,  R2: 5.87,  Outlet: 0.42, S5: 1.03  },
-  { param: 'Manganese',    unit: 'mg/L',  limitLow: 0,   limitHigh: 0.1,  R1: 0.784, R2: 0.905, Outlet: 0.199,S5: 0.387 },
-  { param: 'Oil & Grease', unit: 'mg/L',  limitLow: 0,   limitHigh: 10,   R1: 105,   R2: 12,    Outlet: 8,    S5: 91    },
-  { param: 'TSS',          unit: 'mg/L',  limitLow: 0,   limitHigh: 50,   R1: 750,   R2: 39,    Outlet: 1,    S5: 419   },
-  { param: 'Phosphates',   unit: 'mg/L',  limitLow: 0,   limitHigh: 2.2,  R1: 3.47,  R2: 0.81,  Outlet: 0.15, S5: 1.40  },
-];
+const WQ_PARAMS_LIST = Object.keys(WQ_PARAMS_DATA);
 
-function sitePass(row: typeof WQ_RAW[number], site: Site): boolean {
-  const v = row[site];
-  return row.limitLow > 0
-    ? v >= row.limitLow && v <= row.limitHigh
-    : v <= row.limitHigh;
-}
-
-const WQ_DATA: WQEntry[] = WQ_RAW.map(row => ({
-  param:        row.param,
-  unit:         row.unit,
-  limitDisplay: row.limitLow > 0
-    ? `${row.limitLow}–${row.limitHigh}${row.unit ? ' ' + row.unit : ''}`
-    : `≤ ${row.limitHigh}${row.unit ? ' ' + row.unit : ''}`,
-  R1:     Math.min(row.R1 / row.limitHigh, 16),      R1_raw: row.R1,     R1_pass: sitePass(row, 'R1'),
-  R2:     Math.min(row.R2 / row.limitHigh, 16),      R2_raw: row.R2,     R2_pass: sitePass(row, 'R2'),
-  Outlet: Math.min(row.Outlet / row.limitHigh, 16),  Outlet_raw: row.Outlet, Outlet_pass: sitePass(row, 'Outlet'),
-  S5:     Math.min(row.S5 / row.limitHigh, 16),      S5_raw: row.S5,     S5_pass: sitePass(row, 'S5'),
-}));
-
-function getPass(entry: WQEntry, site: Site): boolean {
-  if (site === 'R1') return entry.R1_pass;
-  if (site === 'R2') return entry.R2_pass;
-  if (site === 'Outlet') return entry.Outlet_pass;
-  return entry.S5_pass;
-}
-function getRaw(entry: WQEntry, site: Site): number {
-  if (site === 'R1') return entry.R1_raw;
-  if (site === 'R2') return entry.R2_raw;
-  if (site === 'Outlet') return entry.Outlet_raw;
-  return entry.S5_raw;
-}
-
-// ── Custom tooltip for Chart 4 ────────────────────────────────────────────────
-
-function WQTooltip({ active, payload, label }: {
-  active?: boolean;
-  payload?: { dataKey: string; payload: WQEntry }[];
-  label?: string;
-}) {
+function WQTooltip({ active, payload }: { active?: boolean; payload?: any[] }) {
   if (!active || !payload?.length) return null;
-  const row = payload[0].payload;
+  const { site, value, pass, limit, unit, paramName } = payload[0].payload;
   return (
     <div style={{
-      background: '#fff',
-      border: '1px solid #F1D2A1',
-      borderRadius: '10px',
-      padding: '0.8rem 1rem',
-      fontSize: '12px',
+      background: '#1A2E1F',
+      color: '#fff',
+      borderRadius: '8px',
+      padding: '8px 12px',
       fontFamily: 'Poppins, sans-serif',
-      boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
-      minWidth: '200px',
+      fontSize: '13px',
+      lineHeight: 1.6,
     }}>
-      <p style={{ fontWeight: 700, color: '#2D4C39', marginBottom: '0.35rem' }}>{label}</p>
-      <p style={{ color: '#888', fontSize: '11px', marginBottom: '0.5rem' }}>
-        Limit: {row.limitDisplay}
+      <p style={{ fontWeight: 700, marginBottom: '4px' }}>{paramName}</p>
+      <p>Site: <strong>{site}</strong></p>
+      <p>Value: {value} {unit}</p>
+      <p>Limit: {limit} {unit}</p>
+      <p style={{ marginTop: '4px', fontWeight: 700, color: pass ? '#52b788' : '#ef9a9a' }}>
+        {pass ? '✓ PASS' : '✗ FAIL'}
       </p>
-      {WQ_SITES.map(site => {
-        const pass = getPass(row, site);
-        const raw = getRaw(row, site);
-        return (
-          <div key={site} style={{
-            display: 'flex', alignItems: 'center', gap: '0.5rem',
-            padding: '0.2rem 0', borderTop: '1px solid #f5f0e8',
-          }}>
-            <span style={{ fontWeight: 600, minWidth: 44, color: '#2D4C39' }}>{site}</span>
-            <span style={{ flex: 1 }}>{raw}{row.unit ? ` ${row.unit}` : ''}</span>
-            <span style={{ fontWeight: 600, color: pass ? '#0C6038' : '#C0392B' }}>
-              {pass ? '✓ PASS' : '✗ FAIL'}
-            </span>
-          </div>
-        );
-      })}
     </div>
   );
 }
 
-// ── Shared styles ─────────────────────────────────────────────────────────────
+// ── Shared style constants ─────────────────────────────────────────────────────
 
 const CARD: React.CSSProperties = {
-  background: '#fff',
-  borderRadius: '14px',
-  padding: '1.75rem',
-  boxShadow: '0 2px 16px rgba(12,96,56,0.08)',
+  background: '#FFFFFF',
+  border: '1px solid #E0E8E2',
+  borderRadius: '16px',
+  padding: '24px',
+  boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
 };
 
 const HEADING: React.CSSProperties = {
-  fontWeight: 700,
-  fontSize: '0.95rem',
-  color: 'var(--outerspace)',
-  marginBottom: '1.25rem',
   fontFamily: 'Poppins, sans-serif',
+  fontWeight: 700,
+  fontSize: '16px',
+  color: '#1A2E1F',
+  margin: '0 0 20px',
 };
 
-const TICK = { fontSize: 11, fill: '#2D4C39', fontFamily: 'Poppins' };
-
-const TOOLTIP_STYLE = {
+const DARK_TT = {
   contentStyle: {
+    background: '#1A2E1F',
+    border: 'none',
     borderRadius: '8px',
-    border: '1px solid #F1D2A1',
-    fontSize: '13px',
+    padding: '8px 12px',
     fontFamily: 'Poppins, sans-serif',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+    fontSize: '13px',
+    color: '#ffffff',
   },
-  cursor: { fill: 'rgba(241,210,161,0.15)' },
+  itemStyle: { color: '#ffffff' },
+  labelStyle: { color: '#ffffff', fontWeight: 700, marginBottom: '4px' },
+  cursor: { fill: 'rgba(26,45,31,0.04)' },
 };
+
+const TICK_STYLE = { fontSize: 12, fill: '#4A5E4F', fontFamily: 'Poppins' };
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function BiodiversityCharts() {
+  const [activeDonutIndex, setActiveDonutIndex] = useState<number | null>(null);
+  const [selectedParam, setSelectedParam] = useState('Iron');
+
+  const paramData = WQ_PARAMS_DATA[selectedParam];
+  const wqChartData = WQ_SITES.map(site => ({
+    site,
+    value: paramData[site],
+    pass: paramData[site] <= paramData.limit,
+    limit: paramData.limit,
+    unit: paramData.unit,
+    paramName: selectedParam,
+  }));
+  const xMax = Math.max(...wqChartData.map(d => d.value), paramData.limit) * 1.25;
+
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
 
       {/* ── Chart 1: 2023 vs 2025 ── */}
       <div style={CARD}>
         <h2 style={HEADING}>Species Count: 2023 vs 2025</h2>
-        <ResponsiveContainer width="100%" height={290}>
-          <BarChart data={BAR_2023_2025} margin={{ top: 4, right: 8, left: -12, bottom: 4 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0ebe0" vertical={false} />
-            <XAxis dataKey="taxa" tick={{ ...TICK, fontSize: 10 }} axisLine={false} tickLine={false} />
-            <YAxis tick={TICK} axisLine={false} tickLine={false} />
-            <Tooltip {...TOOLTIP_STYLE} />
-            <Legend wrapperStyle={{ fontFamily: 'Poppins', fontSize: '12px', paddingTop: '12px' }} />
-            <Bar dataKey="2023" name="2023 Baseline" fill="#F1D2A1" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="2025" name="2025 Current"  fill="#0C6038" radius={[4, 4, 0, 0]} />
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={BAR_2023_2025} margin={{ top: 4, right: 8, left: -10, bottom: 4 }} barCategoryGap="28%">
+            <CartesianGrid strokeDasharray="3 3" stroke="#E0E8E2" vertical={false} />
+            <XAxis dataKey="taxa" tick={{ ...TICK_STYLE, fontSize: 11 }} axisLine={false} tickLine={false} />
+            <YAxis tick={TICK_STYLE} axisLine={false} tickLine={false} />
+            <Tooltip {...DARK_TT} />
+            <Legend wrapperStyle={{ fontFamily: 'Poppins', fontSize: '12px', paddingTop: '14px' }} />
+            <Bar dataKey="2023" name="2023 Baseline" fill="#F1D2A1" radius={[4, 4, 0, 0]} animationDuration={800} />
+            <Bar dataKey="2025" name="2025 Current"  fill="#0C6038" radius={[4, 4, 0, 0]} animationDuration={800} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -193,57 +179,79 @@ export default function BiodiversityCharts() {
       {/* ── Chart 2: Taxa Distribution donut ── */}
       <div style={CARD}>
         <h2 style={HEADING}>Taxa Distribution 2025</h2>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <ResponsiveContainer width="55%" height={280}>
+        <div style={{ position: 'relative' }}>
+          {activeDonutIndex === null && (
+            <div style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              textAlign: 'center',
+              pointerEvents: 'none',
+              zIndex: 10,
+            }}>
+              <div style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 900, fontSize: '28px', color: '#0C6038', lineHeight: 1 }}>870</div>
+              <div style={{ fontFamily: 'Poppins, sans-serif', fontSize: '12px', color: '#4A5E4F', marginTop: '4px' }}>species</div>
+            </div>
+          )}
+          <ResponsiveContainer width="100%" height={260}>
             <PieChart>
               <Pie
+                activeShape={renderActiveShape}
                 data={TAXA_DONUT}
                 dataKey="count"
                 nameKey="taxa"
-                cx="50%" cy="50%"
-                outerRadius={108} innerRadius={54}
-                paddingAngle={2} strokeWidth={0}
+                cx="50%"
+                cy="50%"
+                innerRadius={68}
+                outerRadius={108}
+                paddingAngle={2}
+                strokeWidth={0}
+                animationDuration={800}
+                onMouseEnter={(_, index) => setActiveDonutIndex(index)}
+                onMouseLeave={() => setActiveDonutIndex(null)}
               >
                 {TAXA_DONUT.map(e => <Cell key={e.taxa} fill={e.color} />)}
               </Pie>
-              <Tooltip
-                contentStyle={{ borderRadius: '8px', border: '1px solid #F1D2A1', fontSize: '13px', fontFamily: 'Poppins, sans-serif' }}
-                formatter={(value) => [`${value} species`]}
-              />
             </PieChart>
           </ResponsiveContainer>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', flex: 1 }}>
-            {TAXA_DONUT.map(e => (
-              <div key={e.taxa} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.78rem' }}>
-                <span style={{ width: 12, height: 12, borderRadius: 3, background: e.color, flexShrink: 0 }} />
-                <span style={{ color: '#2D4C39', fontWeight: 500, flex: 1 }}>{e.taxa}</span>
-                <span style={{ color: '#888', fontWeight: 600 }}>{e.count}</span>
-              </div>
-            ))}
-          </div>
+        </div>
+        {/* Legend */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px 16px', marginTop: '12px' }}>
+          {TAXA_DONUT.map(e => (
+            <div key={e.taxa} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontFamily: 'Poppins, sans-serif' }}>
+              <span style={{ width: 12, height: 12, borderRadius: 3, background: e.color, flexShrink: 0 }} />
+              <span style={{ color: '#4A5E4F' }}>{e.taxa}</span>
+              <span style={{ color: '#1A2E1F', fontWeight: 600, marginLeft: 'auto' }}>{e.count}</span>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* ── Chart 3: Student Visits 2026 ── */}
       <div style={CARD}>
         <h2 style={HEADING}>Student Visits 2026</h2>
-        <ResponsiveContainer width="100%" height={290}>
-          <BarChart data={STUDENT_VISITS} margin={{ top: 4, right: 40, left: -12, bottom: 4 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0ebe0" vertical={false} />
-            <XAxis dataKey="quarter" tick={TICK} axisLine={false} tickLine={false} />
-            <YAxis tick={TICK} axisLine={false} tickLine={false} domain={[0, 600]} />
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={STUDENT_VISITS} margin={{ top: 4, right: 48, left: -10, bottom: 4 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#E0E8E2" vertical={false} />
+            <XAxis dataKey="quarter" tick={TICK_STYLE} axisLine={false} tickLine={false} />
+            <YAxis tick={TICK_STYLE} axisLine={false} tickLine={false} domain={[0, 600]} />
             <Tooltip
-              {...TOOLTIP_STYLE}
-              formatter={(v) => [`${v} students`, 'Visits']}
+              {...DARK_TT}
+              formatter={(value) => {
+                const n = Number(value);
+                const pct = Math.round((n / 500) * 100);
+                return [`${n} students (${pct}% of target)`, 'Visits'];
+              }}
             />
             <ReferenceLine
               y={500}
-              stroke="#C0392B"
+              stroke="#D4251C"
               strokeDasharray="6 3"
               strokeWidth={2}
-              label={{ value: 'Target: 500', position: 'right', fontSize: 11, fill: '#C0392B', fontFamily: 'Poppins' }}
+              label={{ value: 'Target: 500', position: 'right', fontSize: 11, fill: '#D4251C', fontFamily: 'Poppins' }}
             />
-            <Bar dataKey="visits" name="Visits" fill="#0C6038" radius={[6, 6, 0, 0]} />
+            <Bar dataKey="visits" name="Visits" fill="#0C6038" radius={[6, 6, 0, 0]} animationDuration={800} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -251,43 +259,64 @@ export default function BiodiversityCharts() {
       {/* ── Chart 4: Water Quality Compliance ── */}
       <div style={CARD}>
         <h2 style={HEADING}>Water Quality Compliance — Oct 2025</h2>
-        <p style={{ fontSize: '11px', color: '#999', marginBottom: '0.75rem', fontFamily: 'Poppins', lineHeight: 1.5 }}>
-          Y-axis = value ÷ limit · Dashed line = threshold (1.0) · Sites per group L→R: R1, R2, Outlet, S5
+
+        {/* Parameter selector */}
+        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
+          {WQ_PARAMS_LIST.map(param => {
+            const active = param === selectedParam;
+            return (
+              <button
+                key={param}
+                onClick={() => setSelectedParam(param)}
+                style={{
+                  padding: '5px 14px',
+                  borderRadius: '9999px',
+                  border: `2px solid ${active ? '#0C6038' : '#E0E8E2'}`,
+                  background: active ? '#0C6038' : 'transparent',
+                  color: active ? '#fff' : '#4A5E4F',
+                  fontFamily: 'Poppins, sans-serif',
+                  fontWeight: 500,
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {param}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Limit badge */}
+        <p style={{ fontSize: '12px', color: '#4A5E4F', fontFamily: 'Poppins', marginBottom: '8px' }}>
+          Compliance limit:&nbsp;
+          <strong style={{ color: '#D4251C' }}>≤ {paramData.limit} {paramData.unit}</strong>
+          &nbsp;· Bars: <span style={{ color: '#1A7D2E', fontWeight: 600 }}>green = PASS</span>,{' '}
+          <span style={{ color: '#D4251C', fontWeight: 600 }}>red = FAIL</span>
         </p>
-        <ResponsiveContainer width="100%" height={230}>
-          <BarChart data={WQ_DATA} margin={{ top: 4, right: 40, left: -12, bottom: 28 }} barCategoryGap="20%">
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0ebe0" vertical={false} />
-            <XAxis
-              dataKey="param"
-              tick={{ ...TICK, fontSize: 10 }}
-              axisLine={false}
-              tickLine={false}
-              angle={-30}
-              textAnchor="end"
-              interval={0}
-            />
-            <YAxis tick={TICK} axisLine={false} tickLine={false} domain={[0, 16]} />
-            <Tooltip content={<WQTooltip />} />
+
+        {/* Horizontal bar chart */}
+        <ResponsiveContainer width="100%" height={200}>
+          <BarChart layout="vertical" data={wqChartData} margin={{ top: 4, right: 48, left: 8, bottom: 4 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#E0E8E2" horizontal={false} />
+            <YAxis type="category" dataKey="site" tick={TICK_STYLE} axisLine={false} tickLine={false} width={48} />
+            <XAxis type="number" tick={TICK_STYLE} axisLine={false} tickLine={false} domain={[0, xMax]} />
+            <Tooltip content={<WQTooltip />} cursor={{ fill: 'rgba(26,45,31,0.04)' }} />
             <ReferenceLine
-              y={1}
-              stroke="#C0392B"
+              x={paramData.limit}
+              stroke="#D4251C"
               strokeDasharray="5 3"
               strokeWidth={1.5}
-              label={{ value: 'Limit', position: 'right', fontSize: 10, fill: '#C0392B', fontFamily: 'Poppins' }}
+              label={{ value: `${paramData.limit}`, position: 'top', fontSize: 10, fill: '#D4251C', fontFamily: 'Poppins' }}
             />
-            {WQ_SITES.map(site => (
-              <Bar key={site} dataKey={site} name={site} radius={[3, 3, 0, 0]}>
-                {WQ_DATA.map((entry, i) => (
-                  <Cell key={i} fill={getPass(entry, site) ? '#0C6038' : '#C0392B'} />
-                ))}
-              </Bar>
-            ))}
+            <Bar dataKey="value" name={selectedParam} radius={[0, 4, 4, 0]} animationDuration={600}>
+              {wqChartData.map((entry, i) => (
+                <Cell key={i} fill={entry.pass ? '#1A7D2E' : '#D4251C'} />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
-        <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', marginTop: '0.5rem', fontSize: '11px', fontFamily: 'Poppins', color: '#666' }}>
-          <span><span style={{ color: '#0C6038', fontWeight: 700 }}>■</span> Compliant (≤ limit)</span>
-          <span><span style={{ color: '#C0392B', fontWeight: 700 }}>■</span> Exceeds limit</span>
-        </div>
       </div>
 
     </div>
