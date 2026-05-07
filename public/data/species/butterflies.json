@@ -1,0 +1,519 @@
+{
+  "taxa": "butterflies",
+  "count": 57,
+  "species": [
+    {
+      "taxa": "butterflies",
+      "id": 1,
+      "family": "Nymphalidae",
+      "scientificName": "Junonia aenone",
+      "commonName": "Eyed Pansy",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 2,
+      "family": "Nymphalidae",
+      "scientificName": "Junonia sophia",
+      "commonName": "Sophia Pansy",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 3,
+      "family": "Nymphalidae",
+      "scientificName": "Junonia terea",
+      "commonName": "Garden Inspector",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 4,
+      "family": "Nymphalidae",
+      "scientificName": "Charaxes achaemenes",
+      "commonName": "Achaemenes Charaxes",
+      "iucn": "LC",
+      "feedingGroup": "Fruit feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 5,
+      "family": "Nymphalidae",
+      "scientificName": "Charaxes candiope",
+      "commonName": "Green-veined Charaxes",
+      "iucn": "LC",
+      "feedingGroup": "Fruit feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 6,
+      "family": "Nymphalidae",
+      "scientificName": "Leptosia alcesta",
+      "commonName": "Albatross White",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 7,
+      "family": "Nymphalidae",
+      "scientificName": "Ypthima albida",
+      "commonName": "Albida Bush Brown",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 8,
+      "family": "Nymphalidae",
+      "scientificName": "[Nymphalidae sp. 8]",
+      "commonName": "Nymphalid sp. 8",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 9,
+      "family": "Nymphalidae",
+      "scientificName": "[Nymphalidae sp. 9]",
+      "commonName": "Nymphalid sp. 9",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 10,
+      "family": "Nymphalidae",
+      "scientificName": "[Nymphalidae sp. 10–21]",
+      "commonName": "Nymphalidae spp. (remaining)",
+      "iucn": "LC",
+      "feedingGroup": "Mixed"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 11,
+      "family": "Hesperiidae",
+      "scientificName": "Eretis lugens",
+      "commonName": "Lugens Skipper",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 12,
+      "family": "Hesperiidae",
+      "scientificName": "[Hesperiidae spp. 2–12]",
+      "commonName": "Hesperiidae spp. (remaining)",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 13,
+      "family": "Lycaenidae",
+      "scientificName": "[Lycaenidae spp. 1–13]",
+      "commonName": "Lycaenidae spp.",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 14,
+      "family": "Pieridae",
+      "scientificName": "[Pieridae spp. 1–11]",
+      "commonName": "Pieridae spp.",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 15,
+      "family": "Hesperiidae",
+      "scientificName": "Borbo detecta",
+      "commonName": "Detected Skipper",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 16,
+      "family": "Hesperiidae",
+      "scientificName": "Borbo fallax",
+      "commonName": "Deceptive Skipper",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 17,
+      "family": "Hesperiidae",
+      "scientificName": "Borbo fatuellus",
+      "commonName": "Marsh Skipper",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 18,
+      "family": "Lycaenidae",
+      "scientificName": "Cacyreus lingeus",
+      "commonName": "Geranium Bronze",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 19,
+      "family": "Pieridae",
+      "scientificName": "Catopsilia florella",
+      "commonName": "African Migrant",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 20,
+      "family": "Nymphalidae",
+      "scientificName": "Charaxes candiope",
+      "commonName": "Green-veined Charaxes",
+      "iucn": "LC",
+      "feedingGroup": "Fruit feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 21,
+      "family": "Pieridae",
+      "scientificName": "Colotis euippe",
+      "commonName": "Smoky Orange Tip",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 22,
+      "family": "Nymphalidae",
+      "scientificName": "Danaus chrysippus",
+      "commonName": "Plain Tiger",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 23,
+      "family": "Lycaenidae",
+      "scientificName": "Eicochrysops hippocrates",
+      "commonName": "Hippocrates Blue",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 24,
+      "family": "Lycaenidae",
+      "scientificName": "Eicochrysops masai",
+      "commonName": "Masai Blue",
+      "iucn": "NE",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 25,
+      "family": "Hesperiidae",
+      "scientificName": "Eretis lugens",
+      "commonName": "Lugens Skipper",
+      "iucn": "NE",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 26,
+      "family": "Pieridae",
+      "scientificName": "Eronia cleodora",
+      "commonName": "Vine Leaf Vagrant",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 27,
+      "family": "Pieridae",
+      "scientificName": "Eurema brigitta",
+      "commonName": "Small Grass Yellow",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 28,
+      "family": "Pieridae",
+      "scientificName": "Eurema hapale",
+      "commonName": "Hapale Yellow",
+      "iucn": "NE",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 29,
+      "family": "Pieridae",
+      "scientificName": "Eurema senegalensis",
+      "commonName": "Senegal Yellow",
+      "iucn": "NE",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 30,
+      "family": "Nymphalidae",
+      "scientificName": "Eurytela dryope",
+      "commonName": "Golden Piper",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 31,
+      "family": "Hesperiidae",
+      "scientificName": "Gegenes hottentota",
+      "commonName": "Hottentot Skipper",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 32,
+      "family": "Hesperiidae",
+      "scientificName": "Gegenes niso",
+      "commonName": "Common Straight Swift",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 33,
+      "family": "Hesperiidae",
+      "scientificName": "Gegenes pumilio",
+      "commonName": "Pigmy Skipper",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 34,
+      "family": "Nymphalidae",
+      "scientificName": "Junonia hierta",
+      "commonName": "Yellow Pansy",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 35,
+      "family": "Nymphalidae",
+      "scientificName": "Junonia oenone",
+      "commonName": "Blue Pansy",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 36,
+      "family": "Nymphalidae",
+      "scientificName": "Junonia sophia",
+      "commonName": "Pansy Soldier",
+      "iucn": "NE",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 37,
+      "family": "Nymphalidae",
+      "scientificName": "Junonia sphia",
+      "commonName": "Sphia Pansy",
+      "iucn": "NE",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 38,
+      "family": "Nymphalidae",
+      "scientificName": "Junonia terea",
+      "commonName": "Garden Inspector",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 39,
+      "family": "Lycaenidae",
+      "scientificName": "Lampides boeticus",
+      "commonName": "Pea Blue",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 40,
+      "family": "Pieridae",
+      "scientificName": "Leptosia alcesta",
+      "commonName": "African Wood White",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 41,
+      "family": "Pieridae",
+      "scientificName": "Leptosia nupta",
+      "commonName": "Veiled White",
+      "iucn": "NE",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 42,
+      "family": "Lycaenidae",
+      "scientificName": "Leptotes pirithous",
+      "commonName": "Striped Blue",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 43,
+      "family": "Nymphalidae",
+      "scientificName": "Melanitis leda",
+      "commonName": "Common Evening Brown",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 44,
+      "family": "Hesperiidae",
+      "scientificName": "Metisella medea",
+      "commonName": "Medea Skipper",
+      "iucn": "NE",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 45,
+      "family": "Hesperiidae",
+      "scientificName": "Metisella midas",
+      "commonName": "Midas Skipper",
+      "iucn": "NE",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 46,
+      "family": "Hesperiidae",
+      "scientificName": "Metisella orientalis",
+      "commonName": "Eastern Skipper",
+      "iucn": "NE",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 47,
+      "family": "Pieridae",
+      "scientificName": "Mylothris agathina",
+      "commonName": "Common Dotted Border",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 48,
+      "family": "Nymphalidae",
+      "scientificName": "Neptis serena",
+      "commonName": "Serene Sailor",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 49,
+      "family": "Lycaenidae",
+      "scientificName": "Neuvipes gemifera",
+      "commonName": "Gemifera Blue",
+      "iucn": "NE",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 50,
+      "family": "Hesperiidae",
+      "scientificName": "Spialia diomus",
+      "commonName": "Diomus Skipper",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 51,
+      "family": "Nymphalidae",
+      "scientificName": "Telchinia encedon",
+      "commonName": "White-barred Acraea",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 52,
+      "family": "Nymphalidae",
+      "scientificName": "Telchinia serena",
+      "commonName": "Serene Acraea",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 53,
+      "family": "Nymphalidae",
+      "scientificName": "Ypthima albida",
+      "commonName": "Albida Bush Brown",
+      "iucn": "NE",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 54,
+      "family": "Nymphalidae",
+      "scientificName": "Ypthima asterope",
+      "commonName": "Common Bush Brown",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 55,
+      "family": "Nymphalidae",
+      "scientificName": "Ypthimomorpha itonia",
+      "commonName": "Itonia Brown",
+      "iucn": "NE",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 56,
+      "family": "Lycaenidae",
+      "scientificName": "Zizeeria knysna",
+      "commonName": "African Grass Blue",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    },
+    {
+      "taxa": "butterflies",
+      "id": 57,
+      "family": "Lycaenidae",
+      "scientificName": "Zizula hylax",
+      "commonName": "Tiny Grass Blue",
+      "iucn": "LC",
+      "feedingGroup": "Nectar feeder"
+    }
+  ]
+}

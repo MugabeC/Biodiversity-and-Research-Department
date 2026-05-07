@@ -1,0 +1,474 @@
+{
+  "taxa": "aquatic_inverts",
+  "count": 52,
+  "species": [
+    {
+      "taxa": "aquatic_inverts",
+      "id": 1,
+      "class": "Clitellata",
+      "order": "Arhynchobdellida",
+      "family": "Hirudinidae",
+      "genusSpecies": "Unidentified",
+      "pollutionTolerance": "High"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 2,
+      "class": "Clitellata",
+      "order": "Arhynchobdellida",
+      "family": "Hirudinidae",
+      "genusSpecies": "Aliolimnatis sp.",
+      "pollutionTolerance": "High"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 3,
+      "class": "Clitellata",
+      "order": "Tubificida",
+      "family": "Tubificidae",
+      "genusSpecies": "Unidentified",
+      "pollutionTolerance": "High"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 4,
+      "class": "Gastropoda",
+      "order": "Architaenioglossa",
+      "family": "Ampullariidae",
+      "genusSpecies": "Pila ovata",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 5,
+      "class": "Gastropoda",
+      "order": "Caenogastropoda",
+      "family": "Thiaridae",
+      "genusSpecies": "Melanoides tuberculata",
+      "pollutionTolerance": "High"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 6,
+      "class": "Gastropoda",
+      "order": "Hygrophila",
+      "family": "Bulinidae",
+      "genusSpecies": "Bulnus sp.",
+      "pollutionTolerance": "High"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 7,
+      "class": "Gastropoda",
+      "order": "Hygrophila",
+      "family": "Lymnaeidae",
+      "genusSpecies": "Unidentified",
+      "pollutionTolerance": "High"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 8,
+      "class": "Gastropoda",
+      "order": "Hygrophila",
+      "family": "Physidae",
+      "genusSpecies": "Unidentified",
+      "pollutionTolerance": "High"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 9,
+      "class": "Gastropoda",
+      "order": "Hygrophila",
+      "family": "Planorbidae",
+      "genusSpecies": "Biomphalaria sp.",
+      "pollutionTolerance": "High"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 10,
+      "class": "Gastropoda",
+      "order": "Sphaerida",
+      "family": "Sphaeridae",
+      "genusSpecies": "Unidentified",
+      "pollutionTolerance": "High"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 11,
+      "class": "Insecta",
+      "order": "Coleoptera",
+      "family": "Dytiscidae",
+      "genusSpecies": "Hydrovatus sp.",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 12,
+      "class": "Insecta",
+      "order": "Coleoptera",
+      "family": "Gyrinidae",
+      "genusSpecies": "Dineutus sp.",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 13,
+      "class": "Insecta",
+      "order": "Coleoptera",
+      "family": "Hydrophilidae",
+      "genusSpecies": "Afrocaenis sp.",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 14,
+      "class": "Insecta",
+      "order": "Coleoptera",
+      "family": "Hydrophilidae",
+      "genusSpecies": "Helochares sp.",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 15,
+      "class": "Insecta",
+      "order": "Coleoptera",
+      "family": "Hydrophilidae",
+      "genusSpecies": "Hydrophilus sp.",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 16,
+      "class": "Insecta",
+      "order": "Coleoptera",
+      "family": "Noteridae",
+      "genusSpecies": "Unidentified",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 17,
+      "class": "Insecta",
+      "order": "Diptera",
+      "family": "Chironomidae",
+      "genusSpecies": "Unidentified",
+      "pollutionTolerance": "High"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 18,
+      "class": "Insecta",
+      "order": "Diptera",
+      "family": "Culicidae",
+      "genusSpecies": "Unidentified",
+      "pollutionTolerance": "High"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 19,
+      "class": "Insecta",
+      "order": "Diptera",
+      "family": "Simuliidae",
+      "genusSpecies": "Unidentified",
+      "pollutionTolerance": "Low"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 20,
+      "class": "Insecta",
+      "order": "Diptera",
+      "family": "Syrphidae",
+      "genusSpecies": "Unidentified",
+      "pollutionTolerance": "High"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 21,
+      "class": "Insecta",
+      "order": "Diptera",
+      "family": "Tipulidae",
+      "genusSpecies": "Unidentified",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 22,
+      "class": "Insecta",
+      "order": "Ephemeroptera",
+      "family": "Baetidae",
+      "genusSpecies": "Cloeon sp.",
+      "pollutionTolerance": "Low"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 23,
+      "class": "Insecta",
+      "order": "Ephemeroptera",
+      "family": "Caenidae",
+      "genusSpecies": "Afrocaenis sp.",
+      "pollutionTolerance": "Low"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 24,
+      "class": "Insecta",
+      "order": "Ephemeroptera",
+      "family": "Caenidae",
+      "genusSpecies": "Notiothemis sp.",
+      "pollutionTolerance": "Low"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 25,
+      "class": "Insecta",
+      "order": "Hemiptera",
+      "family": "Belostomatidae",
+      "genusSpecies": "Appasus sp.",
+      "pollutionTolerance": "High"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 26,
+      "class": "Insecta",
+      "order": "Hemiptera",
+      "family": "Corixidae",
+      "genusSpecies": "Trichocorixa sp.",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 27,
+      "class": "Insecta",
+      "order": "Hemiptera",
+      "family": "Gerridae",
+      "genusSpecies": "Limnogonus sp.1",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 28,
+      "class": "Insecta",
+      "order": "Hemiptera",
+      "family": "Gerridae",
+      "genusSpecies": "Limnogonus sp.2",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 29,
+      "class": "Insecta",
+      "order": "Hemiptera",
+      "family": "Gerridae",
+      "genusSpecies": "Trepobates sp.",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 30,
+      "class": "Insecta",
+      "order": "Hemiptera",
+      "family": "Micronectidae",
+      "genusSpecies": "Micronecta sp.",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 31,
+      "class": "Insecta",
+      "order": "Hemiptera",
+      "family": "Micronectidae",
+      "genusSpecies": "Rhagovelia sp.",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 32,
+      "class": "Insecta",
+      "order": "Hemiptera",
+      "family": "Naucoridae",
+      "genusSpecies": "Unidentified",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 33,
+      "class": "Insecta",
+      "order": "Hemiptera",
+      "family": "Nepidae",
+      "genusSpecies": "Laccotrephes sp.",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 34,
+      "class": "Insecta",
+      "order": "Hemiptera",
+      "family": "Nepidae",
+      "genusSpecies": "Ranatra sp.",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 35,
+      "class": "Insecta",
+      "order": "Hemiptera",
+      "family": "Notonectidae",
+      "genusSpecies": "Buenoa sp.",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 36,
+      "class": "Insecta",
+      "order": "Hemiptera",
+      "family": "Veliidae",
+      "genusSpecies": "Rhagovelia sp.",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 37,
+      "class": "Insecta",
+      "order": "Odonata",
+      "family": "Aeshnidae",
+      "genusSpecies": "Anax sp.",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 38,
+      "class": "Insecta",
+      "order": "Odonata",
+      "family": "Coenagrionidae",
+      "genusSpecies": "Unidentified",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 39,
+      "class": "Insecta",
+      "order": "Odonata",
+      "family": "Corduliidae",
+      "genusSpecies": "Unidentified",
+      "pollutionTolerance": "Low"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 40,
+      "class": "Insecta",
+      "order": "Odonata",
+      "family": "Libellulidae",
+      "genusSpecies": "Afrocaenis sp.",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 41,
+      "class": "Insecta",
+      "order": "Odonata",
+      "family": "Libellulidae",
+      "genusSpecies": "Notiothemis sp.",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 42,
+      "class": "Insecta",
+      "order": "Odonata",
+      "family": "Libellulidae",
+      "genusSpecies": "Tetrathemis sp.",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 43,
+      "class": "Insecta",
+      "order": "Odonata",
+      "family": "Protoneuridae",
+      "genusSpecies": "Unidentified",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 44,
+      "class": "Insecta",
+      "order": "Trichoptera",
+      "family": "Ecnomidae",
+      "genusSpecies": "Ecnomus sp.",
+      "pollutionTolerance": "Low — SENSITIVE"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 45,
+      "class": "Insecta",
+      "order": "Trichoptera",
+      "family": "Hydropsychidae",
+      "genusSpecies": "Cheumatopsyche sp.",
+      "pollutionTolerance": "Low — SENSITIVE"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 46,
+      "class": "Insecta",
+      "order": "Trichoptera",
+      "family": "Hydropsychidae",
+      "genusSpecies": "Hydropsyche sp.",
+      "pollutionTolerance": "Low — SENSITIVE"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 47,
+      "class": "Insecta",
+      "order": "Trichoptera",
+      "family": "Hydrosalpingidae",
+      "genusSpecies": "Unidentified",
+      "pollutionTolerance": "Low — SENSITIVE"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 48,
+      "class": "Insecta",
+      "order": "Trichoptera",
+      "family": "Leptoceridae",
+      "genusSpecies": "Trianodes sp.",
+      "pollutionTolerance": "Low — SENSITIVE"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 49,
+      "class": "Insecta",
+      "order": "Trichoptera",
+      "family": "Stenopsychidae",
+      "genusSpecies": "Unidentified",
+      "pollutionTolerance": "Low — SENSITIVE"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 50,
+      "class": "Malacostraca",
+      "order": "Decapoda",
+      "family": "Atyidae",
+      "genusSpecies": "Unidentified",
+      "pollutionTolerance": "Moderate"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 51,
+      "class": "Malacostraca",
+      "order": "Decapoda",
+      "family": "Cambaridae",
+      "genusSpecies": "Procambarus clarkii",
+      "pollutionTolerance": "High"
+    },
+    {
+      "taxa": "aquatic_inverts",
+      "id": 52,
+      "class": "Malacostraca",
+      "order": "Trombidiformes",
+      "family": "Hydrachnidae",
+      "genusSpecies": "Hyracharina sp.",
+      "pollutionTolerance": "Moderate"
+    }
+  ]
+}

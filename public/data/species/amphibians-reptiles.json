@@ -1,0 +1,226 @@
+{
+  "taxa": "amphibians-reptiles",
+  "count": 22,
+  "species": [
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 1,
+      "group": "Amphibian",
+      "family": "Bufonidae",
+      "commonName": "Common Toad",
+      "scientificName": "Sclerophrys gutturalis",
+      "iucnGlobal": "LC",
+      "endemism": "Widespread"
+    },
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 2,
+      "group": "Amphibian",
+      "family": "Hyperoliidae",
+      "commonName": "Four-lined Spiny Reed Frog",
+      "scientificName": "Afrixalus quadrivittatus",
+      "iucnGlobal": "LC",
+      "endemism": "Widespread"
+    },
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 3,
+      "group": "Amphibian",
+      "family": "Hyperoliidae",
+      "commonName": "Kivu Reed Frog",
+      "scientificName": "Hyperolius kivuensis",
+      "iucnGlobal": "LC",
+      "endemism": "Widespread"
+    },
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 4,
+      "group": "Amphibian",
+      "family": "Hyperoliidae",
+      "commonName": "Rwanda Long Reed Frog",
+      "scientificName": "Hyperolius rwandae",
+      "iucnGlobal": "LC",
+      "endemism": "Albertine Rift Endemic"
+    },
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 5,
+      "group": "Amphibian",
+      "family": "Hyperoliidae",
+      "commonName": "Common Reed Frog",
+      "scientificName": "Hyperolius viridiflavus",
+      "iucnGlobal": "LC",
+      "endemism": "Widespread"
+    },
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 6,
+      "group": "Amphibian",
+      "family": "Hyperoliidae",
+      "commonName": "Bubbling Kassina",
+      "scientificName": "Kassina senegalensis",
+      "iucnGlobal": "LC",
+      "endemism": "Widespread"
+    },
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 7,
+      "group": "Amphibian",
+      "family": "Phrynobatrachidae",
+      "commonName": "Kakamega Puddle Frog",
+      "scientificName": "Phrynobatrachus kakamikro",
+      "iucnGlobal": "DD",
+      "endemism": "Unknown"
+    },
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 8,
+      "group": "Amphibian",
+      "family": "Phrynobatrachidae",
+      "commonName": "Natal Puddle Frog",
+      "scientificName": "Phrynobatrachus natalensis",
+      "iucnGlobal": "LC",
+      "endemism": "Widespread"
+    },
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 9,
+      "group": "Amphibian",
+      "family": "Pipidae",
+      "commonName": "Lake Victoria Clawed Frog",
+      "scientificName": "Xenopus victorianus",
+      "iucnGlobal": "LC",
+      "endemism": "Widespread"
+    },
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 10,
+      "group": "Amphibian",
+      "family": "Pyxicephalidae",
+      "commonName": "Nutt's River Frog",
+      "scientificName": "Amietia nutti",
+      "iucnGlobal": "LC",
+      "endemism": "Widespread"
+    },
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 11,
+      "group": "Amphibian",
+      "family": "Ptychadenidae",
+      "commonName": "Nile Grass Frog",
+      "scientificName": "Ptychadena nilotica",
+      "iucnGlobal": "LC",
+      "endemism": "Widespread"
+    },
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 12,
+      "group": "Reptile",
+      "family": "Chamaeleonidae",
+      "commonName": "Groove-throated Chameleon",
+      "scientificName": "Trioceros ellioti",
+      "iucnGlobal": "LC",
+      "endemism": "Widespread"
+    },
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 13,
+      "group": "Reptile",
+      "family": "Colubridae",
+      "commonName": "Red-lipped Snake",
+      "scientificName": "Crotaphopeltis hotamboeia",
+      "iucnGlobal": "LC",
+      "endemism": "Widespread"
+    },
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 14,
+      "group": "Reptile",
+      "family": "Colubridae",
+      "commonName": "Common Egg-eater",
+      "scientificName": "Dasypeltis scabra",
+      "iucnGlobal": "LC",
+      "endemism": "Widespread"
+    },
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 15,
+      "group": "Reptile",
+      "family": "Colubridae",
+      "commonName": "Olive Marsh Snake",
+      "scientificName": "Natriciteres olivacea",
+      "iucnGlobal": "LC",
+      "endemism": "Widespread"
+    },
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 16,
+      "group": "Reptile",
+      "family": "Colubridae",
+      "commonName": "Angola Green Snake",
+      "scientificName": "Philothamnus angolensis",
+      "iucnGlobal": "LC",
+      "endemism": "Widespread"
+    },
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 17,
+      "group": "Reptile",
+      "family": "Typhlopidae",
+      "commonName": "Angola Blind Snake",
+      "scientificName": "Afrotyphlops angolensis",
+      "iucnGlobal": "LC",
+      "endemism": "Widespread"
+    },
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 18,
+      "group": "Reptile",
+      "family": "Gekkonidae",
+      "commonName": "Tropical House Gecko",
+      "scientificName": "Hemidactylus mabouia",
+      "iucnGlobal": "LC",
+      "endemism": "Widespread"
+    },
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 19,
+      "group": "Reptile",
+      "family": "Lamprophiidae",
+      "commonName": "Brown House Snake",
+      "scientificName": "Boaedon montanus",
+      "iucnGlobal": "LC",
+      "endemism": "Albertine Rift Endemic"
+    },
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 20,
+      "group": "Reptile",
+      "family": "Scincidae",
+      "commonName": "Speckle-lipped Mabuya",
+      "scientificName": "Trachylepis maculilabris",
+      "iucnGlobal": "LC",
+      "endemism": "Widespread"
+    },
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 21,
+      "group": "Reptile",
+      "family": "Scincidae",
+      "commonName": "Grass-top Skink",
+      "scientificName": "Trachylepis megalura",
+      "iucnGlobal": "LC",
+      "endemism": "Widespread"
+    },
+    {
+      "taxa": "amphibians-reptiles",
+      "id": 22,
+      "group": "Reptile",
+      "family": "Scincidae",
+      "commonName": "African Striped Skink",
+      "scientificName": "Trachylepis striata",
+      "iucnGlobal": "LC",
+      "endemism": "Widespread"
+    }
+  ]
+}

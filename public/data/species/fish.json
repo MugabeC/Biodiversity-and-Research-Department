@@ -1,0 +1,69 @@
+{
+  "taxa": "fish",
+  "count": 7,
+  "species": [
+    {
+      "taxa": "fish",
+      "id": 1,
+      "family": "Clariidae",
+      "commonName": "African Sharptooth Catfish",
+      "scientificName": "Clarias gariepinus",
+      "iucn": "LC",
+      "origin": "Native (N. Africa)"
+    },
+    {
+      "taxa": "fish",
+      "id": 2,
+      "family": "Clariidae",
+      "commonName": "Smooth-headed Catfish",
+      "scientificName": "Clarias liocephalus",
+      "iucn": "LC",
+      "origin": "Native (L. Tanganyika)"
+    },
+    {
+      "taxa": "fish",
+      "id": 3,
+      "family": "Cyprinidae",
+      "commonName": "Enteromius sp.",
+      "scientificName": "Enteromius spp.",
+      "iucn": "LC",
+      "origin": "Native (Tropical Africa)"
+    },
+    {
+      "taxa": "fish",
+      "id": 4,
+      "family": "Cichlidae",
+      "commonName": "Haplochromis spp.",
+      "scientificName": "Haplochromis spp.",
+      "iucn": "—",
+      "origin": "Native (L. Kivu)"
+    },
+    {
+      "taxa": "fish",
+      "id": 5,
+      "family": "Cichlidae",
+      "commonName": "Nile Tilapia",
+      "scientificName": "Oreochromis niloticus",
+      "iucn": "LC",
+      "origin": "Native (Nile Basin)"
+    },
+    {
+      "taxa": "fish",
+      "id": 6,
+      "family": "Poeciliidae",
+      "commonName": "Guppy — INVASIVE",
+      "scientificName": "Poecilia reticulata",
+      "iucn": "LC",
+      "origin": "Introduced (S. America)"
+    },
+    {
+      "taxa": "fish",
+      "id": 7,
+      "family": "Cichlidae",
+      "commonName": "Multicolour Mouthbrooder",
+      "scientificName": "Pseudocrenilabrus multicolor",
+      "iucn": "LC",
+      "origin": "Native (Nile system)"
+    }
+  ]
+}

@@ -1,0 +1,136 @@
+{
+  "taxa": "mammals",
+  "count": 13,
+  "species": [
+    {
+      "taxa": "mammals",
+      "id": 1,
+      "order": "Carnivora",
+      "family": "Herpestidae",
+      "commonName": "Marsh Mongoose",
+      "scientificName": "Atilax paludinosus",
+      "iucn": "LC",
+      "endemism": "Not Endemic"
+    },
+    {
+      "taxa": "mammals",
+      "id": 2,
+      "order": "Eulipotyphla",
+      "family": "Soricidae",
+      "commonName": "Olivier's Shrew",
+      "scientificName": "Crocidura olivieri",
+      "iucn": "LC",
+      "endemism": "Not Endemic"
+    },
+    {
+      "taxa": "mammals",
+      "id": 3,
+      "order": "Rodentia",
+      "family": "Muridae",
+      "commonName": "African Marsh Rat",
+      "scientificName": "Dasymys incomtus",
+      "iucn": "LC",
+      "endemism": "Albertine Rift Endemic"
+    },
+    {
+      "taxa": "mammals",
+      "id": 4,
+      "order": "Rodentia",
+      "family": "Muridae",
+      "commonName": "African Thicket Rat",
+      "scientificName": "Grammomys surdaster",
+      "iucn": "LC",
+      "endemism": "Albertine Rift Endemic"
+    },
+    {
+      "taxa": "mammals",
+      "id": 5,
+      "order": "Carnivora",
+      "family": "Mustelidae",
+      "commonName": "Spotted-necked Otter",
+      "scientificName": "Hydrictis maculicollis",
+      "iucn": "NT",
+      "endemism": "Not Endemic"
+    },
+    {
+      "taxa": "mammals",
+      "id": 6,
+      "order": "Rodentia",
+      "family": "Muridae",
+      "commonName": "Typical Striped Grass Mouse",
+      "scientificName": "Lemniscomys striatus",
+      "iucn": "LC",
+      "endemism": "Not Endemic"
+    },
+    {
+      "taxa": "mammals",
+      "id": 7,
+      "order": "Carnivora",
+      "family": "Canidae",
+      "commonName": "Side-striped Jackal",
+      "scientificName": "Lupulella adusta",
+      "iucn": "LC",
+      "endemism": "Not Endemic"
+    },
+    {
+      "taxa": "mammals",
+      "id": 8,
+      "order": "Rodentia",
+      "family": "Muridae",
+      "commonName": "Rufous-nosed Rat",
+      "scientificName": "Oenomys hypoxanthus",
+      "iucn": "LC",
+      "endemism": "Not Endemic"
+    },
+    {
+      "taxa": "mammals",
+      "id": 9,
+      "order": "Rodentia",
+      "family": "Muridae",
+      "commonName": "Vlei Rat",
+      "scientificName": "Otomys sp.",
+      "iucn": "DD",
+      "endemism": "Not Assessed"
+    },
+    {
+      "taxa": "mammals",
+      "id": 10,
+      "order": "Rodentia",
+      "family": "Muridae",
+      "commonName": "Jackson's Soft-furred Mouse",
+      "scientificName": "Praomys jacksoni",
+      "iucn": "LC",
+      "endemism": "Not Endemic"
+    },
+    {
+      "taxa": "mammals",
+      "id": 11,
+      "order": "Rodentia",
+      "family": "Muridae",
+      "commonName": "Unidentified Rodent",
+      "scientificName": "Scat-Rodent sp.",
+      "iucn": "DD",
+      "endemism": "Not Assessed"
+    },
+    {
+      "taxa": "mammals",
+      "id": 12,
+      "order": "Chiroptera",
+      "family": "Unknown",
+      "commonName": "Unidentified Bat",
+      "scientificName": "Unknown bat sp.",
+      "iucn": "DD",
+      "endemism": "Unknown"
+    },
+    {
+      "taxa": "mammals",
+      "id": 13,
+      "order": "Carnivora",
+      "family": "Viverridae",
+      "commonName": "Cape Genet",
+      "scientificName": "Genetta tigrina",
+      "iucn": "LC",
+      "endemism": "Not Endemic"
+    }
+  ]
+}

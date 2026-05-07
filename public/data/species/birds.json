@@ -1,0 +1,2265 @@
+{
+  "taxa": "birds",
+  "count": 251,
+  "species": [
+    {
+      "taxa": "birds",
+      "id": 1,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "African Goshawk",
+      "scientificName": "Accipiter tachiro",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 2,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "Augur Buzzard",
+      "scientificName": "Buteo augur",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 3,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "African Marsh Harrier",
+      "scientificName": "Circus ranivorus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 4,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "Palm-nut Vulture",
+      "scientificName": "Gypohierax angolensis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 5,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "African Fish Eagle",
+      "scientificName": "Haliaeetus vocifer",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 6,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "Wahlberg's Eagle",
+      "scientificName": "Hieraaetus wahlbergi",
+      "status": "LC,I"
+    },
+    {
+      "taxa": "birds",
+      "id": 7,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "Long-crested Eagle",
+      "scientificName": "Lophaetus occipitalis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 8,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "Yellow-billed Kite",
+      "scientificName": "Milvus aegyptius",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 9,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "Black Kite",
+      "scientificName": "Milvus migrans",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 10,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "African Harrier-Hawk",
+      "scientificName": "Polyboroides typus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 11,
+      "order": "Anseriformes",
+      "family": "Anatidae",
+      "commonName": "Yellow-billed Duck",
+      "scientificName": "Anas undulata",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 12,
+      "order": "Anseriformes",
+      "family": "Anatidae",
+      "commonName": "White-faced Whistling Duck",
+      "scientificName": "Dendrocygna viduata",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 13,
+      "order": "Anseriformes",
+      "family": "Anatidae",
+      "commonName": "Spur-winged Goose",
+      "scientificName": "Plectropterus gambensis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 14,
+      "order": "Apodiformes",
+      "family": "Apodidae",
+      "commonName": "Common Swift",
+      "scientificName": "Apus apus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 15,
+      "order": "Apodiformes",
+      "family": "Apodidae",
+      "commonName": "White-rumped Swift",
+      "scientificName": "Apus caffer",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 16,
+      "order": "Caprimulgiformes",
+      "family": "Caprimulgidae",
+      "commonName": "Mozambique Nightjar",
+      "scientificName": "Caprimulgus fossii",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 17,
+      "order": "Ciconiiformes",
+      "family": "Ciconiidae",
+      "commonName": "African Openbill",
+      "scientificName": "Anastomus lamelligerus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 18,
+      "order": "Ciconiiformes",
+      "family": "Ciconiidae",
+      "commonName": "Yellow-billed Stork",
+      "scientificName": "Mycteria ibis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 19,
+      "order": "Coliiformes",
+      "family": "Coliidae",
+      "commonName": "Speckled Mousebird",
+      "scientificName": "Colius striatus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 20,
+      "order": "Coliiformes",
+      "family": "Coliidae",
+      "commonName": "Red-faced Mousebird",
+      "scientificName": "Urocolius indicus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 21,
+      "order": "Columbiformes",
+      "family": "Columbidae",
+      "commonName": "Laughing Dove",
+      "scientificName": "Spilopelia senegalensis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 22,
+      "order": "Columbiformes",
+      "family": "Columbidae",
+      "commonName": "Ring-necked Dove",
+      "scientificName": "Streptopelia capicola",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 23,
+      "order": "Columbiformes",
+      "family": "Columbidae",
+      "commonName": "Red-eyed Dove",
+      "scientificName": "Streptopelia semitorquata",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 24,
+      "order": "Columbiformes",
+      "family": "Columbidae",
+      "commonName": "Blue-spotted Wood Dove",
+      "scientificName": "Turtur afer",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 25,
+      "order": "Columbiformes",
+      "family": "Columbidae",
+      "commonName": "Emerald-spotted Wood Dove",
+      "scientificName": "Turtur chalcospilos",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 26,
+      "order": "Coraciiformes",
+      "family": "Alcedinidae",
+      "commonName": "Pied Kingfisher",
+      "scientificName": "Ceryle rudis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 27,
+      "order": "Coraciiformes",
+      "family": "Alcedinidae",
+      "commonName": "Malachite Kingfisher",
+      "scientificName": "Corythornis cristatus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 28,
+      "order": "Coraciiformes",
+      "family": "Alcedinidae",
+      "commonName": "Woodland Kingfisher",
+      "scientificName": "Halcyon senegalensis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 29,
+      "order": "Coraciiformes",
+      "family": "Alcedinidae",
+      "commonName": "African Pygmy Kingfisher",
+      "scientificName": "Ispidina picta",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 30,
+      "order": "Coraciiformes",
+      "family": "Alcedinidae",
+      "commonName": "Giant Kingfisher",
+      "scientificName": "Megaceryle maxima",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 31,
+      "order": "Coraciiformes",
+      "family": "Meropidae",
+      "commonName": "European Bee-eater",
+      "scientificName": "Merops apiaster",
+      "status": "LC,P"
+    },
+    {
+      "taxa": "birds",
+      "id": 32,
+      "order": "Coraciiformes",
+      "family": "Meropidae",
+      "commonName": "Cinnamon-chested Bee-eater",
+      "scientificName": "Merops oreobates",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 33,
+      "order": "Coraciiformes",
+      "family": "Meropidae",
+      "commonName": "Little Bee-eater",
+      "scientificName": "Merops pusillus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 34,
+      "order": "Cuculiformes",
+      "family": "Cuculidae",
+      "commonName": "Blue-headed Coucal",
+      "scientificName": "Centropus monachus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 35,
+      "order": "Cuculiformes",
+      "family": "Cuculidae",
+      "commonName": "White-browed Coucal",
+      "scientificName": "Centropus superciliosus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 36,
+      "order": "Cuculiformes",
+      "family": "Cuculidae",
+      "commonName": "Klaas's Cuckoo",
+      "scientificName": "Chrysococcyx klaas",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 37,
+      "order": "Cuculiformes",
+      "family": "Cuculidae",
+      "commonName": "African Cuckoo",
+      "scientificName": "Cuculus gularis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 38,
+      "order": "Cuculiformes",
+      "family": "Cuculidae",
+      "commonName": "Red-chested Cuckoo",
+      "scientificName": "Cuculus solitarius",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 39,
+      "order": "Cuculiformes",
+      "family": "Musophagidae",
+      "commonName": "Bare-faced Go-away-bird",
+      "scientificName": "Corythaixoides personatus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 40,
+      "order": "Galliformes",
+      "family": "Phasianidae",
+      "commonName": "Red-necked Spurfowl",
+      "scientificName": "Pternistis afer",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 41,
+      "order": "Gruiformes",
+      "family": "Gruidae",
+      "commonName": "Grey Crowned Crane",
+      "scientificName": "Balearica regulorum",
+      "status": "EN,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 42,
+      "order": "Gruiformes",
+      "family": "Rallidae",
+      "commonName": "Common Moorhen",
+      "scientificName": "Gallinula chloropus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 43,
+      "order": "Gruiformes",
+      "family": "Rallidae",
+      "commonName": "Red-chested Flufftail",
+      "scientificName": "Sarothrura rufa",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 44,
+      "order": "Gruiformes",
+      "family": "Rallidae",
+      "commonName": "Black Crake",
+      "scientificName": "Zapornia flavirostra",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 45,
+      "order": "Musophagiformes",
+      "family": "Musophagidae",
+      "commonName": "Ross's Turaco",
+      "scientificName": "Musophaga rossae",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 46,
+      "order": "Passeriformes",
+      "family": "Acrocephalidae",
+      "commonName": "Lesser Swamp Warbler",
+      "scientificName": "Acrocephalus gracilirostris",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 47,
+      "order": "Passeriformes",
+      "family": "Acrocephalidae",
+      "commonName": "Eurasian Reed Warbler",
+      "scientificName": "Acrocephalus scirpaceus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 48,
+      "order": "Passeriformes",
+      "family": "Acrocephalidae",
+      "commonName": "African Yellow Warbler",
+      "scientificName": "Iduna natalensis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 49,
+      "order": "Passeriformes",
+      "family": "Ardeidae",
+      "commonName": "Great Egret",
+      "scientificName": "Ardea alba",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 50,
+      "order": "Passeriformes",
+      "family": "Ardeidae",
+      "commonName": "Black-headed Heron",
+      "scientificName": "Ardea melanocephala",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 51,
+      "order": "Passeriformes",
+      "family": "Ardeidae",
+      "commonName": "Little Egret",
+      "scientificName": "Egretta garzetta",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 52,
+      "order": "Passeriformes",
+      "family": "Ardeidae",
+      "commonName": "Black-crowned Night Heron",
+      "scientificName": "Nycticorax nycticorax",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 53,
+      "order": "Passeriformes",
+      "family": "Campephagidae",
+      "commonName": "Black Cuckoo-shrike",
+      "scientificName": "Campephaga flava",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 54,
+      "order": "Passeriformes",
+      "family": "Cisticolidae",
+      "commonName": "Black-throated Apalis",
+      "scientificName": "Apalis jacksoni",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 55,
+      "order": "Passeriformes",
+      "family": "Cisticolidae",
+      "commonName": "Grey-backed Camaroptera",
+      "scientificName": "Camaroptera brevicaudata",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 56,
+      "order": "Passeriformes",
+      "family": "Cisticolidae",
+      "commonName": "Chubb's Cisticola",
+      "scientificName": "Cisticola chubbi",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 57,
+      "order": "Passeriformes",
+      "family": "Cisticolidae",
+      "commonName": "Red-faced Cisticola",
+      "scientificName": "Cisticola erythrops",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 58,
+      "order": "Passeriformes",
+      "family": "Cisticolidae",
+      "commonName": "Winding Cisticola",
+      "scientificName": "Cisticola marginatus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 59,
+      "order": "Passeriformes",
+      "family": "Cisticolidae",
+      "commonName": "Trilling Cisticola",
+      "scientificName": "Cisticola woosnami",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 60,
+      "order": "Passeriformes",
+      "family": "Cisticolidae",
+      "commonName": "Grey-capped Warbler",
+      "scientificName": "Eminia lepida",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 61,
+      "order": "Passeriformes",
+      "family": "Cisticolidae",
+      "commonName": "Buff-bellied Warbler",
+      "scientificName": "Phyllolais pulchella",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 62,
+      "order": "Passeriformes",
+      "family": "Cisticolidae",
+      "commonName": "Tawny-flanked Prinia",
+      "scientificName": "Prinia subflava",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 63,
+      "order": "Passeriformes",
+      "family": "Cisticolidae",
+      "commonName": "White-chinned Prinia",
+      "scientificName": "Schistolais leucopogon",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 64,
+      "order": "Passeriformes",
+      "family": "Corvidae",
+      "commonName": "Pied Crow",
+      "scientificName": "Corvus albus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 65,
+      "order": "Passeriformes",
+      "family": "Dicruridae",
+      "commonName": "Fork-tailed Drongo",
+      "scientificName": "Dicrurus adsimilis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 66,
+      "order": "Passeriformes",
+      "family": "Estrildidae",
+      "commonName": "Common Waxbill",
+      "scientificName": "Estrilda astrild",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 67,
+      "order": "Passeriformes",
+      "family": "Estrildidae",
+      "commonName": "Black-crowned Waxbill",
+      "scientificName": "Estrilda nonnula",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 68,
+      "order": "Passeriformes",
+      "family": "Estrildidae",
+      "commonName": "Crimson-rumped Waxbill",
+      "scientificName": "Estrilda charmosyna",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 69,
+      "order": "Passeriformes",
+      "family": "Estrildidae",
+      "commonName": "Fawn-breasted Waxbill",
+      "scientificName": "Estrilda paludicola",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 70,
+      "order": "Passeriformes",
+      "family": "Estrildidae",
+      "commonName": "White-collared Oliveback",
+      "scientificName": "Nesocharis ansorgei",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 71,
+      "order": "Passeriformes",
+      "family": "Estrildidae",
+      "commonName": "Green-winged Pytilia",
+      "scientificName": "Pytilia melba",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 72,
+      "order": "Passeriformes",
+      "family": "Estrildidae",
+      "commonName": "Black-and-white Mannikin",
+      "scientificName": "Spermestes bicolor",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 73,
+      "order": "Passeriformes",
+      "family": "Estrildidae",
+      "commonName": "Bronze Mannikin",
+      "scientificName": "Spermestes cucullata",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 74,
+      "order": "Passeriformes",
+      "family": "Estrildidae",
+      "commonName": "Red-cheeked Cordon-bleu",
+      "scientificName": "Uraeginthus bengalus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 75,
+      "order": "Passeriformes",
+      "family": "Fringillidae",
+      "commonName": "Streaky-headed Seedeater",
+      "scientificName": "Crithagra frontalis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 76,
+      "order": "Passeriformes",
+      "family": "Fringillidae",
+      "commonName": "Yellow-fronted Canary",
+      "scientificName": "Crithagra mozambica",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 77,
+      "order": "Passeriformes",
+      "family": "Fringillidae",
+      "commonName": "Streaky Seedeater",
+      "scientificName": "Crithagra striolata",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 78,
+      "order": "Passeriformes",
+      "family": "Fringillidae",
+      "commonName": "Brimstone Canary",
+      "scientificName": "Crithagra sulphurata",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 79,
+      "order": "Passeriformes",
+      "family": "Hirundinidae",
+      "commonName": "Lesser Striped Swallow",
+      "scientificName": "Cecropis abyssinica",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 80,
+      "order": "Passeriformes",
+      "family": "Hirundinidae",
+      "commonName": "Red-rumped Swallow",
+      "scientificName": "Cecropis daurica",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 81,
+      "order": "Passeriformes",
+      "family": "Hirundinidae",
+      "commonName": "Angola Swallow",
+      "scientificName": "Hirundo angolensis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 82,
+      "order": "Passeriformes",
+      "family": "Hirundinidae",
+      "commonName": "Barn Swallow",
+      "scientificName": "Hirundo rustica",
+      "status": "LC,I"
+    },
+    {
+      "taxa": "birds",
+      "id": 83,
+      "order": "Passeriformes",
+      "family": "Hirundinidae",
+      "commonName": "Wire-tailed Swallow",
+      "scientificName": "Hirundo smithii",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 84,
+      "order": "Passeriformes",
+      "family": "Hirundinidae",
+      "commonName": "White-headed Saw-wing",
+      "scientificName": "Psalidoprocne albiceps",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 85,
+      "order": "Passeriformes",
+      "family": "Hirundinidae",
+      "commonName": "Rock Martin",
+      "scientificName": "Ptyonoprogne fuligula",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 86,
+      "order": "Passeriformes",
+      "family": "Laniidae",
+      "commonName": "Grey-backed Fiscal",
+      "scientificName": "Lanius excubitoroides",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 87,
+      "order": "Passeriformes",
+      "family": "Laniidae",
+      "commonName": "Common Fiscal",
+      "scientificName": "Lanius humeralis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 88,
+      "order": "Passeriformes",
+      "family": "Laniidae",
+      "commonName": "Red-tailed Shrike",
+      "scientificName": "Lanius isabellinus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 89,
+      "order": "Passeriformes",
+      "family": "Leiothrichidae",
+      "commonName": "Arrow-marked Babbler",
+      "scientificName": "Turdoides jardineii",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 90,
+      "order": "Passeriformes",
+      "family": "Leiothrichidae",
+      "commonName": "Black-lored Babbler",
+      "scientificName": "Turdoides sharpei",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 91,
+      "order": "Passeriformes",
+      "family": "Macrosphenidae",
+      "commonName": "Red-faced Crombec",
+      "scientificName": "Sylvietta whytii",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 92,
+      "order": "Passeriformes",
+      "family": "Malaconotidae",
+      "commonName": "Ethiopian Boubou",
+      "scientificName": "Laniarius aethiopicus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 93,
+      "order": "Passeriformes",
+      "family": "Malaconotidae",
+      "commonName": "Black-headed Gonolek",
+      "scientificName": "Laniarius erythrogaster",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 94,
+      "order": "Passeriformes",
+      "family": "Monarchidae",
+      "commonName": "African Paradise Flycatcher",
+      "scientificName": "Terpsiphone viridis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 95,
+      "order": "Passeriformes",
+      "family": "Motacillidae",
+      "commonName": "Yellow-throated Longclaw",
+      "scientificName": "Macronyx croceus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 96,
+      "order": "Passeriformes",
+      "family": "Motacillidae",
+      "commonName": "African Pied Wagtail",
+      "scientificName": "Motacilla aguimp",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 97,
+      "order": "Passeriformes",
+      "family": "Motacillidae",
+      "commonName": "Cape Wagtail",
+      "scientificName": "Motacilla capensis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 98,
+      "order": "Passeriformes",
+      "family": "Muscicapidae",
+      "commonName": "White-browed Scrub Robin",
+      "scientificName": "Cercotrichas leucophrys",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 99,
+      "order": "Passeriformes",
+      "family": "Muscicapidae",
+      "commonName": "White-browed Robin-Chat",
+      "scientificName": "Cossypha heuglini",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 100,
+      "order": "Passeriformes",
+      "family": "Muscicapidae",
+      "commonName": "Red-capped Robin-Chat",
+      "scientificName": "Cossypha natalensis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 101,
+      "order": "Passeriformes",
+      "family": "Muscicapidae",
+      "commonName": "Blue-mantled Crested Flycatcher",
+      "scientificName": "Trochocercus caerulescens",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 102,
+      "order": "Passeriformes",
+      "family": "Muscicapidae",
+      "commonName": "White-eyed Slaty Flycatcher",
+      "scientificName": "Melanaenornis fischeri",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 103,
+      "order": "Passeriformes",
+      "family": "Muscicapidae",
+      "commonName": "Dusky Flycatcher",
+      "scientificName": "Muscicapa adusta",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 104,
+      "order": "Passeriformes",
+      "family": "Muscicapidae",
+      "commonName": "Swamp Flycatcher",
+      "scientificName": "Muscicapa aquatica",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 105,
+      "order": "Passeriformes",
+      "family": "Muscicapidae",
+      "commonName": "Spotted Flycatcher",
+      "scientificName": "Muscicapa striata",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 106,
+      "order": "Passeriformes",
+      "family": "Muscicapidae",
+      "commonName": "African Stonechat",
+      "scientificName": "Saxicola torquatus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 107,
+      "order": "Passeriformes",
+      "family": "Nectariniidae",
+      "commonName": "Scarlet-chested Sunbird",
+      "scientificName": "Chalcomitra senegalensis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 108,
+      "order": "Passeriformes",
+      "family": "Nectariniidae",
+      "commonName": "Olive-bellied Sunbird",
+      "scientificName": "Cinnyris chloropygius",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 109,
+      "order": "Passeriformes",
+      "family": "Nectariniidae",
+      "commonName": "Copper Sunbird",
+      "scientificName": "Cinnyris cupreus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 110,
+      "order": "Passeriformes",
+      "family": "Nectariniidae",
+      "commonName": "Red-chested Sunbird",
+      "scientificName": "Cinnyris erythrocercus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 111,
+      "order": "Passeriformes",
+      "family": "Nectariniidae",
+      "commonName": "Variable Sunbird",
+      "scientificName": "Cinnyris venustus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 112,
+      "order": "Passeriformes",
+      "family": "Nectariniidae",
+      "commonName": "Blue-headed Sunbird",
+      "scientificName": "Cyanomitra alinae",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 113,
+      "order": "Passeriformes",
+      "family": "Nectariniidae",
+      "commonName": "Green-headed Sunbird",
+      "scientificName": "Cyanomitra verticalis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 114,
+      "order": "Passeriformes",
+      "family": "Nectariniidae",
+      "commonName": "Collared Sunbird",
+      "scientificName": "Hedydipna collaris",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 115,
+      "order": "Passeriformes",
+      "family": "Nectariniidae",
+      "commonName": "Bronze Sunbird",
+      "scientificName": "Nectarinia kilimensis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 116,
+      "order": "Passeriformes",
+      "family": "Passeridae",
+      "commonName": "Grey-headed Sparrow",
+      "scientificName": "Passer griseus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 117,
+      "order": "Passeriformes",
+      "family": "Phylloscopidae",
+      "commonName": "Willow Warbler",
+      "scientificName": "Phylloscopus trochilus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 118,
+      "order": "Passeriformes",
+      "family": "Ploceidae",
+      "commonName": "Thick-billed Weaver",
+      "scientificName": "Amblyospiza albifrons",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 119,
+      "order": "Passeriformes",
+      "family": "Ploceidae",
+      "commonName": "Parasitic Weaver",
+      "scientificName": "Anomalospiza imberbis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 120,
+      "order": "Passeriformes",
+      "family": "Ploceidae",
+      "commonName": "Fan-tailed Widowbird",
+      "scientificName": "Euplectes axillaris",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 121,
+      "order": "Passeriformes",
+      "family": "Ploceidae",
+      "commonName": "Baglafecht Weaver",
+      "scientificName": "Ploceus baglafecht",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 122,
+      "order": "Passeriformes",
+      "family": "Ploceidae",
+      "commonName": "Village Weaver",
+      "scientificName": "Ploceus cucullatus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 123,
+      "order": "Passeriformes",
+      "family": "Ploceidae",
+      "commonName": "Lesser Masked Weaver",
+      "scientificName": "Ploceus intermedius",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 124,
+      "order": "Passeriformes",
+      "family": "Ploceidae",
+      "commonName": "Black-headed Weaver",
+      "scientificName": "Ploceus melanocephalus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 125,
+      "order": "Passeriformes",
+      "family": "Ploceidae",
+      "commonName": "Black-necked Weaver",
+      "scientificName": "Ploceus nigricollis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 126,
+      "order": "Passeriformes",
+      "family": "Ploceidae",
+      "commonName": "Spectacled Weaver",
+      "scientificName": "Ploceus ocularis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 127,
+      "order": "Passeriformes",
+      "family": "Ploceidae",
+      "commonName": "Slender-billed Weaver",
+      "scientificName": "Ploceus pelzelni",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 128,
+      "order": "Passeriformes",
+      "family": "Ploceidae",
+      "commonName": "Holub's Golden Weaver",
+      "scientificName": "Ploceus xantops",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 129,
+      "order": "Passeriformes",
+      "family": "Ploceidae",
+      "commonName": "Red-billed Quelea",
+      "scientificName": "Quelea quelea",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 130,
+      "order": "Passeriformes",
+      "family": "Pycnonotidae",
+      "commonName": "Yellow-throated Greenbul",
+      "scientificName": "Atimastillas flavigula",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 131,
+      "order": "Passeriformes",
+      "family": "Pycnonotidae",
+      "commonName": "Common Bulbul",
+      "scientificName": "Pycnonotus barbatus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 132,
+      "order": "Passeriformes",
+      "family": "Sturnidae",
+      "commonName": "Purple-headed Starling",
+      "scientificName": "Lamprotornis purpuroptera",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 133,
+      "order": "Passeriformes",
+      "family": "Turdidae",
+      "commonName": "African Thrush",
+      "scientificName": "Turdus pelios",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 134,
+      "order": "Passeriformes",
+      "family": "Viduidae",
+      "commonName": "Pin-tailed Whydah",
+      "scientificName": "Vidua macroura",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 135,
+      "order": "Passeriformes",
+      "family": "Zosteropidae",
+      "commonName": "Stuhlmann's White-eye",
+      "scientificName": "Zosterops stuhlmanni",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 136,
+      "order": "Pelecaniformes",
+      "family": "Ardeidae",
+      "commonName": "Grey Heron",
+      "scientificName": "Ardea cinerea",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 137,
+      "order": "Pelecaniformes",
+      "family": "Ardeidae",
+      "commonName": "Intermediate Egret",
+      "scientificName": "Ardea intermedia",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 138,
+      "order": "Pelecaniformes",
+      "family": "Ardeidae",
+      "commonName": "Cattle Egret",
+      "scientificName": "Bubulcus ibis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 139,
+      "order": "Pelecaniformes",
+      "family": "Ardeidae",
+      "commonName": "Striated Heron",
+      "scientificName": "Butorides striata",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 140,
+      "order": "Pelecaniformes",
+      "family": "Scopidae",
+      "commonName": "Hamerkop",
+      "scientificName": "Scopus umbretta",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 141,
+      "order": "Pelecaniformes",
+      "family": "Threskiornithidae",
+      "commonName": "Hadada Ibis",
+      "scientificName": "Bostrychia hagedash",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 142,
+      "order": "Pelecaniformes",
+      "family": "Threskiornithidae",
+      "commonName": "African Sacred Ibis",
+      "scientificName": "Threskiornis aethiopicus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 143,
+      "order": "Piciformes",
+      "family": "Indicatoridae",
+      "commonName": "Scaly-throated Honeyguide",
+      "scientificName": "Indicator variegatus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 144,
+      "order": "Piciformes",
+      "family": "Lybiidae",
+      "commonName": "Double-toothed Barbet",
+      "scientificName": "Pogonornis bidentatus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 145,
+      "order": "Piciformes",
+      "family": "Lybiidae",
+      "commonName": "Spot-flanked Barbet",
+      "scientificName": "Tricholaema lacrymosa",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 146,
+      "order": "Piciformes",
+      "family": "Picidae",
+      "commonName": "Cardinal Woodpecker",
+      "scientificName": "Dendropicos fuscescens",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 147,
+      "order": "Piciformes",
+      "family": "Picidae",
+      "commonName": "Grey Woodpecker",
+      "scientificName": "Dendropicos goerta",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 148,
+      "order": "Podicipediformes",
+      "family": "Podicipedae",
+      "commonName": "Little Grebe",
+      "scientificName": "Tachybaptus ruficollis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 149,
+      "order": "Psittaciformes",
+      "family": "Psittacidae",
+      "commonName": "Meyer's Parrot",
+      "scientificName": "Poicephalus meyeri",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 150,
+      "order": "Strigiformes",
+      "family": "Strigidae",
+      "commonName": "Spotted Eagle-Owl",
+      "scientificName": "Bubo africanus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 151,
+      "order": "Strigiformes",
+      "family": "Strigidae",
+      "commonName": "African Wood Owl",
+      "scientificName": "Strix woodfordii",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 152,
+      "order": "Suliformes",
+      "family": "Phalacrocoracidae",
+      "commonName": "Long-tailed Cormorant",
+      "scientificName": "Microcarbo africanus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 153,
+      "order": "Suliformes",
+      "family": "Phalacrocoracidae",
+      "commonName": "Great Cormorant",
+      "scientificName": "Phalacrocorax carbo",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 154,
+      "order": "Trogoniformes",
+      "family": "Trogonidae",
+      "commonName": "Narina Trogon",
+      "scientificName": "Apaloderma narina",
+      "status": "LC,I"
+    },
+    {
+      "taxa": "birds",
+      "id": 155,
+      "order": "Passeriformes",
+      "family": "Ploceidae",
+      "commonName": "Vieillot's Black Weaver",
+      "scientificName": "Ploceus nigerrimus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 156,
+      "order": "Passeriformes",
+      "family": "Estrildidae",
+      "commonName": "Bronze Mannikin (2)",
+      "scientificName": "Spermestes cucullata",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 157,
+      "order": "Galliformes",
+      "family": "Numididae",
+      "commonName": "Helmeted Guinea Fowl",
+      "scientificName": "Numida meleagris",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 158,
+      "order": "Galliformes",
+      "family": "Phasianidae",
+      "commonName": "Indian Peafowl",
+      "scientificName": "Pavo cristatus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 159,
+      "order": "Columbiformes",
+      "family": "Columbidae",
+      "commonName": "Speckled Pigeon",
+      "scientificName": "Columba guinea",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 160,
+      "order": "Columbiformes",
+      "family": "Columbidae",
+      "commonName": "Tambourine Dove",
+      "scientificName": "Turtur tympanistria",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 161,
+      "order": "Columbiformes",
+      "family": "Columbidae",
+      "commonName": "African Green-Pigeon",
+      "scientificName": "Treron calvus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 162,
+      "order": "Musophagiformes",
+      "family": "Musophagidae",
+      "commonName": "Eastern Plantain-eater",
+      "scientificName": "Crinifer zonurus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 163,
+      "order": "Musophagiformes",
+      "family": "Musophagidae",
+      "commonName": "Purple-crested Turaco",
+      "scientificName": "Gallirex porphyreolophus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 164,
+      "order": "Cuculiformes",
+      "family": "Cuculidae",
+      "commonName": "Great Spotted Cuckoo",
+      "scientificName": "Clamator glandarius",
+      "status": "LC,I"
+    },
+    {
+      "taxa": "birds",
+      "id": 165,
+      "order": "Cuculiformes",
+      "family": "Cuculidae",
+      "commonName": "Levaillant's Cuckoo",
+      "scientificName": "Clamator levaillantii",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 166,
+      "order": "Cuculiformes",
+      "family": "Cuculidae",
+      "commonName": "Pied Cuckoo",
+      "scientificName": "Clamator jacobinus",
+      "status": "LC,I"
+    },
+    {
+      "taxa": "birds",
+      "id": 167,
+      "order": "Caprimulgiformes",
+      "family": "Caprimulgidae",
+      "commonName": "Square-tailed Nightjar",
+      "scientificName": "Caprimulgus fossii",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 168,
+      "order": "Apodiformes",
+      "family": "Apodidae",
+      "commonName": "Little Swift",
+      "scientificName": "Apus affinis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 169,
+      "order": "Apodiformes",
+      "family": "Apodidae",
+      "commonName": "African Palm Swift",
+      "scientificName": "Cypsiurus parvus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 170,
+      "order": "Charadriiformes",
+      "family": "Charadriidae",
+      "commonName": "Three-banded Plover",
+      "scientificName": "Charadrius tricollaris",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 171,
+      "order": "Charadriiformes",
+      "family": "Charadriidae",
+      "commonName": "Long-toed Lapwing",
+      "scientificName": "Vanellus crassirostris",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 172,
+      "order": "Charadriiformes",
+      "family": "Charadriidae",
+      "commonName": "Wattled Lapwing",
+      "scientificName": "Vanellus senegallus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 173,
+      "order": "Charadriiformes",
+      "family": "Jacanidae",
+      "commonName": "African Jacana",
+      "scientificName": "Actophilornis africanus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 174,
+      "order": "Charadriiformes",
+      "family": "Scolopacidae",
+      "commonName": "Common Sandpiper",
+      "scientificName": "Actitis hypoleucos",
+      "status": "LC,P"
+    },
+    {
+      "taxa": "birds",
+      "id": 175,
+      "order": "Charadriiformes",
+      "family": "Scolopacidae",
+      "commonName": "Marsh Sandpiper",
+      "scientificName": "Tringa stagnatilis",
+      "status": "LC,P"
+    },
+    {
+      "taxa": "birds",
+      "id": 176,
+      "order": "Ciconiiformes",
+      "family": "Ciconiidae",
+      "commonName": "White Stork",
+      "scientificName": "Ciconia ciconia",
+      "status": "LC,P"
+    },
+    {
+      "taxa": "birds",
+      "id": 177,
+      "order": "Ciconiiformes",
+      "family": "Ciconiidae",
+      "commonName": "Marabou Stork",
+      "scientificName": "Leptoptilos crumenifer",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 178,
+      "order": "Pelecaniformes",
+      "family": "Threskiornithidae",
+      "commonName": "African Spoonbill",
+      "scientificName": "Platalea alba",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 179,
+      "order": "Pelecaniformes",
+      "family": "Ardeidae",
+      "commonName": "Little Bittern",
+      "scientificName": "Ixobrychus minutus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 180,
+      "order": "Pelecaniformes",
+      "family": "Ardeidae",
+      "commonName": "Rufous-bellied Heron",
+      "scientificName": "Ardeola rufiventris",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 181,
+      "order": "Pelecaniformes",
+      "family": "Ardeidae",
+      "commonName": "Western Cattle Egret",
+      "scientificName": "Ardea ibis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 182,
+      "order": "Pelecaniformes",
+      "family": "Ardeidae",
+      "commonName": "Yellow-billed Egret",
+      "scientificName": "Ardea brachyrhyncha",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 183,
+      "order": "Pelecaniformes",
+      "family": "Pelecanidae",
+      "commonName": "Pink-backed Pelican",
+      "scientificName": "Pelecanus rufescens",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 184,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "Black-winged Kite",
+      "scientificName": "Elanus caeruleus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 185,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "European Honey-buzzard",
+      "scientificName": "Pernis apivorus",
+      "status": "LC,P"
+    },
+    {
+      "taxa": "birds",
+      "id": 186,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "Western Banded Snake-Eagle",
+      "scientificName": "Circaetus cinerascens",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 187,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "Brown Snake Eagle",
+      "scientificName": "Circaetus cinereus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 188,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "Booted Eagle",
+      "scientificName": "Hieraaetus pennatus",
+      "status": "LC,I"
+    },
+    {
+      "taxa": "birds",
+      "id": 189,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "Tawny Eagle",
+      "scientificName": "Aquila rapax",
+      "status": "VU,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 190,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "Bat Hawk",
+      "scientificName": "Macheiramphus alcinus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 191,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "Gabar Goshawk",
+      "scientificName": "Micronisus gabar",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 192,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "Lizard Buzzard",
+      "scientificName": "Kaupifalco monogrammicus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 193,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "Little Sparrowhawk",
+      "scientificName": "Accipiter minullus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 194,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "Common Buzzard",
+      "scientificName": "Buteo buteo",
+      "status": "LC,P"
+    },
+    {
+      "taxa": "birds",
+      "id": 195,
+      "order": "Accipitriformes",
+      "family": "Accipitridae",
+      "commonName": "Hooded Vulture",
+      "scientificName": "Necrosyrtes monachus",
+      "status": "CR,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 196,
+      "order": "Strigiformes",
+      "family": "Strigidae",
+      "commonName": "Pearl-spotted Owlet",
+      "scientificName": "Glaucidium perlatum",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 197,
+      "order": "Coraciiformes",
+      "family": "Coraciidae",
+      "commonName": "Lilac-breasted Roller",
+      "scientificName": "Coracias caudatus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 198,
+      "order": "Coraciiformes",
+      "family": "Coraciidae",
+      "commonName": "Broad-billed Roller",
+      "scientificName": "Eurystomus glaucurus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 199,
+      "order": "Piciformes",
+      "family": "Lybiidae",
+      "commonName": "Yellow-rumped Tinkerbird",
+      "scientificName": "Pogoniulus bilineatus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 200,
+      "order": "Piciformes",
+      "family": "Indicatoridae",
+      "commonName": "Brown-backed Honeybird",
+      "scientificName": "Prodotiscus regulus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 201,
+      "order": "Piciformes",
+      "family": "Indicatoridae",
+      "commonName": "Lesser Honeyguide",
+      "scientificName": "Indicator minor",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 202,
+      "order": "Piciformes",
+      "family": "Indicatoridae",
+      "commonName": "Greater Honeyguide",
+      "scientificName": "Indicator indicator",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 203,
+      "order": "Piciformes",
+      "family": "Picidae",
+      "commonName": "Green-backed Woodpecker",
+      "scientificName": "Campethera maculosa",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 204,
+      "order": "Piciformes",
+      "family": "Picidae",
+      "commonName": "Nubian Woodpecker",
+      "scientificName": "Campethera nubica",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 205,
+      "order": "Piciformes",
+      "family": "Picidae",
+      "commonName": "Golden-tailed Woodpecker",
+      "scientificName": "Campethera abingoni",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 206,
+      "order": "Falconiformes",
+      "family": "Falconidae",
+      "commonName": "Eurasian Kestrel",
+      "scientificName": "Falco tinnunculus",
+      "status": "LC,P"
+    },
+    {
+      "taxa": "birds",
+      "id": 207,
+      "order": "Falconiformes",
+      "family": "Falconidae",
+      "commonName": "Grey Kestrel",
+      "scientificName": "Falco ardosiaceus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 208,
+      "order": "Falconiformes",
+      "family": "Falconidae",
+      "commonName": "Red-necked Falcon",
+      "scientificName": "Falco chicquera",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 209,
+      "order": "Falconiformes",
+      "family": "Falconidae",
+      "commonName": "Peregrine Falcon",
+      "scientificName": "Falco peregrinus",
+      "status": "LC,P"
+    },
+    {
+      "taxa": "birds",
+      "id": 210,
+      "order": "Passeriformes",
+      "family": "Oriolidae",
+      "commonName": "African Black-headed Oriole",
+      "scientificName": "Oriolus larvatus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 211,
+      "order": "Passeriformes",
+      "family": "Platysteiridae",
+      "commonName": "Brown-throated Wattle-eye",
+      "scientificName": "Platysteira cyanea",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 212,
+      "order": "Passeriformes",
+      "family": "Platysteiridae",
+      "commonName": "Chinspot Batis",
+      "scientificName": "Batis molitor",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 213,
+      "order": "Passeriformes",
+      "family": "Malaconotidae",
+      "commonName": "Northern Puffback",
+      "scientificName": "Dryoscopus cubla",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 214,
+      "order": "Passeriformes",
+      "family": "Malaconotidae",
+      "commonName": "Black-crowned Tchagra",
+      "scientificName": "Tchagra australis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 215,
+      "order": "Passeriformes",
+      "family": "Malaconotidae",
+      "commonName": "Tropical Boubou",
+      "scientificName": "Laniarius major",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 216,
+      "order": "Passeriformes",
+      "family": "Malaconotidae",
+      "commonName": "Grey-headed Bushshrike",
+      "scientificName": "Malaconotus blanchoti",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 217,
+      "order": "Passeriformes",
+      "family": "Malaconotidae",
+      "commonName": "Brubru",
+      "scientificName": "Nilaus afer",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 218,
+      "order": "Passeriformes",
+      "family": "Laniidae",
+      "commonName": "Red-backed Shrike",
+      "scientificName": "Lanius collurio",
+      "status": "LC,P"
+    },
+    {
+      "taxa": "birds",
+      "id": 219,
+      "order": "Passeriformes",
+      "family": "Laniidae",
+      "commonName": "Mackinnon's Shrike",
+      "scientificName": "Lanius mackinnoni",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 220,
+      "order": "Passeriformes",
+      "family": "Cisticolidae",
+      "commonName": "Green-backed Camaroptera",
+      "scientificName": "Camaroptera brachyura",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 221,
+      "order": "Passeriformes",
+      "family": "Cisticolidae",
+      "commonName": "Yellow-breasted Apalis",
+      "scientificName": "Apalis flavida",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 222,
+      "order": "Passeriformes",
+      "family": "Cisticolidae",
+      "commonName": "Singing Cisticola",
+      "scientificName": "Cisticola cantans",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 223,
+      "order": "Passeriformes",
+      "family": "Cisticolidae",
+      "commonName": "Siffling Cisticola",
+      "scientificName": "Cisticola brachypterus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 224,
+      "order": "Passeriformes",
+      "family": "Acrocephalidae",
+      "commonName": "Icterine Warbler",
+      "scientificName": "Hippolais icterina",
+      "status": "LC,P"
+    },
+    {
+      "taxa": "birds",
+      "id": 225,
+      "order": "Passeriformes",
+      "family": "Acrocephalidae",
+      "commonName": "Sedge Warbler",
+      "scientificName": "Acrocephalus schoenobaenus",
+      "status": "LC,P"
+    },
+    {
+      "taxa": "birds",
+      "id": 226,
+      "order": "Passeriformes",
+      "family": "Acrocephalidae",
+      "commonName": "Great Swamp Warbler",
+      "scientificName": "Acrocephalus rufescens",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 227,
+      "order": "Passeriformes",
+      "family": "Acrocephalidae",
+      "commonName": "Great Reed Warbler",
+      "scientificName": "Acrocephalus arundinaceus",
+      "status": "LC,P"
+    },
+    {
+      "taxa": "birds",
+      "id": 228,
+      "order": "Passeriformes",
+      "family": "Hirundinidae",
+      "commonName": "Banded Martin",
+      "scientificName": "Riparia cincta",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 229,
+      "order": "Passeriformes",
+      "family": "Hirundinidae",
+      "commonName": "African Red-rumped Swallow",
+      "scientificName": "Cecropis melanocrissus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 230,
+      "order": "Passeriformes",
+      "family": "Hirundinidae",
+      "commonName": "Mosque Swallow",
+      "scientificName": "Cecropis senegalensis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 231,
+      "order": "Passeriformes",
+      "family": "Hirundinidae",
+      "commonName": "European/African-rumped Swallow",
+      "scientificName": "Cecropis rufula",
+      "status": "LC,P"
+    },
+    {
+      "taxa": "birds",
+      "id": 232,
+      "order": "Passeriformes",
+      "family": "Sturnidae",
+      "commonName": "Violet-backed Starling",
+      "scientificName": "Cinnyricinclus leucogaster",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 233,
+      "order": "Passeriformes",
+      "family": "Muscicapidae",
+      "commonName": "Pale Flycatcher",
+      "scientificName": "Agricola pallidus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 234,
+      "order": "Passeriformes",
+      "family": "Muscicapidae",
+      "commonName": "Southern Black-Flycatcher",
+      "scientificName": "Melaenornis pammelaina",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 235,
+      "order": "Passeriformes",
+      "family": "Muscicapidae",
+      "commonName": "Brown-backed Scrub-Robin",
+      "scientificName": "Cercotrichas hartlaubi",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 236,
+      "order": "Passeriformes",
+      "family": "Muscicapidae",
+      "commonName": "Arnot's Chat",
+      "scientificName": "Myrmecocichla arnotti",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 237,
+      "order": "Passeriformes",
+      "family": "Muscicapidae",
+      "commonName": "Familiar Chat",
+      "scientificName": "Oenanthe familiaris",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 238,
+      "order": "Passeriformes",
+      "family": "Nectariniidae",
+      "commonName": "Marico Sunbird",
+      "scientificName": "Cinnyris mariquensis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 239,
+      "order": "Passeriformes",
+      "family": "Ploceidae",
+      "commonName": "Red-headed Weaver",
+      "scientificName": "Anaplectes rubriceps",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 240,
+      "order": "Passeriformes",
+      "family": "Ploceidae",
+      "commonName": "Southern Red Bishop",
+      "scientificName": "Euplectes orix",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 241,
+      "order": "Passeriformes",
+      "family": "Ploceidae",
+      "commonName": "Yellow Bishop",
+      "scientificName": "Euplectes capensis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 242,
+      "order": "Passeriformes",
+      "family": "Estrildidae",
+      "commonName": "Black-faced Waxbill",
+      "scientificName": "Brunhilda erythronotos",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 243,
+      "order": "Passeriformes",
+      "family": "Estrildidae",
+      "commonName": "Red-billed Firefinch",
+      "scientificName": "Lagonosticta senegala",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 244,
+      "order": "Passeriformes",
+      "family": "Estrildidae",
+      "commonName": "African Firefinch",
+      "scientificName": "Lagonosticta rubricata",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 245,
+      "order": "Passeriformes",
+      "family": "Viduidae",
+      "commonName": "Village Indigobird",
+      "scientificName": "Vidua chalybeata",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 246,
+      "order": "Passeriformes",
+      "family": "Motacillidae",
+      "commonName": "Western Yellow Wagtail",
+      "scientificName": "Motacilla flava",
+      "status": "LC,P"
+    },
+    {
+      "taxa": "birds",
+      "id": 247,
+      "order": "Passeriformes",
+      "family": "Motacillidae",
+      "commonName": "African Pipit",
+      "scientificName": "Anthus cinnamomeus",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 248,
+      "order": "Passeriformes",
+      "family": "Motacillidae",
+      "commonName": "Plain-backed Pipit",
+      "scientificName": "Anthus leucophrys",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 249,
+      "order": "Passeriformes",
+      "family": "Fringillidae",
+      "commonName": "Western Citril",
+      "scientificName": "Crithagra frontalis",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 250,
+      "order": "Passeriformes",
+      "family": "Fringillidae",
+      "commonName": "Thick-billed Seedeater",
+      "scientificName": "Crithagra burtoni",
+      "status": "LC,R"
+    },
+    {
+      "taxa": "birds",
+      "id": 251,
+      "order": "Passeriformes",
+      "family": "Emberizidae",
+      "commonName": "Golden-breasted Bunting",
+      "scientificName": "Emberiza flaviventris",
+      "status": "LC,R"
+    }
+  ]
+}
