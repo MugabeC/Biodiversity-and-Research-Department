@@ -12,7 +12,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <NavBar />
-        <main style={{ paddingTop: '68px' }}>{children}</main>
+        <main style={{
+          paddingTop: '68px',
+          minHeight: '100vh',
+          background: 'linear-gradient(135deg, #e8f5e9 0%, #F7F5EF 30%, #f0f7f0 60%, #e8f2eb 100%)',
+        }}>{children}</main>
       </body>
     </html>
   );

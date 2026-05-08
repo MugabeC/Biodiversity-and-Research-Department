@@ -1,5 +1,10 @@
 import Image from 'next/image';
-import BiodiversityCharts from './components/BiodiversityCharts';
+import dynamic from 'next/dynamic';
+
+const BiodiversityCharts    = dynamic(() => import('./components/BiodiversityCharts'),    { ssr: false });
+const TaxaDistributionChart = dynamic(() => import('./components/TaxaDistributionChart'), { ssr: false });
+const StudentVisitsChart    = dynamic(() => import('./components/StudentVisitsChart'),    { ssr: false });
+const WaterQualityChart     = dynamic(() => import('./components/WaterQualityChart'),     { ssr: false });
 
 const TAXA_CARDS = [
   { taxa: 'Birds',                 count: 251, icon: '/images/icons/bird-icon.png',       badge: '▲ +202%', stable: false },
@@ -13,18 +18,13 @@ const TAXA_CARDS = [
 
 export default function HomePage() {
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #e8f5e9 0%, #F7F5EF 30%, #f0f7f0 60%, #e8f2eb 100%)',
-        paddingBottom: '5rem',
-      }}
-    >
-      {/* ── Title section — no dark band ── */}
+    <div style={{ paddingBottom: '5rem' }}>
+
+      {/* ── Title — ComforterBrush via inline style, no Tailwind ── */}
       <section style={{ textAlign: 'center', padding: '3rem 2rem 0' }}>
         <h1
-          className="font-comforter"
           style={{
+            fontFamily: 'ComforterBrush, cursive',
             fontSize: 'clamp(36px, 5vw, 64px)',
             color: '#F5A623',
             lineHeight: 1.15,
@@ -48,70 +48,30 @@ export default function HomePage() {
 
       <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem' }}>
 
-        {/* ── 870 hero — 24px gap from title ── */}
-        <section
-          style={{
-            textAlign: 'center',
-            marginTop: '24px',
-            marginBottom: '32px',
-          }}
-        >
-          <p
-            style={{
-              fontFamily: 'Poppins, sans-serif',
-              fontWeight: 900,
-              fontSize: '96px',
-              color: '#0C6038',
-              lineHeight: 1,
-              margin: 0,
-            }}
-          >
+        {/* ── 870 hero ── */}
+        <section style={{ textAlign: 'center', marginTop: '24px', marginBottom: '32px' }}>
+          <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 900, fontSize: '96px', color: '#0C6038', lineHeight: 1, margin: 0 }}>
             870
           </p>
-          <p
-            style={{
-              fontFamily: 'Poppins, sans-serif',
-              fontWeight: 600,
-              fontSize: '20px',
-              color: '#4A5E4F',
-              margin: '0.5rem 0 0.25rem',
-            }}
-          >
+          <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '20px', color: '#4A5E4F', margin: '0.5rem 0 0.25rem' }}>
             Total Species Recorded
           </p>
-          <p
-            style={{
-              fontFamily: 'Poppins, sans-serif',
-              fontWeight: 400,
-              fontSize: '15px',
-              color: '#4A5E4F',
-              margin: 0,
-              opacity: 0.7,
-            }}
-          >
+          <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 400, fontSize: '15px', color: '#4A5E4F', margin: 0, opacity: 0.7 }}>
             across 7 taxa groups · Nyandungu Eco-Park · 2025 Biodiversity Survey
           </p>
         </section>
 
-        {/* ── Taxa cards — glassmorphism + floating icons ── */}
+        {/* ── Taxa cards — 4 cols desktop, 2 tablet, 1 mobile ── */}
         <section style={{ marginBottom: '40px' }}>
-          <div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-            style={{
-              position: 'relative',
-              overflow: 'visible',
-              paddingTop: '36px',
-              columnGap: '1.5rem',
-              rowGap: '3rem',
-            }}
-          >
+          <div className="taxa-grid">
             {TAXA_CARDS.map((card) => (
               <div
                 key={card.taxa}
                 className="taxa-card"
                 style={{
                   position: 'relative',
-                  background: 'rgba(255,255,255,0.45)',
+                  overflow: 'visible',
+                  background: 'rgba(255,255,255,0.5)',
                   backdropFilter: 'blur(16px)',
                   WebkitBackdropFilter: 'blur(16px)',
                   border: '1px solid rgba(255,255,255,0.6)',
@@ -124,7 +84,7 @@ export default function HomePage() {
                 }}
               >
                 {/* Floating icon — overflows card top edge */}
-                <div style={{ position: 'absolute', top: '-28px', left: '24px' }}>
+                <div style={{ position: 'absolute', top: '-28px', left: '20px' }}>
                   <Image
                     src={card.icon}
                     alt={card.taxa}
@@ -157,29 +117,12 @@ export default function HomePage() {
                 </div>
 
                 {/* Taxa name */}
-                <p
-                  style={{
-                    fontFamily: 'Poppins, sans-serif',
-                    fontWeight: 600,
-                    fontSize: '14px',
-                    color: '#4A5E4F',
-                    margin: 0,
-                  }}
-                >
+                <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px', color: '#4A5E4F', margin: 0 }}>
                   {card.taxa}
                 </p>
 
                 {/* Count */}
-                <p
-                  style={{
-                    fontFamily: 'Poppins, sans-serif',
-                    fontWeight: 700,
-                    fontSize: '42px',
-                    color: '#0C6038',
-                    margin: 0,
-                    lineHeight: 1,
-                  }}
-                >
+                <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '42px', color: '#0C6038', margin: 0, lineHeight: 1 }}>
                   {card.count}
                 </p>
               </div>
@@ -187,8 +130,14 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── Charts — 40px gap from cards ── */}
-        <BiodiversityCharts />
+        {/* ── Charts — 2×2 grid ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <BiodiversityCharts />
+          <TaxaDistributionChart />
+          <StudentVisitsChart />
+          <WaterQualityChart />
+        </div>
+
       </div>
     </div>
   );

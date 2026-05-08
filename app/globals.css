@@ -41,6 +41,23 @@ body {
   }
 }
 
+/* Taxa cards responsive grid — 4 cols desktop, 2 tablet, 1 mobile */
+.taxa-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 1.5rem;
+  row-gap: 3rem;
+  position: relative;
+  overflow: visible;
+  padding-top: 36px;
+}
+@media (max-width: 768px) {
+  .taxa-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .taxa-grid { grid-template-columns: 1fr; }
+}
+
 /* Glassmorphism taxa card hover */
 .taxa-card {
   transition: transform 0.2s ease, box-shadow 0.2s ease, backdrop-filter 0.2s ease;

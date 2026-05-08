@@ -83,10 +83,10 @@ export default function NavBar() {
             style={{
               fontFamily: 'Poppins, sans-serif',
               fontWeight: 600,
-              fontSize: '15px',
+              fontSize: '13px',
               color: '#0C6038',
               lineHeight: 1.3,
-              maxWidth: '200px',
+              whiteSpace: 'nowrap',
             }}
           >
             Biodiversity and Research Department
