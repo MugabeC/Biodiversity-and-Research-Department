@@ -160,7 +160,9 @@ function Pill({ children, variant = 'green' }: { children: React.ReactNode; vari
   );
 }
 
-function ExternalLinkBtn({ href, label }: { href: string; label: string }) {
+function ExternalLinkBtn({ href, label, bg, textColor = '#ffffff' }: {
+  href: string; label: string; bg: string; textColor?: string;
+}) {
   return (
     <a
       href={href}
@@ -168,16 +170,15 @@ function ExternalLinkBtn({ href, label }: { href: string; label: string }) {
       rel="noopener noreferrer"
       style={{
         display: 'inline-block',
-        padding: '9px 22px',
+        padding: '10px 20px',
         borderRadius: '9999px',
-        border: '1.5px solid #E0E8E2',
-        background: 'rgba(255,255,255,0.8)',
-        color: '#0C6038',
+        background: bg,
+        color: textColor,
         fontFamily: 'Poppins, sans-serif',
-        fontWeight: 600,
+        fontWeight: 500,
         fontSize: '14px',
         textDecoration: 'none',
-        transition: 'all 0.2s ease',
+        whiteSpace: 'nowrap',
       }}
     >
       {label} ↗
@@ -257,8 +258,8 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
     ? ecologicalRole
     : species.feedingGroup ? [species.feedingGroup] : [];
 
-  const links       = species.links || {};
-  const hasAnyLink  = !!(links.inaturalist || links.iucn || links.ebird || links.powo || links.fishbase);
+  const sciNamePlus = scientificName.replace(/ /g, '+');
+  const sciNameDash = scientificName.replace(/ /g, '-');
 
   const waText = encodeURIComponent(
     `${commonName}${scientificName && scientificName !== commonName ? ` (${scientificName})` : ''} — spotted at Nyandungu Eco-Park, Rwanda 🌿`
@@ -474,19 +475,47 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
 
-            {links.inaturalist && <ExternalLinkBtn href={links.inaturalist} label="iNaturalist" />}
-            {links.iucn        && <ExternalLinkBtn href={links.iucn}        label="IUCN Red List" />}
-            {links.ebird       && species.taxa === 'birds'  && <ExternalLinkBtn href={links.ebird}    label="eBird" />}
-            {links.powo        && species.taxa === 'plants' && <ExternalLinkBtn href={links.powo}     label="POWO" />}
-            {links.fishbase    && species.taxa === 'fish'   && <ExternalLinkBtn href={links.fishbase} label="FishBase" />}
+            {/* All species */}
+            {scientificName && (
+              <>
+                <ExternalLinkBtn
+                  href={`https://www.inaturalist.org/taxa/search?q=${sciNamePlus}`}
+                  label="iNaturalist"
+                  bg="#74ac00"
+                />
+                <ExternalLinkBtn
+                  href={`https://www.iucnredlist.org/search?query=${sciNamePlus}`}
+                  label="IUCN Red List"
+                  bg="#e8551a"
+                />
+              </>
+            )}
 
-            {!hasAnyLink && (
-              <p style={{
-                fontFamily: 'Poppins, sans-serif', fontSize: '14px', color: '#9E9E9E',
-                margin: '0', width: '100%',
-              }}>
-                External links not yet added for this species.
-              </p>
+            {/* Birds only */}
+            {species.taxa === 'birds' && scientificName && (
+              <ExternalLinkBtn
+                href={`https://ebird.org/species/search?q=${sciNamePlus}`}
+                label="eBird"
+                bg="#0a6a8c"
+              />
+            )}
+
+            {/* Plants only */}
+            {species.taxa === 'plants' && scientificName && (
+              <ExternalLinkBtn
+                href={`https://powo.science.kew.org/taxon/search?q=${sciNamePlus}`}
+                label="POWO"
+                bg="#00695c"
+              />
+            )}
+
+            {/* Fish only */}
+            {species.taxa === 'fish' && scientificName && (
+              <ExternalLinkBtn
+                href={`https://www.fishbase.se/summary/${sciNameDash}`}
+                label="FishBase"
+                bg="#1565c0"
+              />
             )}
 
             {/* WhatsApp share — always visible */}
