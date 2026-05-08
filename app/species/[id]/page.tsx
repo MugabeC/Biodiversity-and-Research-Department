@@ -258,13 +258,26 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
     ? ecologicalRole
     : species.feedingGroup ? [species.feedingGroup] : [];
 
-  const sciNamePlus = scientificName.replace(/ /g, '+');
-  const sciNameDash = scientificName.replace(/ /g, '-');
+  const sciNamePlus  = scientificName.replace(/ /g, '+');
+  const sciNameUnderscore = scientificName.replace(/ /g, '_');
 
-  const waText = encodeURIComponent(
-    `${commonName}${scientificName && scientificName !== commonName ? ` (${scientificName})` : ''} — spotted at Nyandungu Eco-Park, Rwanda 🌿`
-  );
-  const waUrl = `https://wa.me/+250788533002?text=${waText}`;
+  const waMessage = [
+    '*🌿 Species Spotted at Nyandungu Eco-Park*',
+    `*Common Name:* ${commonName}`,
+    `*Scientific Name:* _${scientificName || '—'}_`,
+    `*Local Name (Kinyarwanda):* ${kinyarwanda || 'Not yet recorded'}`,
+    `*Taxa Group:* ${TAXA_LABELS[species.taxa] ?? species.taxa}`,
+    `*Order:* ${species.order || '—'}`,
+    `*Family:* ${species.family || '—'}`,
+    `*IUCN Status:* ${iucn}`,
+    `*Endemism:* ${endemism.headline}${endemism.sub ? ` — ${endemism.sub}` : ''}`,
+    `*Habitat:* ${habitatTypes.length > 0 ? habitatTypes.join(', ') : 'Data not yet available'}`,
+    `*Ecological Role:* ${ecoPills.length > 0 ? ecoPills.join(', ') : 'Data not yet available'}`,
+    `*About:* ${description || 'No description available yet'}`,
+    '',
+    '_📍 Recorded during the 2025 Biodiversity Survey — Nyandungu Eco-Park, Kigali, Rwanda_',
+  ].join('\n');
+  const waUrl = `https://wa.me/+250788533002?text=${encodeURIComponent(waMessage)}`;
 
   return (
     <div style={{ paddingBottom: '5rem' }}>
@@ -479,7 +492,7 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
             {scientificName && (
               <>
                 <ExternalLinkBtn
-                  href={`https://www.inaturalist.org/taxa/search?q=${sciNamePlus}`}
+                  href={`https://www.inaturalist.org/search?q=${sciNamePlus}`}
                   label="iNaturalist"
                   bg="#74ac00"
                 />
@@ -488,13 +501,18 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
                   label="IUCN Red List"
                   bg="#e8551a"
                 />
+                <ExternalLinkBtn
+                  href={`https://en.wikipedia.org/wiki/${sciNameUnderscore}`}
+                  label="Wikipedia"
+                  bg="#6d6d6d"
+                />
               </>
             )}
 
             {/* Birds only */}
             {species.taxa === 'birds' && scientificName && (
               <ExternalLinkBtn
-                href={`https://ebird.org/species/search?q=${sciNamePlus}`}
+                href={`https://ebird.org/search?q=${sciNamePlus}`}
                 label="eBird"
                 bg="#0a6a8c"
               />
@@ -503,7 +521,7 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
             {/* Plants only */}
             {species.taxa === 'plants' && scientificName && (
               <ExternalLinkBtn
-                href={`https://powo.science.kew.org/taxon/search?q=${sciNamePlus}`}
+                href={`https://powo.science.kew.org/results?q=${sciNamePlus}`}
                 label="POWO"
                 bg="#00695c"
               />
@@ -512,7 +530,7 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
             {/* Fish only */}
             {species.taxa === 'fish' && scientificName && (
               <ExternalLinkBtn
-                href={`https://www.fishbase.se/summary/${sciNameDash}`}
+                href={`https://www.fishbase.se/search.php?requirement=scientific+name&search=${sciNamePlus}`}
                 label="FishBase"
                 bg="#1565c0"
               />
