@@ -104,6 +104,29 @@ body {
   box-shadow: 0 16px 40px rgba(12, 96, 56, 0.18) !important;
 }
 
+/* Species detail hero layout */
+.species-hero {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+.species-hero-image { width: 40%; flex-shrink: 0; }
+.species-hero-content { flex: 1; min-width: 0; }
+@media (max-width: 768px) {
+  .species-hero { flex-direction: column; }
+  .species-hero-image { width: 100%; }
+}
+
+/* Species detail info grid */
+.species-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+@media (max-width: 900px) {
+  .species-detail-grid { grid-template-columns: 1fr; }
+}
+
 /* Glassmorphism taxa card hover */
 .taxa-card {
   transition: transform 0.2s ease, box-shadow 0.2s ease, backdrop-filter 0.2s ease;

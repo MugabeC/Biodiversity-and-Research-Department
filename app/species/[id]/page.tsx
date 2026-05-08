@@ -1,0 +1,534 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+
+// ── Types ─────────────────────────────────────────────────────────────────────
+
+type RawSpecies = Record<string, any>;
+
+// ── Lookup tables ─────────────────────────────────────────────────────────────
+
+const TAXA_LABELS: Record<string, string> = {
+  birds:                 'Birds',
+  plants:                'Plants',
+  butterflies:           'Butterflies',
+  aquatic_inverts:       'Aquatic Inverts',
+  'amphibians-reptiles': 'Amphibians & Reptiles',
+  mammals:               'Mammals',
+  fish:                  'Fish',
+};
+
+const TAXA_ICONS: Record<string, string> = {
+  birds:                 '/images/icons/bird-icon.png',
+  plants:                '/images/icons/plant-icon.png',
+  butterflies:           '/images/icons/butterfly-icon.png',
+  aquatic_inverts:       '/images/icons/aquatic-icon.png',
+  'amphibians-reptiles': '/images/icons/amphibian-icon.png',
+  mammals:               '/images/icons/mammal-icon.png',
+  fish:                  '/images/icons/fish-icon.png',
+};
+
+const IUCN_STYLE: Record<string, { bg: string; color: string }> = {
+  LC: { bg: '#e8f5e9', color: '#2e7d32' },
+  NT: { bg: '#f1f8e9', color: '#558b2f' },
+  VU: { bg: '#fff8e1', color: '#e65100' },
+  EN: { bg: '#fbe9e7', color: '#bf360c' },
+  CR: { bg: '#fce4ec', color: '#880e4f' },
+  NE: { bg: '#f5f5f5', color: '#616161' },
+  DD: { bg: '#e3f2fd', color: '#0d47a1' },
+};
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function getIucn(s: RawSpecies): string {
+  if (s.taxa === 'birds' && s.status) return s.status.split(',')[0];
+  if (s.iucn) return s.iucn;
+  if (s.iucnGlobal) return s.iucnGlobal;
+  return 'NE';
+}
+
+function getEndemism(s: RawSpecies): { headline: string; sub: string } {
+  if (s.taxa === 'birds') {
+    const code = s.status?.split(',')[1];
+    if (code === 'R') return { headline: 'Native', sub: 'Resident species' };
+    if (code === 'I') return { headline: 'Migratory', sub: 'Intra-African Migrant' };
+    if (code === 'P') return { headline: 'Migratory', sub: 'Palearctic Migrant' };
+    return { headline: '—', sub: '' };
+  }
+  if (s.taxa === 'mammals' || s.taxa === 'amphibians-reptiles') {
+    if (s.endemism === 'Albertine Rift Endemic') return { headline: 'Endemic', sub: 'Albertine Rift Endemic' };
+    if (s.endemism === 'Not Endemic') return { headline: 'Native', sub: 'Not Endemic' };
+    if (s.endemism === 'Widespread') return { headline: 'Native', sub: 'Widespread species' };
+    return { headline: s.endemism || '—', sub: '' };
+  }
+  if (s.taxa === 'plants') {
+    if (s.albertineRiftEndemic === 'AR') return { headline: 'Endemic', sub: 'Albertine Rift Endemic' };
+    if (s.albertineRiftEndemic === 'No') return { headline: 'Native', sub: 'Not endemic' };
+    return { headline: s.albertineRiftEndemic || '—', sub: '' };
+  }
+  if (s.taxa === 'fish') {
+    if (typeof s.origin === 'string') {
+      if (s.origin.startsWith('Native')) return { headline: 'Native', sub: s.origin };
+      if (s.origin.startsWith('Introduced')) return { headline: 'Introduced', sub: s.origin };
+    }
+    return { headline: '—', sub: '' };
+  }
+  return { headline: '—', sub: 'No data available' };
+}
+
+// Extra taxa-specific key-value pairs to display as pills in the hero
+function getExtraPills(s: RawSpecies): { label: string; value: string }[] {
+  const pills: { label: string; value: string }[] = [];
+  if (s.taxa === 'birds' && s.status) {
+    const code = s.status.split(',')[1];
+    const map: Record<string, string> = { R: 'Resident', I: 'Intra-African Migrant', P: 'Palearctic Migrant' };
+    if (map[code]) pills.push({ label: 'Residency', value: map[code] });
+  }
+  if (s.feedingGroup)       pills.push({ label: 'Feeding Group',        value: s.feedingGroup });
+  if (s.pollutionTolerance) pills.push({ label: 'Pollution Tolerance',  value: s.pollutionTolerance });
+  if (s.origin)             pills.push({ label: 'Origin',               value: s.origin });
+  return pills;
+}
+
+// ── Shared styles ─────────────────────────────────────────────────────────────
+
+const CARD: React.CSSProperties = {
+  background: 'rgba(255,255,255,0.5)',
+  backdropFilter: 'blur(16px)',
+  WebkitBackdropFilter: 'blur(16px)',
+  border: '1px solid rgba(255,255,255,0.6)',
+  borderRadius: '16px',
+  padding: '24px',
+  boxShadow: '0 8px 32px rgba(12,96,56,0.10)',
+};
+
+const CARD_TITLE: React.CSSProperties = {
+  fontFamily: 'Poppins, sans-serif',
+  fontWeight: 600,
+  fontSize: '13px',
+  color: '#0C6038',
+  margin: '0 0 14px',
+  textTransform: 'uppercase',
+  letterSpacing: '0.07em',
+};
+
+// ── Small components (defined before use) ─────────────────────────────────────
+
+function BackButton() {
+  return (
+    <Link
+      href="/species"
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '6px',
+        padding: '8px 18px',
+        borderRadius: '9999px',
+        border: '1.5px solid #E0E8E2',
+        background: 'rgba(255,255,255,0.7)',
+        backdropFilter: 'blur(8px)',
+        color: '#4A5E4F',
+        fontFamily: 'Poppins, sans-serif',
+        fontWeight: 500,
+        fontSize: '14px',
+        textDecoration: 'none',
+        transition: 'border-color 0.2s ease',
+      }}
+    >
+      ← Back to Species Explorer
+    </Link>
+  );
+}
+
+function Pill({ children, variant = 'green' }: { children: React.ReactNode; variant?: 'green' | 'gray' }) {
+  return (
+    <span style={{
+      background: variant === 'green' ? 'rgba(12,96,56,0.08)' : 'rgba(74,94,79,0.07)',
+      color: variant === 'green' ? '#0C6038' : '#4A5E4F',
+      borderRadius: '9999px',
+      padding: '5px 14px',
+      fontFamily: 'Poppins, sans-serif',
+      fontWeight: 500,
+      fontSize: '13px',
+      display: 'inline-block',
+      whiteSpace: 'nowrap',
+    }}>
+      {children}
+    </span>
+  );
+}
+
+function ExternalLinkBtn({ href, label }: { href: string; label: string }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        display: 'inline-block',
+        padding: '9px 22px',
+        borderRadius: '9999px',
+        border: '1.5px solid #E0E8E2',
+        background: 'rgba(255,255,255,0.8)',
+        color: '#0C6038',
+        fontFamily: 'Poppins, sans-serif',
+        fontWeight: 600,
+        fontSize: '14px',
+        textDecoration: 'none',
+        transition: 'all 0.2s ease',
+      }}
+    >
+      {label} ↗
+    </a>
+  );
+}
+
+// ── Page ──────────────────────────────────────────────────────────────────────
+
+export default function SpeciesDetailPage({ params }: { params: { id: string } }) {
+  const uid = params.id;
+  const [species, setSpecies] = useState<RawSpecies | null>(null);
+  const [notFound, setNotFound] = useState(false);
+  const [loading, setLoading]   = useState(true);
+
+  useEffect(() => {
+    // uid format: "{taxa}-{numericId}" — taxa can contain hyphens (amphibians-reptiles)
+    // so split on the LAST hyphen
+    const lastDash = uid.lastIndexOf('-');
+    const taxa     = uid.slice(0, lastDash);
+    const numId    = parseInt(uid.slice(lastDash + 1), 10);
+
+    fetch('/data/species/species.json')
+      .then(r => r.json())
+      .then(data => {
+        const found = (data.species as RawSpecies[]).find(
+          s => s.taxa === taxa && s.id === numId
+        );
+        if (found) setSpecies(found);
+        else setNotFound(true);
+        setLoading(false);
+      })
+      .catch(() => { setNotFound(true); setLoading(false); });
+  }, [uid]);
+
+  // ── Loading ──
+  if (loading) {
+    return (
+      <div style={{
+        minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontFamily: 'Poppins, sans-serif', fontSize: '15px', color: '#4A5E4F',
+      }}>
+        Loading…
+      </div>
+    );
+  }
+
+  // ── Not found ──
+  if (notFound || !species) {
+    return (
+      <div style={{ maxWidth: '640px', margin: '4rem auto', textAlign: 'center', padding: '0 1.5rem' }}>
+        <BackButton />
+        <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: '20px', color: '#4A5E4F', marginTop: '2rem' }}>
+          Species not found.
+        </p>
+      </div>
+    );
+  }
+
+  // ── Derived values ──
+  const iucn        = getIucn(species);
+  const iucnStyle   = IUCN_STYLE[iucn] ?? IUCN_STYLE.NE;
+  const endemism    = getEndemism(species);
+  const extraPills  = getExtraPills(species);
+  const icon        = TAXA_ICONS[species.taxa];
+
+  const commonName     = species.commonName || species.genusSpecies || species.scientificName || '—';
+  const scientificName = species.scientificName || species.genusSpecies || '';
+  const kinyarwanda    = species.kinyarwanda || '';
+  const imageUrl       = species.image_url   || null;
+  const description    = species.description_short || '';
+  const habitatTypes   = Array.isArray(species.habitat_types)    ? species.habitat_types    : [];
+  const ecologicalRole = Array.isArray(species.ecological_role)  ? species.ecological_role  : [];
+
+  // Feeding group as fallback ecological role
+  const ecoPills: string[] = ecologicalRole.length > 0
+    ? ecologicalRole
+    : species.feedingGroup ? [species.feedingGroup] : [];
+
+  const links       = species.links || {};
+  const hasAnyLink  = !!(links.inaturalist || links.iucn || links.ebird || links.powo || links.fishbase);
+
+  const waText = encodeURIComponent(
+    `${commonName}${scientificName && scientificName !== commonName ? ` (${scientificName})` : ''} — spotted at Nyandungu Eco-Park, Rwanda 🌿`
+  );
+  const waUrl = `https://wa.me/+250788533002?text=${waText}`;
+
+  return (
+    <div style={{ paddingBottom: '5rem' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '2rem 1.5rem 0' }}>
+
+        {/* ── Back button ── */}
+        <BackButton />
+
+        {/* ── Hero ── */}
+        <div className="species-hero" style={{ marginTop: '1.5rem', marginBottom: '2rem' }}>
+
+          {/* Image / placeholder */}
+          <div className="species-hero-image">
+            {imageUrl ? (
+              <div style={{ position: 'relative', height: '400px', borderRadius: '20px', overflow: 'hidden' }}>
+                <Image src={imageUrl} alt={commonName} fill style={{ objectFit: 'cover' }} unoptimized />
+              </div>
+            ) : (
+              <div style={{
+                height: '400px',
+                background: 'linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%)',
+                borderRadius: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+                {icon && (
+                  <Image
+                    src={icon}
+                    alt={species.taxa}
+                    width={120}
+                    height={120}
+                    style={{ objectFit: 'contain', opacity: 0.45 }}
+                    unoptimized
+                  />
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Details */}
+          <div className="species-hero-content">
+
+            {/* IUCN badge */}
+            <span style={{
+              display: 'inline-block',
+              background: iucnStyle.bg,
+              color: iucnStyle.color,
+              borderRadius: '9999px',
+              padding: '6px 20px',
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 700,
+              fontSize: '16px',
+              marginBottom: '16px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+            }}>
+              {iucn}
+            </span>
+
+            {/* Common name */}
+            <h1 style={{
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 700,
+              fontSize: 'clamp(24px, 3.5vw, 36px)',
+              color: '#1A2E1F',
+              margin: '0 0 8px',
+              lineHeight: 1.2,
+            }}>
+              {commonName}
+            </h1>
+
+            {/* Scientific name */}
+            {scientificName && scientificName !== commonName && (
+              <p style={{
+                fontFamily: 'Poppins, sans-serif',
+                fontWeight: 400,
+                fontStyle: 'italic',
+                fontSize: '20px',
+                color: '#4A5E4F',
+                margin: '0 0 12px',
+              }}>
+                {scientificName}
+              </p>
+            )}
+
+            {/* Kinyarwanda */}
+            {kinyarwanda && (
+              <p style={{
+                fontFamily: 'Poppins, sans-serif',
+                fontWeight: 500,
+                fontSize: '16px',
+                color: '#808847',
+                margin: '0 0 14px',
+              }}>
+                <span style={{ color: '#4A5E4F', fontWeight: 400 }}>Kinyarwanda: </span>
+                {kinyarwanda}
+              </p>
+            )}
+
+            {/* Taxa chip */}
+            <div style={{ marginBottom: '18px' }}>
+              <Pill>{TAXA_LABELS[species.taxa] ?? species.taxa}</Pill>
+            </div>
+
+            {/* Order, Family, Class, Group */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginBottom: '18px' }}>
+              {species.order  && <InfoRow label="Order"  value={species.order} />}
+              {species.family && <InfoRow label="Family" value={species.family} />}
+              {species.class  && <InfoRow label="Class"  value={species.class} />}
+              {species.group  && <InfoRow label="Group"  value={species.group} />}
+            </div>
+
+            {/* Taxa-specific extra pills */}
+            {extraPills.length > 0 && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                {extraPills.map(p => (
+                  <Pill key={p.label} variant="gray">{p.label}: {p.value}</Pill>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* ── Details grid ── */}
+        <div className="species-detail-grid" style={{ marginBottom: '1.5rem' }}>
+
+          {/* Habitat */}
+          <div style={CARD}>
+            <p style={CARD_TITLE}>Habitat Types</p>
+            {habitatTypes.length > 0 ? (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                {habitatTypes.map((h: string) => <Pill key={h}>{h}</Pill>)}
+              </div>
+            ) : (
+              <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: '14px', color: '#9E9E9E', margin: 0, lineHeight: 1.6 }}>
+                Habitat data not yet available for this species.
+              </p>
+            )}
+          </div>
+
+          {/* Ecological Role */}
+          <div style={CARD}>
+            <p style={CARD_TITLE}>Ecological Role</p>
+            {ecoPills.length > 0 ? (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                {ecoPills.map((r: string) => <Pill key={r}>{r}</Pill>)}
+              </div>
+            ) : (
+              <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: '14px', color: '#9E9E9E', margin: 0, lineHeight: 1.6 }}>
+                Ecological role data not yet available.
+              </p>
+            )}
+          </div>
+
+          {/* Endemism */}
+          <div style={CARD}>
+            <p style={CARD_TITLE}>Endemism Status</p>
+            {endemism.headline && endemism.headline !== '—' ? (
+              <div>
+                <p style={{
+                  fontFamily: 'Poppins, sans-serif',
+                  fontWeight: 700,
+                  fontSize: '24px',
+                  color: '#0C6038',
+                  margin: '0 0 6px',
+                  lineHeight: 1.2,
+                }}>
+                  {endemism.headline}
+                </p>
+                {endemism.sub && (
+                  <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: '13px', color: '#4A5E4F', margin: 0 }}>
+                    {endemism.sub}
+                  </p>
+                )}
+              </div>
+            ) : (
+              <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: '14px', color: '#9E9E9E', margin: 0 }}>
+                Endemism data not available.
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* ── Description ── */}
+        <div style={{ ...CARD, marginBottom: '1.5rem' }}>
+          <p style={{
+            fontFamily: 'Poppins, sans-serif', fontWeight: 600,
+            fontSize: '18px', color: '#1A2E1F', margin: '0 0 12px',
+          }}>
+            About this Species
+          </p>
+          <p style={{
+            fontFamily: 'Poppins, sans-serif', fontWeight: 400, fontSize: '16px',
+            color: description ? '#4A5E4F' : '#9E9E9E',
+            margin: 0, lineHeight: 1.75,
+          }}>
+            {description || 'No description available yet.'}
+          </p>
+        </div>
+
+        {/* ── External links + WhatsApp ── */}
+        <div style={CARD}>
+          <p style={{
+            fontFamily: 'Poppins, sans-serif', fontWeight: 600,
+            fontSize: '18px', color: '#1A2E1F', margin: '0 0 16px',
+          }}>
+            Learn More
+          </p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
+
+            {links.inaturalist && <ExternalLinkBtn href={links.inaturalist} label="iNaturalist" />}
+            {links.iucn        && <ExternalLinkBtn href={links.iucn}        label="IUCN Red List" />}
+            {links.ebird       && species.taxa === 'birds'  && <ExternalLinkBtn href={links.ebird}    label="eBird" />}
+            {links.powo        && species.taxa === 'plants' && <ExternalLinkBtn href={links.powo}     label="POWO" />}
+            {links.fishbase    && species.taxa === 'fish'   && <ExternalLinkBtn href={links.fishbase} label="FishBase" />}
+
+            {!hasAnyLink && (
+              <p style={{
+                fontFamily: 'Poppins, sans-serif', fontSize: '14px', color: '#9E9E9E',
+                margin: '0', width: '100%',
+              }}>
+                External links not yet added for this species.
+              </p>
+            )}
+
+            {/* WhatsApp share — always visible */}
+            <a
+              href={waUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '9px 22px',
+                borderRadius: '9999px',
+                background: '#25D366',
+                color: '#ffffff',
+                fontFamily: 'Poppins, sans-serif',
+                fontWeight: 600,
+                fontSize: '14px',
+                textDecoration: 'none',
+                boxShadow: '0 2px 10px rgba(37,211,102,0.35)',
+                transition: 'opacity 0.2s ease',
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+              </svg>
+              Share on WhatsApp
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+// ── Inline helpers ─────────────────────────────────────────────────────────────
+
+function InfoRow({ label, value }: { label: string; value: string }) {
+  return (
+    <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 400, fontSize: '14px', color: '#4A5E4F', margin: 0 }}>
+      <span style={{ fontWeight: 600 }}>{label}:</span> {value}
+    </p>
+  );
+}
