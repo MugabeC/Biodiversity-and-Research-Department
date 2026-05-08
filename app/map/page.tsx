@@ -95,7 +95,7 @@ export default function MapPage() {
           map.current.addLayer({
             id: 'park-boundary', type: 'line', source: 'park-boundary-src',
             layout: { visibility: 'visible' },
-            paint: { 'line-color': '#0C6038', 'line-width': 3 },
+            paint: { 'line-color': '#00FF00', 'line-width': 4, 'line-opacity': 1 },
           });
 
           // ── Restored area ────────────────────────────────────────────────
@@ -115,7 +115,7 @@ export default function MapPage() {
           map.current.addLayer({
             id: 'trails', type: 'line', source: 'trails-src',
             layout: { visibility: 'visible' },
-            paint: { 'line-color': '#c77dff', 'line-width': 2, 'line-dasharray': [2, 2] },
+            paint: { 'line-color': '#FF00FF', 'line-width': 3 },
           });
 
           const drainageFeatures = polylines.features.filter((f: any) => ['DRAINAGE', 'MASONRY DRAINAGE'].includes(f.properties.Layer));
@@ -123,7 +123,7 @@ export default function MapPage() {
           map.current.addLayer({
             id: 'drainage', type: 'line', source: 'drainage-src',
             layout: { visibility: 'visible' },
-            paint: { 'line-color': '#4895ef', 'line-width': 1.5 },
+            paint: { 'line-color': '#00FFFF', 'line-width': 3 },
           });
 
           const roadFeatures = polylines.features.filter((f: any) => ['MAIN ROAD_PEDESTRIAN', 'INTERNAL SERVICE ROAD', 'EXISTING EARTHROAD'].includes(f.properties.Layer));
@@ -189,10 +189,10 @@ export default function MapPage() {
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <div style={{ position: 'fixed', top: '68px', left: 0, right: 0, bottom: 0, width: '100%' }}>
+    <div style={{ margin: 0, padding: 0 }}>
 
       {/* Map canvas */}
-      <div ref={mapContainer} style={{ width: '100%', height: '100%' }} />
+      <div ref={mapContainer} style={{ width: '100%', height: 'calc(100vh - 68px)' }} />
 
       {/* ── Layer toggle panel ── */}
       <div style={{ ...GLASS, position: 'absolute', top: '16px', left: '16px', zIndex: 10, padding: '16px', minWidth: '210px' }}>
