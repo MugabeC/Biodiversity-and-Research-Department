@@ -5,42 +5,49 @@ import { useEffect, useRef, useState } from 'react';
 // ── Layer config ──────────────────────────────────────────────────────────────
 
 const LAYERS = [
-  { id: 'park-boundary', label: 'Park Boundary',     color: '#0C6038', defaultOn: true,  mapIds: ['park-boundary'] },
-  { id: 'restored-area', label: 'Restored Area',      color: '#F5A623', defaultOn: true,  mapIds: ['restored-area'] },
-  { id: 'trails',        label: 'Trails & Walkways',  color: '#c77dff', defaultOn: false, mapIds: ['trails'] },
-  { id: 'drainage',      label: 'Drainage & Streams', color: '#4895ef', defaultOn: false, mapIds: ['drainage'] },
-  { id: 'ponds',         label: 'Ponds & Wet Areas',  color: '#52b788', defaultOn: false, mapIds: ['ponds'] },
-  { id: 'vegetation',    label: 'Vegetation',          color: '#2D4C39', defaultOn: false, mapIds: ['vegetation'] },
-  { id: 'roads',         label: 'Roads',               color: '#adb5bd', defaultOn: false, mapIds: ['roads'] },
-  { id: 'buildings',     label: 'Buildings',           color: '#6C2728', defaultOn: false, mapIds: ['buildings'] },
+  { id: 'park-boundary', label: 'Park Boundary',     color: '#0C6038', mapIds: ['park-boundary'] },
+  { id: 'restored-area', label: 'Restored Area',      color: '#F5A623', mapIds: ['restored-area'] },
+  { id: 'trails',        label: 'Trails & Walkways',  color: '#c77dff', mapIds: ['trails'] },
+  { id: 'drainage',      label: 'Drainage & Streams', color: '#4895ef', mapIds: ['drainage'] },
+  { id: 'ponds',         label: 'Ponds & Wet Areas',  color: '#52b788', mapIds: ['ponds'] },
+  { id: 'vegetation',    label: 'Vegetation',          color: '#2D4C39', mapIds: ['vegetation'] },
+  { id: 'roads',         label: 'Roads',               color: '#adb5bd', mapIds: ['roads'] },
+  { id: 'buildings',     label: 'Buildings',           color: '#6C2728', mapIds: ['buildings'] },
 ];
+
+const INIT_VISIBILITY: Record<string, boolean> = {
+  'park-boundary': true,
+  'restored-area': true,
+  'trails':        true,
+  'drainage':      true,
+  'ponds':         true,
+  'vegetation':    true,
+  'roads':         true,
+  'buildings':     true,
+};
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function MapPage() {
-  const mapContainer  = useRef<HTMLDivElement>(null);
-  const map           = useRef<any>(null);
-  const layersReady   = useRef(false);
+  const mapContainer   = useRef<HTMLDivElement>(null);
+  const map            = useRef<any>(null);
+  const visibilityRef  = useRef<Record<string, boolean>>({ ...INIT_VISIBILITY });
 
-  const [is3D,    setIs3D]    = useState(true);
-  const [layerOn, setLayerOn] = useState<Record<string, boolean>>(
-    Object.fromEntries(LAYERS.map(l => [l.id, l.defaultOn]))
-  );
+  const [is3D,        setIs3D]        = useState(true);
+  const [layerStates, setLayerStates] = useState<Record<string, boolean>>({ ...INIT_VISIBILITY });
 
   // ── Toggle function ──────────────────────────────────────────────────────
-  const toggleLayer = (mapIds: string[], visible: boolean) => {
-    if (!map.current || !layersReady.current) return;
-    mapIds.forEach(id => {
-      if (map.current.getLayer(id)) {
-        map.current.setLayoutProperty(id, 'visibility', visible ? 'visible' : 'none');
-      }
-    });
-  };
-
-  const handleToggle = (layerId: string, mapIds: string[]) => {
-    const nextOn = !layerOn[layerId];
-    setLayerOn(prev => ({ ...prev, [layerId]: nextOn }));
-    toggleLayer(mapIds, nextOn);
+  const handleToggle = (key: string, layerIds: string[]) => {
+    const newVal = !visibilityRef.current[key];
+    visibilityRef.current[key] = newVal;
+    setLayerStates(prev => ({ ...prev, [key]: newVal }));
+    if (map.current) {
+      layerIds.forEach(id => {
+        if (map.current.getLayer(id)) {
+          map.current.setLayoutProperty(id, 'visibility', newVal ? 'visible' : 'none');
+        }
+      });
+    }
   };
 
   // ── 2D/3D toggle ─────────────────────────────────────────────────────────
@@ -107,7 +114,7 @@ export default function MapPage() {
           map.current.addSource('trails-src', { type: 'geojson', data: { type: 'FeatureCollection', features: trailFeatures } });
           map.current.addLayer({
             id: 'trails', type: 'line', source: 'trails-src',
-            layout: { visibility: 'none' },
+            layout: { visibility: 'visible' },
             paint: { 'line-color': '#c77dff', 'line-width': 2, 'line-dasharray': [2, 2] },
           });
 
@@ -115,7 +122,7 @@ export default function MapPage() {
           map.current.addSource('drainage-src', { type: 'geojson', data: { type: 'FeatureCollection', features: drainageFeatures } });
           map.current.addLayer({
             id: 'drainage', type: 'line', source: 'drainage-src',
-            layout: { visibility: 'none' },
+            layout: { visibility: 'visible' },
             paint: { 'line-color': '#4895ef', 'line-width': 1.5 },
           });
 
@@ -123,7 +130,7 @@ export default function MapPage() {
           map.current.addSource('roads-src', { type: 'geojson', data: { type: 'FeatureCollection', features: roadFeatures } });
           map.current.addLayer({
             id: 'roads', type: 'line', source: 'roads-src',
-            layout: { visibility: 'none' },
+            layout: { visibility: 'visible' },
             paint: { 'line-color': '#adb5bd', 'line-width': 2 },
           });
 
@@ -134,7 +141,7 @@ export default function MapPage() {
           map.current.addSource('ponds-src', { type: 'geojson', data: { type: 'FeatureCollection', features: pondFeatures } });
           map.current.addLayer({
             id: 'ponds', type: 'circle', source: 'ponds-src',
-            layout: { visibility: 'none' },
+            layout: { visibility: 'visible' },
             paint: { 'circle-color': '#52b788', 'circle-radius': 6, 'circle-opacity': 0.8 },
           });
 
@@ -142,7 +149,7 @@ export default function MapPage() {
           map.current.addSource('buildings-src', { type: 'geojson', data: { type: 'FeatureCollection', features: buildingFeatures } });
           map.current.addLayer({
             id: 'buildings', type: 'circle', source: 'buildings-src',
-            layout: { visibility: 'none' },
+            layout: { visibility: 'visible' },
             paint: { 'circle-color': '#6C2728', 'circle-radius': 5 },
           });
 
@@ -152,11 +159,10 @@ export default function MapPage() {
           map.current.addSource('vegetation-src', { type: 'geojson', data: { type: 'FeatureCollection', features: vegFeatures } });
           map.current.addLayer({
             id: 'vegetation', type: 'fill', source: 'vegetation-src',
-            layout: { visibility: 'none' },
+            layout: { visibility: 'visible' },
             paint: { 'fill-color': '#2D4C39', 'fill-opacity': 0.5 },
           });
 
-          layersReady.current = true;
           console.log('All layers added successfully');
         } catch (e) {
           console.error('Error adding layers:', e);
@@ -183,7 +189,7 @@ export default function MapPage() {
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <div style={{ width: '100%', height: 'calc(100vh - 68px)', position: 'relative' }}>
+    <div style={{ position: 'fixed', top: '68px', left: 0, right: 0, bottom: 0, width: '100%' }}>
 
       {/* Map canvas */}
       <div ref={mapContainer} style={{ width: '100%', height: '100%' }} />
@@ -205,7 +211,7 @@ export default function MapPage() {
                   {label}
                 </span>
               </div>
-              <ToggleSwitch on={layerOn[id]} color={color} />
+              <ToggleSwitch on={layerStates[id]} color={color} />
             </div>
           ))}
         </div>
