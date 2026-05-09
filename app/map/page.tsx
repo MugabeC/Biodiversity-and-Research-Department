@@ -19,10 +19,8 @@ const LAYERS = [
   { id: 'restored-area', label: 'Restored Area',      color: '#F5A623', mapIds: ['restored-area-fill', 'restored-area-line'] },
   { id: 'trails',        label: 'Trails & Walkways',  color: '#c77dff', mapIds: ['trails'] },
   { id: 'drainage',      label: 'Drainage & Streams', color: '#4895ef', mapIds: ['drainage'] },
-  { id: 'ponds',         label: 'Ponds & Wet Areas',  color: '#52b788', mapIds: ['ponds', 'ponds-polygon'] },
   { id: 'open-grounds',  label: 'Open Grounds',       color: '#8DA750', mapIds: ['open-grounds'] },
   { id: 'roads',         label: 'Roads',               color: '#adb5bd', mapIds: ['roads'] },
-  { id: 'zones',         label: 'Zones',               color: '#7B8CDE', mapIds: ['zones-bamboo', 'zones-garden', 'zones-botanic', 'zones-drainage', 'zones-sector'] },
 ];
 
 const INIT_VISIBILITY: Record<string, boolean> = {
@@ -30,10 +28,8 @@ const INIT_VISIBILITY: Record<string, boolean> = {
   'restored-area': true,
   'trails':        true,
   'drainage':      true,
-  'ponds':         true,
   'open-grounds':  true,
   'roads':         true,
-  'zones':         true,
 };
 
 // ── Page ──────────────────────────────────────────────────────────────────────
@@ -187,27 +183,8 @@ export default function MapPage() {
             paint: { 'line-color': '#adb5bd', 'line-width': 1.5, 'line-opacity': 0.6 },
           });
 
-          // ── Dots ────────────────────────────────────────────────────────
-          const dots = await fetch('/data/geojson/Topo_dots.geojson').then(r => r.json());
-          const pondFeatures = dots.features.filter((f: any) => ['PONDS', 'WET AREA'].includes(f.properties.Layer));
-          map.current.addSource('ponds-src', { type: 'geojson', data: { type: 'FeatureCollection', features: pondFeatures } });
-          map.current.addLayer({
-            id: 'ponds', type: 'circle', source: 'ponds-src',
-            layout: { visibility: 'visible' },
-            paint: { 'circle-color': '#52b788', 'circle-radius': 4, 'circle-opacity': 0.7 },
-          });
-
           // ── Polygons ────────────────────────────────────────────────────
           const polygons = await fetch('/data/geojson/Topo_polygon.geojson').then(r => r.json());
-
-          // Wet area polygon (DRAINAGE polygon as water coverage)
-          const pondPolyFeatures = polygons.features.filter((f: any) => f.properties.Layer === 'DRAINAGE');
-          map.current.addSource('ponds-polygon-src', { type: 'geojson', data: { type: 'FeatureCollection', features: pondPolyFeatures } });
-          map.current.addLayer({
-            id: 'ponds-polygon', type: 'fill', source: 'ponds-polygon-src',
-            layout: { visibility: 'visible' },
-            paint: { 'fill-color': '#52b788', 'fill-opacity': 0.35 },
-          });
 
           // Open Grounds (vegetation cover)
           const openGroundsFeatures = polygons.features.filter((f: any) => ['BAMBOO_TREE', 'GARDEN', 'BOTANIC GARDEN'].includes(f.properties.Layer));
@@ -217,25 +194,6 @@ export default function MapPage() {
             layout: { visibility: 'visible' },
             paint: { 'fill-color': '#8DA750', 'fill-opacity': 0.4 },
           });
-
-          // Zones — 5 sublayers with distinct colours
-          const zoneConfigs = [
-            { id: 'zones-bamboo',   filter: 'BAMBOO_TREE',    fill: '#4a7c59', opacity: 0.40 },
-            { id: 'zones-garden',   filter: 'GARDEN',         fill: '#8DA750', opacity: 0.35 },
-            { id: 'zones-botanic',  filter: 'BOTANIC GARDEN', fill: '#2d6a4f', opacity: 0.40 },
-            { id: 'zones-drainage', filter: 'DRAINAGE',       fill: '#4895ef', opacity: 0.25 },
-            { id: 'zones-sector',   filter: 'SECTOR_2',       fill: '#565656', opacity: 0.20 },
-          ];
-
-          for (const { id, filter, fill, opacity } of zoneConfigs) {
-            const features = polygons.features.filter((f: any) => f.properties.Layer === filter);
-            map.current.addSource(`${id}-src`, { type: 'geojson', data: { type: 'FeatureCollection', features } });
-            map.current.addLayer({
-              id, type: 'fill', source: `${id}-src`,
-              layout: { visibility: 'visible' },
-              paint: { 'fill-color': fill, 'fill-opacity': opacity },
-            });
-          }
 
           console.log('All layers added successfully');
         } catch (e) {
