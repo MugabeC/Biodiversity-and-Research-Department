@@ -4,6 +4,34 @@ import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
+// ── Bird image helper ─────────────────────────────────────────────────────────
+
+const BIRD_BASE = '/images/species/bird images';
+
+function birdPrimaryCandidates(n: number): string[] {
+  return [
+    `${BIRD_BASE}/birds-${n}.jpg`,
+    `${BIRD_BASE}/birds-${n}.JPG`,
+    `${BIRD_BASE}/Birds-${n}.jpg`,
+    `${BIRD_BASE}/Birds-${n}.JPG`,
+  ];
+}
+
+// Cycles through candidate srcs on error; hides when all fail.
+function BirdPhoto({ num, alt }: { num: number; alt: string }) {
+  const candidates = birdPrimaryCandidates(num);
+  const [idx, setIdx] = useState(0);
+  if (idx >= candidates.length) return null;
+  return (
+    <img
+      src={candidates[idx]}
+      alt={alt}
+      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+      onError={() => setIdx(i => i + 1)}
+    />
+  );
+}
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 type Species = {
@@ -167,6 +195,10 @@ function SpeciesCard({ species }: { species: Species }) {
   const icon = TAXA_ICONS[species.taxa];
   const displayName = species.commonName || species.scientificName;
 
+  // Extract bird number from uid like "birds-45" → 45
+  const birdNumMatch = species.uid.match(/^birds-(\d+)$/);
+  const birdNum = birdNumMatch ? parseInt(birdNumMatch[1]) : null;
+
   return (
     <Link
       href={`/species/${species.uid}`}
@@ -181,7 +213,7 @@ function SpeciesCard({ species }: { species: Species }) {
         overflow: 'hidden',
       }}
     >
-      {/* Placeholder image area */}
+      {/* Image area: gradient + icon placeholder with real photo overlaid */}
       <div style={{
         position: 'relative',
         height: '160px',
@@ -190,6 +222,7 @@ function SpeciesCard({ species }: { species: Species }) {
         alignItems: 'center',
         justifyContent: 'center',
         flexShrink: 0,
+        overflow: 'hidden',
       }}>
         {icon && (
           <Image
@@ -201,6 +234,8 @@ function SpeciesCard({ species }: { species: Species }) {
             unoptimized
           />
         )}
+        {/* Real photo overlays placeholder; hides itself if all candidates fail */}
+        {birdNum !== null && <BirdPhoto num={birdNum} alt={displayName || species.taxa} />}
         <span style={{
           position: 'absolute',
           top: 10,
@@ -214,6 +249,7 @@ function SpeciesCard({ species }: { species: Species }) {
           fontSize: '11px',
           lineHeight: 1.6,
           boxShadow: '0 1px 4px rgba(0,0,0,0.10)',
+          zIndex: 1,
         }}>
           {species.iucn}
         </span>

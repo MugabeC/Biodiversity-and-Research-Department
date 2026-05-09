@@ -188,11 +188,38 @@ function ExternalLinkBtn({ href, label, bg, textColor = '#ffffff' }: {
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
+// ── Bird image helpers ────────────────────────────────────────────────────────
+
+const BIRD_BASE = '/images/species/bird images';
+
+function birdCandidates(n: number, suffix?: number): string[] {
+  const name = suffix !== undefined ? `birds-${n}-${suffix}` : `birds-${n}`;
+  const Name = suffix !== undefined ? `Birds-${n}-${suffix}` : `Birds-${n}`;
+  return [`${BIRD_BASE}/${name}.jpg`, `${BIRD_BASE}/${name}.JPG`, `${BIRD_BASE}/${Name}.jpg`, `${BIRD_BASE}/${Name}.JPG`];
+}
+
+async function tryLoad(srcs: string[]): Promise<string | null> {
+  for (const src of srcs) {
+    const ok = await new Promise<boolean>(res => {
+      const img = new window.Image();
+      img.onload  = () => res(true);
+      img.onerror = () => res(false);
+      img.src = src;
+    });
+    if (ok) return src;
+  }
+  return null;
+}
+
+// ── Page ──────────────────────────────────────────────────────────────────────
+
 export default function SpeciesDetailPage({ params }: { params: { id: string } }) {
   const uid = params.id;
-  const [species, setSpecies] = useState<RawSpecies | null>(null);
-  const [notFound, setNotFound] = useState(false);
-  const [loading, setLoading]   = useState(true);
+  const [species, setSpecies]       = useState<RawSpecies | null>(null);
+  const [notFound, setNotFound]     = useState(false);
+  const [loading, setLoading]       = useState(true);
+  const [galleryImages, setGallery] = useState<string[]>([]);
+  const [photoIdx, setPhotoIdx]     = useState(0);
 
   useEffect(() => {
     // uid format: "{taxa}-{numericId}" — taxa can contain hyphens (amphibians-reptiles)
@@ -213,6 +240,21 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
       })
       .catch(() => { setNotFound(true); setLoading(false); });
   }, [uid]);
+
+  // Probe which bird photos actually exist after species loads
+  useEffect(() => {
+    if (!species || species.taxa !== 'birds') { setGallery([]); return; }
+    const n = species.id;
+    Promise.all([
+      tryLoad(birdCandidates(n)),
+      tryLoad(birdCandidates(n, 1)),
+      tryLoad(birdCandidates(n, 2)),
+      tryLoad(birdCandidates(n, 3)),
+    ]).then(results => {
+      setGallery(results.filter((s): s is string => s !== null));
+      setPhotoIdx(0);
+    });
+  }, [species]);
 
   // ── Loading ──
   if (loading) {
@@ -248,7 +290,6 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
   const commonName     = species.commonName || species.genusSpecies || species.scientificName || '—';
   const scientificName = species.scientificName || species.genusSpecies || '';
   const kinyarwanda    = species.kinyarwanda || '';
-  const imageUrl       = species.image_url   || null;
   const description    = species.description_short || '';
   const habitatTypes   = Array.isArray(species.habitat_types)    ? species.habitat_types    : [];
   const ecologicalRole = Array.isArray(species.ecological_role)  ? species.ecological_role  : [];
@@ -289,33 +330,77 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
         {/* ── Hero ── */}
         <div className="species-hero" style={{ marginTop: '1.5rem', marginBottom: '2rem' }}>
 
-          {/* Image / placeholder */}
+          {/* Image / gallery */}
           <div className="species-hero-image">
-            {imageUrl ? (
-              <div style={{ position: 'relative', height: '400px', borderRadius: '20px', overflow: 'hidden' }}>
-                <Image src={imageUrl} alt={commonName} fill style={{ objectFit: 'cover' }} unoptimized />
-              </div>
-            ) : (
-              <div style={{
-                height: '400px',
-                background: 'linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%)',
-                borderRadius: '20px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-                {icon && (
-                  <Image
-                    src={icon}
-                    alt={species.taxa}
-                    width={120}
-                    height={120}
-                    style={{ objectFit: 'contain', opacity: 0.45 }}
-                    unoptimized
+            <div style={{ position: 'relative', height: '400px', borderRadius: '20px', overflow: 'hidden' }}>
+              {galleryImages.length > 0 ? (
+                <>
+                  <img
+                    key={galleryImages[photoIdx]}
+                    src={galleryImages[photoIdx]}
+                    alt={commonName}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                   />
-                )}
-              </div>
-            )}
+
+                  {/* Left / right arrows */}
+                  {galleryImages.length > 1 && (
+                    <>
+                      <button
+                        onClick={() => setPhotoIdx(i => Math.max(0, i - 1))}
+                        disabled={photoIdx === 0}
+                        style={{
+                          position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)',
+                          width: 36, height: 36, borderRadius: '50%', border: 'none',
+                          background: 'rgba(255,255,255,0.85)', color: '#1A2E1F',
+                          fontSize: '20px', lineHeight: 1, cursor: 'pointer',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
+                          opacity: photoIdx === 0 ? 0.35 : 1,
+                        }}
+                      >‹</button>
+                      <button
+                        onClick={() => setPhotoIdx(i => Math.min(galleryImages.length - 1, i + 1))}
+                        disabled={photoIdx === galleryImages.length - 1}
+                        style={{
+                          position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)',
+                          width: 36, height: 36, borderRadius: '50%', border: 'none',
+                          background: 'rgba(255,255,255,0.85)', color: '#1A2E1F',
+                          fontSize: '20px', lineHeight: 1, cursor: 'pointer',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
+                          opacity: photoIdx === galleryImages.length - 1 ? 0.35 : 1,
+                        }}
+                      >›</button>
+                      <span style={{
+                        position: 'absolute', bottom: 10, right: 14,
+                        background: 'rgba(0,0,0,0.45)', color: '#fff',
+                        borderRadius: '9999px', padding: '2px 10px',
+                        fontFamily: 'Poppins, sans-serif', fontSize: '12px', fontWeight: 500,
+                      }}>
+                        {photoIdx + 1} / {galleryImages.length}
+                      </span>
+                    </>
+                  )}
+                </>
+              ) : (
+                <div style={{
+                  width: '100%', height: '100%',
+                  background: 'linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  {icon && (
+                    <Image
+                      src={icon}
+                      alt={species.taxa}
+                      width={120}
+                      height={120}
+                      style={{ objectFit: 'contain', opacity: 0.45 }}
+                      unoptimized
+                    />
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Details */}
