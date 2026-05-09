@@ -2,17 +2,27 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+// ── Map style options ─────────────────────────────────────────────────────────
+
+const MAP_STYLES = [
+  { id: 'satellite', label: 'Satellite', url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}' },
+  { id: 'street',    label: 'Street',    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}' },
+  { id: 'terrain',   label: 'Terrain',   url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}' },
+] as const;
+
+type StyleId = typeof MAP_STYLES[number]['id'];
+
 // ── Layer config ──────────────────────────────────────────────────────────────
 
 const LAYERS = [
-  { id: 'park-boundary', label: 'Park Boundary',     color: '#0C6038', mapIds: ['park-boundary'] },
+  { id: 'park-boundary', label: 'Park Boundary',     color: '#000000', mapIds: ['park-boundary'] },
   { id: 'restored-area', label: 'Restored Area',      color: '#F5A623', mapIds: ['restored-area-fill', 'restored-area-line'] },
   { id: 'trails',        label: 'Trails & Walkways',  color: '#c77dff', mapIds: ['trails'] },
   { id: 'drainage',      label: 'Drainage & Streams', color: '#4895ef', mapIds: ['drainage'] },
   { id: 'ponds',         label: 'Ponds & Wet Areas',  color: '#52b788', mapIds: ['ponds'] },
-  { id: 'vegetation',    label: 'Vegetation',          color: '#2D4C39', mapIds: ['vegetation'] },
+  { id: 'vegetation',    label: 'Vegetation',          color: '#8DA750', mapIds: ['vegetation'] },
   { id: 'roads',         label: 'Roads',               color: '#adb5bd', mapIds: ['roads'] },
-  { id: 'buildings',     label: 'Buildings',           color: '#6C2728', mapIds: ['buildings'] },
+  { id: 'zones',         label: 'Zones',               color: '#4895ef', mapIds: ['zones-fill', 'zones-line'] },
 ];
 
 const INIT_VISIBILITY: Record<string, boolean> = {
@@ -23,7 +33,7 @@ const INIT_VISIBILITY: Record<string, boolean> = {
   'ponds':         true,
   'vegetation':    true,
   'roads':         true,
-  'buildings':     true,
+  'zones':         true,
 };
 
 // ── Page ──────────────────────────────────────────────────────────────────────
@@ -35,8 +45,9 @@ export default function MapPage() {
 
   const [is3D,        setIs3D]        = useState(true);
   const [layerStates, setLayerStates] = useState<Record<string, boolean>>({ ...INIT_VISIBILITY });
+  const [mapStyle,    setMapStyle]    = useState<StyleId>('satellite');
 
-  // ── Toggle ────────────────────────────────────────────────────────────────
+  // ── Layer toggle ──────────────────────────────────────────────────────────
   const handleToggle = (key: string, layerIds: string[]) => {
     const newVal = !visibilityRef.current[key];
     visibilityRef.current[key] = newVal;
@@ -58,6 +69,23 @@ export default function MapPage() {
     setIs3D(next3D);
   };
 
+  // ── Style switcher ────────────────────────────────────────────────────────
+  const switchMapStyle = (styleId: StyleId, url: string) => {
+    setMapStyle(styleId);
+    if (!map.current) return;
+    const m = map.current;
+    if (m.getLayer('esri-satellite-layer')) m.removeLayer('esri-satellite-layer');
+    if (m.getSource('esri-satellite'))      m.removeSource('esri-satellite');
+    m.addSource('esri-satellite', {
+      type: 'raster',
+      tiles: [url],
+      tileSize: 256,
+      attribution: 'Tiles © Esri',
+    });
+    const before = m.getLayer('park-boundary') ? 'park-boundary' : undefined;
+    m.addLayer({ id: 'esri-satellite-layer', type: 'raster', source: 'esri-satellite' }, before);
+  };
+
   // ── Map init ──────────────────────────────────────────────────────────────
   useEffect(() => {
     if (map.current) return;
@@ -72,7 +100,7 @@ export default function MapPage() {
           sources: {
             'esri-satellite': {
               type: 'raster',
-              tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
+              tiles: [MAP_STYLES[0].url],
               tileSize: 256,
               attribution: 'Tiles © Esri',
             },
@@ -95,7 +123,7 @@ export default function MapPage() {
           map.current.addLayer({
             id: 'park-boundary', type: 'line', source: 'park-boundary-src',
             layout: { visibility: 'visible' },
-            paint: { 'line-color': '#0C6038', 'line-width': 2, 'line-opacity': 0.9 },
+            paint: { 'line-color': '#000000', 'line-width': 2.5, 'line-opacity': 0.9 },
           });
 
           // Restored area — fill + outline
@@ -139,7 +167,7 @@ export default function MapPage() {
             paint: { 'line-color': '#adb5bd', 'line-width': 1.5, 'line-opacity': 0.6 },
           });
 
-          // Dots
+          // Dots — ponds only (buildings excluded: no valid data)
           const dots = await fetch('/data/geojson/Topo_dots.geojson').then(r => r.json());
 
           const pondFeatures = dots.features.filter((f: any) => ['PONDS', 'WET AREA'].includes(f.properties.Layer));
@@ -150,22 +178,28 @@ export default function MapPage() {
             paint: { 'circle-color': '#52b788', 'circle-radius': 4, 'circle-opacity': 0.7 },
           });
 
-          const buildingFeatures = dots.features.filter((f: any) => f.properties.Layer === 'EXISTING BUILDING');
-          map.current.addSource('buildings-src', { type: 'geojson', data: { type: 'FeatureCollection', features: buildingFeatures } });
-          map.current.addLayer({
-            id: 'buildings', type: 'circle', source: 'buildings-src',
-            layout: { visibility: 'visible' },
-            paint: { 'circle-color': '#6C2728', 'circle-radius': 3, 'circle-opacity': 0.7 },
-          });
-
-          // Vegetation polygons
+          // Polygons
           const polygons = await fetch('/data/geojson/Topo_polygon.geojson').then(r => r.json());
+
           const vegFeatures = polygons.features.filter((f: any) => ['BAMBOO_TREE', 'GARDEN', 'BOTANIC GARDEN'].includes(f.properties.Layer));
           map.current.addSource('vegetation-src', { type: 'geojson', data: { type: 'FeatureCollection', features: vegFeatures } });
           map.current.addLayer({
             id: 'vegetation', type: 'fill', source: 'vegetation-src',
             layout: { visibility: 'visible' },
-            paint: { 'fill-color': '#2D4C39', 'fill-opacity': 0.3 },
+            paint: { 'fill-color': '#8DA750', 'fill-opacity': 0.4 },
+          });
+
+          const zoneFeatures = polygons.features.filter((f: any) => f.properties.Layer === 'SECTOR_2');
+          map.current.addSource('zones-src', { type: 'geojson', data: { type: 'FeatureCollection', features: zoneFeatures } });
+          map.current.addLayer({
+            id: 'zones-fill', type: 'fill', source: 'zones-src',
+            layout: { visibility: 'visible' },
+            paint: { 'fill-color': '#4895ef', 'fill-opacity': 0.2 },
+          });
+          map.current.addLayer({
+            id: 'zones-line', type: 'line', source: 'zones-src',
+            layout: { visibility: 'visible' },
+            paint: { 'line-color': '#4895ef', 'line-width': 1 },
           });
 
           console.log('All layers added successfully');
@@ -193,13 +227,10 @@ export default function MapPage() {
   };
 
   // ── Render ────────────────────────────────────────────────────────────────
-  // Outer div is the positioning context for all absolute overlays.
-  // height: calc(100vh - 68px) fills the viewport below the fixed navbar.
-  // MainWrapper already removes paddingTop for /map so no double offset.
   return (
     <div style={{ position: 'relative', width: '100%', height: 'calc(100vh - 68px)', overflow: 'hidden' }}>
 
-      {/* Map canvas fills the container */}
+      {/* Map canvas */}
       <div ref={mapContainer} style={{ width: '100%', height: '100%' }} />
 
       {/* ── Layer toggle panel — top-left ── */}
@@ -229,11 +260,31 @@ export default function MapPage() {
         </div>
       </div>
 
-      {/* ── 2D/3D button — top-right, clear of nav controls ── */}
+      {/* ── Map style switcher — bottom-left ── */}
+      <div style={{ position: 'absolute', bottom: '32px', left: '16px', zIndex: 10, display: 'flex', gap: '6px' }}>
+        {MAP_STYLES.map(({ id, label, url }) => (
+          <button
+            key={id}
+            onClick={() => switchMapStyle(id, url)}
+            style={{
+              padding: '7px 14px', borderRadius: '9999px', border: 'none',
+              background: mapStyle === id ? '#0C6038' : '#ffffff',
+              color: mapStyle === id ? '#ffffff' : '#4A5E4F',
+              fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px',
+              cursor: 'pointer', boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+              transition: 'background 0.2s ease, color 0.2s ease',
+            }}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {/* ── 2D/3D button — bottom-right, above info card ── */}
       <button
         onClick={toggle3D}
         style={{
-          position: 'absolute', top: '10px', right: '50px', zIndex: 10,
+          position: 'absolute', bottom: '180px', right: '16px', zIndex: 10,
           padding: '8px 18px', borderRadius: '9999px', border: 'none',
           background: '#ffffff', color: '#0C6038',
           fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px',
