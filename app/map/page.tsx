@@ -15,14 +15,14 @@ type StyleId = typeof MAP_STYLES[number]['id'];
 // ── Layer config ──────────────────────────────────────────────────────────────
 
 const LAYERS = [
-  { id: 'park-boundary', label: 'Park Boundary',     color: '#000000', mapIds: ['park-boundary'] },
+  { id: 'park-boundary', label: 'Park Boundary',     color: '#1a1a1a', mapIds: ['park-boundary'] },
   { id: 'restored-area', label: 'Restored Area',      color: '#F5A623', mapIds: ['restored-area-fill', 'restored-area-line'] },
   { id: 'trails',        label: 'Trails & Walkways',  color: '#c77dff', mapIds: ['trails'] },
   { id: 'drainage',      label: 'Drainage & Streams', color: '#4895ef', mapIds: ['drainage'] },
-  { id: 'ponds',         label: 'Ponds & Wet Areas',  color: '#52b788', mapIds: ['ponds'] },
-  { id: 'vegetation',    label: 'Vegetation',          color: '#8DA750', mapIds: ['vegetation'] },
+  { id: 'ponds',         label: 'Ponds & Wet Areas',  color: '#52b788', mapIds: ['ponds', 'ponds-polygon'] },
+  { id: 'open-grounds',  label: 'Open Grounds',       color: '#8DA750', mapIds: ['open-grounds'] },
   { id: 'roads',         label: 'Roads',               color: '#adb5bd', mapIds: ['roads'] },
-  { id: 'zones',         label: 'Zones',               color: '#4895ef', mapIds: ['zones-fill', 'zones-line'] },
+  { id: 'zones',         label: 'Zones',               color: '#7B8CDE', mapIds: ['zones-bamboo', 'zones-garden', 'zones-botanic', 'zones-drainage', 'zones-sector'] },
 ];
 
 const INIT_VISIBILITY: Record<string, boolean> = {
@@ -31,7 +31,7 @@ const INIT_VISIBILITY: Record<string, boolean> = {
   'trails':        true,
   'drainage':      true,
   'ponds':         true,
-  'vegetation':    true,
+  'open-grounds':  true,
   'roads':         true,
   'zones':         true,
 };
@@ -61,11 +61,19 @@ export default function MapPage() {
     }
   };
 
-  // ── 2D/3D ─────────────────────────────────────────────────────────────────
+  // ── 2D/3D with terrain ────────────────────────────────────────────────────
   const toggle3D = () => {
     if (!map.current) return;
     const next3D = !is3D;
-    map.current.easeTo({ pitch: next3D ? 45 : 0, bearing: next3D ? -17 : 0, duration: 600 });
+    if (next3D) {
+      if (map.current.getSource('terrain-source')) {
+        map.current.setTerrain({ source: 'terrain-source', exaggeration: 1.8 });
+      }
+      map.current.easeTo({ pitch: 60, bearing: -17, duration: 700 });
+    } else {
+      map.current.setTerrain(null);
+      map.current.easeTo({ pitch: 0, bearing: 0, duration: 700 });
+    }
     setIs3D(next3D);
   };
 
@@ -76,12 +84,7 @@ export default function MapPage() {
     const m = map.current;
     if (m.getLayer('esri-satellite-layer')) m.removeLayer('esri-satellite-layer');
     if (m.getSource('esri-satellite'))      m.removeSource('esri-satellite');
-    m.addSource('esri-satellite', {
-      type: 'raster',
-      tiles: [url],
-      tileSize: 256,
-      attribution: 'Tiles © Esri',
-    });
+    m.addSource('esri-satellite', { type: 'raster', tiles: [url], tileSize: 256, attribution: 'Tiles © Esri' });
     const before = m.getLayer('park-boundary') ? 'park-boundary' : undefined;
     m.addLayer({ id: 'esri-satellite-layer', type: 'raster', source: 'esri-satellite' }, before);
   };
@@ -109,7 +112,7 @@ export default function MapPage() {
         } as any,
         center: [30.1491, -1.9555],
         zoom: 15,
-        pitch: 45,
+        pitch: 60,
         bearing: -17,
       });
 
@@ -117,16 +120,33 @@ export default function MapPage() {
 
       map.current.on('load', async () => {
         try {
-          // Park boundary
+          // ── Terrain & sky (3D, enabled by default) ──────────────────────
+          map.current.addSource('terrain-source', {
+            type: 'raster-dem',
+            url: 'https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=g8UGiMdXyHomD5NmJULL',
+            tileSize: 256,
+          });
+          map.current.setTerrain({ source: 'terrain-source', exaggeration: 1.8 });
+          map.current.addLayer({
+            id: 'sky-layer',
+            type: 'sky',
+            paint: {
+              'sky-type': 'atmosphere',
+              'sky-atmosphere-sun': [0.0, 90.0],
+              'sky-atmosphere-sun-intensity': 15,
+            },
+          } as any);
+
+          // ── Park boundary ───────────────────────────────────────────────
           const boundary = await fetch('/data/geojson/Surveyed_boundary.geojson').then(r => r.json());
           map.current.addSource('park-boundary-src', { type: 'geojson', data: boundary });
           map.current.addLayer({
             id: 'park-boundary', type: 'line', source: 'park-boundary-src',
             layout: { visibility: 'visible' },
-            paint: { 'line-color': '#000000', 'line-width': 2.5, 'line-opacity': 0.9 },
+            paint: { 'line-color': '#1a1a1a', 'line-width': 1.5, 'line-opacity': 0.85 },
           });
 
-          // Restored area — fill + outline
+          // ── Restored area ───────────────────────────────────────────────
           const restored = await fetch('/data/geojson/Nyandungu.geojson').then(r => r.json());
           map.current.addSource('restored-src', { type: 'geojson', data: restored });
           map.current.addLayer({
@@ -140,7 +160,7 @@ export default function MapPage() {
             paint: { 'line-color': '#F5A623', 'line-width': 1.5 },
           });
 
-          // Polylines
+          // ── Polylines ───────────────────────────────────────────────────
           const polylines = await fetch('/data/geojson/Topo_polylines.geojson').then(r => r.json());
 
           const trailFeatures = polylines.features.filter((f: any) => f.properties.Layer === 'PEDESTRIAN WALKWAYS AND TRAILS');
@@ -167,9 +187,8 @@ export default function MapPage() {
             paint: { 'line-color': '#adb5bd', 'line-width': 1.5, 'line-opacity': 0.6 },
           });
 
-          // Dots — ponds only (buildings excluded: no valid data)
+          // ── Dots ────────────────────────────────────────────────────────
           const dots = await fetch('/data/geojson/Topo_dots.geojson').then(r => r.json());
-
           const pondFeatures = dots.features.filter((f: any) => ['PONDS', 'WET AREA'].includes(f.properties.Layer));
           map.current.addSource('ponds-src', { type: 'geojson', data: { type: 'FeatureCollection', features: pondFeatures } });
           map.current.addLayer({
@@ -178,29 +197,45 @@ export default function MapPage() {
             paint: { 'circle-color': '#52b788', 'circle-radius': 4, 'circle-opacity': 0.7 },
           });
 
-          // Polygons
+          // ── Polygons ────────────────────────────────────────────────────
           const polygons = await fetch('/data/geojson/Topo_polygon.geojson').then(r => r.json());
 
-          const vegFeatures = polygons.features.filter((f: any) => ['BAMBOO_TREE', 'GARDEN', 'BOTANIC GARDEN'].includes(f.properties.Layer));
-          map.current.addSource('vegetation-src', { type: 'geojson', data: { type: 'FeatureCollection', features: vegFeatures } });
+          // Wet area polygon (DRAINAGE polygon as water coverage)
+          const pondPolyFeatures = polygons.features.filter((f: any) => f.properties.Layer === 'DRAINAGE');
+          map.current.addSource('ponds-polygon-src', { type: 'geojson', data: { type: 'FeatureCollection', features: pondPolyFeatures } });
           map.current.addLayer({
-            id: 'vegetation', type: 'fill', source: 'vegetation-src',
+            id: 'ponds-polygon', type: 'fill', source: 'ponds-polygon-src',
+            layout: { visibility: 'visible' },
+            paint: { 'fill-color': '#52b788', 'fill-opacity': 0.35 },
+          });
+
+          // Open Grounds (vegetation cover)
+          const openGroundsFeatures = polygons.features.filter((f: any) => ['BAMBOO_TREE', 'GARDEN', 'BOTANIC GARDEN'].includes(f.properties.Layer));
+          map.current.addSource('open-grounds-src', { type: 'geojson', data: { type: 'FeatureCollection', features: openGroundsFeatures } });
+          map.current.addLayer({
+            id: 'open-grounds', type: 'fill', source: 'open-grounds-src',
             layout: { visibility: 'visible' },
             paint: { 'fill-color': '#8DA750', 'fill-opacity': 0.4 },
           });
 
-          const zoneFeatures = polygons.features.filter((f: any) => f.properties.Layer === 'SECTOR_2');
-          map.current.addSource('zones-src', { type: 'geojson', data: { type: 'FeatureCollection', features: zoneFeatures } });
-          map.current.addLayer({
-            id: 'zones-fill', type: 'fill', source: 'zones-src',
-            layout: { visibility: 'visible' },
-            paint: { 'fill-color': '#4895ef', 'fill-opacity': 0.2 },
-          });
-          map.current.addLayer({
-            id: 'zones-line', type: 'line', source: 'zones-src',
-            layout: { visibility: 'visible' },
-            paint: { 'line-color': '#4895ef', 'line-width': 1 },
-          });
+          // Zones — 5 sublayers with distinct colours
+          const zoneConfigs = [
+            { id: 'zones-bamboo',   filter: 'BAMBOO_TREE',    fill: '#4a7c59', opacity: 0.40 },
+            { id: 'zones-garden',   filter: 'GARDEN',         fill: '#8DA750', opacity: 0.35 },
+            { id: 'zones-botanic',  filter: 'BOTANIC GARDEN', fill: '#2d6a4f', opacity: 0.40 },
+            { id: 'zones-drainage', filter: 'DRAINAGE',       fill: '#4895ef', opacity: 0.25 },
+            { id: 'zones-sector',   filter: 'SECTOR_2',       fill: '#565656', opacity: 0.20 },
+          ];
+
+          for (const { id, filter, fill, opacity } of zoneConfigs) {
+            const features = polygons.features.filter((f: any) => f.properties.Layer === filter);
+            map.current.addSource(`${id}-src`, { type: 'geojson', data: { type: 'FeatureCollection', features } });
+            map.current.addLayer({
+              id, type: 'fill', source: `${id}-src`,
+              layout: { visibility: 'visible' },
+              paint: { 'fill-color': fill, 'fill-opacity': opacity },
+            });
+          }
 
           console.log('All layers added successfully');
         } catch (e) {
@@ -227,8 +262,10 @@ export default function MapPage() {
   };
 
   // ── Render ────────────────────────────────────────────────────────────────
+  // position:fixed anchors the map to the viewport so the NavBar (68px) never
+  // overlaps and there is no white band at the bottom.
   return (
-    <div style={{ position: 'relative', width: '100%', height: 'calc(100vh - 68px)', overflow: 'hidden' }}>
+    <div style={{ position: 'fixed', top: '68px', left: 0, right: 0, bottom: 0 }}>
 
       {/* Map canvas */}
       <div ref={mapContainer} style={{ width: '100%', height: '100%' }} />
@@ -260,6 +297,22 @@ export default function MapPage() {
         </div>
       </div>
 
+      {/* ── 2D/3D button — left side, above style switcher ── */}
+      <button
+        onClick={toggle3D}
+        style={{
+          position: 'absolute', bottom: '82px', left: '16px', zIndex: 10,
+          padding: '7px 20px', borderRadius: '9999px', border: 'none',
+          background: is3D ? '#0C6038' : '#ffffff',
+          color: is3D ? '#ffffff' : '#0C6038',
+          fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px',
+          cursor: 'pointer', boxShadow: '0 2px 10px rgba(0,0,0,0.18)',
+          transition: 'background 0.2s ease, color 0.2s ease',
+        }}
+      >
+        {is3D ? '3D ▲' : '2D ▬'}
+      </button>
+
       {/* ── Map style switcher — bottom-left ── */}
       <div style={{ position: 'absolute', bottom: '32px', left: '16px', zIndex: 10, display: 'flex', gap: '6px' }}>
         {MAP_STYLES.map(({ id, label, url }) => (
@@ -279,20 +332,6 @@ export default function MapPage() {
           </button>
         ))}
       </div>
-
-      {/* ── 2D/3D button — bottom-right, above info card ── */}
-      <button
-        onClick={toggle3D}
-        style={{
-          position: 'absolute', bottom: '180px', right: '16px', zIndex: 10,
-          padding: '8px 18px', borderRadius: '9999px', border: 'none',
-          background: '#ffffff', color: '#0C6038',
-          fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px',
-          cursor: 'pointer', boxShadow: '0 2px 12px rgba(0,0,0,0.18)',
-        }}
-      >
-        {is3D ? '2D' : '3D'}
-      </button>
 
       {/* ── Info card — bottom-right ── */}
       <div style={{

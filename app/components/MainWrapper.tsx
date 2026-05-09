@@ -9,9 +9,7 @@ export default function MainWrapper({ children }: { children: React.ReactNode })
   return (
     <main style={{
       paddingTop: isMap ? 0 : '68px',
-      height: isMap ? 'calc(100vh - 68px)' : undefined,
-      minHeight: isMap ? undefined : '100vh',
-      overflow: isMap ? 'hidden' : undefined,
+      minHeight: '100vh',
       background: isMap
         ? 'transparent'
         : 'linear-gradient(135deg, #e8f5e9 0%, #F7F5EF 30%, #f0f7f0 60%, #e8f2eb 100%)',
