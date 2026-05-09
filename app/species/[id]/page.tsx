@@ -332,14 +332,14 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
 
           {/* Image / gallery */}
           <div className="species-hero-image">
-            <div style={{ position: 'relative', height: '400px', borderRadius: '20px', overflow: 'hidden' }}>
+            <div style={{ position: 'relative', borderRadius: '20px', overflow: 'hidden', background: 'linear-gradient(135deg, #e8f5e9, #c8e6c9)' }}>
               {galleryImages.length > 0 ? (
                 <>
                   <img
                     key={galleryImages[photoIdx]}
                     src={galleryImages[photoIdx]}
                     alt={commonName}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                    style={{ width: '100%', maxHeight: '500px', objectFit: 'contain', display: 'block' }}
                   />
 
                   {/* Left / right arrows */}
@@ -384,8 +384,7 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
                 </>
               ) : (
                 <div style={{
-                  width: '100%', height: '100%',
-                  background: 'linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%)',
+                  width: '100%', height: '360px',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
                   {icon && (

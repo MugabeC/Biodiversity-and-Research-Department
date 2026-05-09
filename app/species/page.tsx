@@ -26,7 +26,7 @@ function BirdPhoto({ num, alt }: { num: number; alt: string }) {
     <img
       src={candidates[idx]}
       alt={alt}
-      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+      style={{ position: 'absolute', inset: '8px', width: 'calc(100% - 16px)', height: 'calc(100% - 16px)', objectFit: 'contain' }}
       onError={() => setIdx(i => i + 1)}
     />
   );
@@ -213,11 +213,11 @@ function SpeciesCard({ species }: { species: Species }) {
         overflow: 'hidden',
       }}
     >
-      {/* Image area: gradient + icon placeholder with real photo overlaid */}
+      {/* Image area: gradient background, contain fit, 8px padding */}
       <div style={{
         position: 'relative',
         height: '160px',
-        background: 'linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%)',
+        background: 'linear-gradient(135deg, #e8f5e9, #c8e6c9)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
