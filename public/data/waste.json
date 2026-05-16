@@ -1,72 +1,19 @@
-[
-  {
-    "month": "March 2025",
-    "kg": null,
-    "note": null
-  },
-  {
-    "month": "April 2025",
-    "kg": null,
-    "note": null
-  },
-  {
-    "month": "May 2025",
-    "kg": null,
-    "note": null
-  },
-  {
-    "month": "June 2025",
-    "kg": 1000,
-    "note": ">1,000"
-  },
-  {
-    "month": "July 2025",
-    "kg": null,
-    "note": null
-  },
-  {
-    "month": "August 2025",
-    "kg": null,
-    "note": null
-  },
-  {
-    "month": "September 2025",
-    "kg": null,
-    "note": null
-  },
-  {
-    "month": "October 2025",
-    "kg": 225.0,
-    "note": null
-  },
-  {
-    "month": "November 2025",
-    "kg": 204.0,
-    "note": null
-  },
-  {
-    "month": "December 2025",
-    "kg": 52.0,
-    "note": null
-  },
-  {
-    "month": "January 2026",
-    "kg": 56.0,
-    "note": null
-  },
-  {
-    "month": "February 2026",
-    "kg": 108.0,
-    "note": null
-  },
-  {
-    "month": "March 2026",
-    "kg": 320.0,
-    "note": null
-  },
-  {
-    "month": "April 2026",
-    "kg": 324.0,
-    "note": null
-  }
-]
+{
+  "splitNote": "Biodegradable / non-biodegradable kg are recorded per month. Where only total kg was available, split uses a 70% / 30% estimate until weighed data is entered.",
+  "records": [
+    { "month": "March 2025", "kg": null, "biodegradableKg": null, "nonBiodegradableKg": null, "note": null },
+    { "month": "April 2025", "kg": null, "biodegradableKg": null, "nonBiodegradableKg": null, "note": null },
+    { "month": "May 2025", "kg": null, "biodegradableKg": null, "nonBiodegradableKg": null, "note": null },
+    { "month": "June 2025", "kg": 1000, "biodegradableKg": 700, "nonBiodegradableKg": 300, "note": ">1,000 total" },
+    { "month": "July 2025", "kg": null, "biodegradableKg": null, "nonBiodegradableKg": null, "note": null },
+    { "month": "August 2025", "kg": null, "biodegradableKg": null, "nonBiodegradableKg": null, "note": null },
+    { "month": "September 2025", "kg": null, "biodegradableKg": null, "nonBiodegradableKg": null, "note": null },
+    { "month": "October 2025", "kg": 225, "biodegradableKg": 158, "nonBiodegradableKg": 67, "note": null },
+    { "month": "November 2025", "kg": 204, "biodegradableKg": 143, "nonBiodegradableKg": 61, "note": null },
+    { "month": "December 2025", "kg": 52, "biodegradableKg": 36, "nonBiodegradableKg": 16, "note": null },
+    { "month": "January 2026", "kg": 56, "biodegradableKg": 39, "nonBiodegradableKg": 17, "note": null },
+    { "month": "February 2026", "kg": 108, "biodegradableKg": 76, "nonBiodegradableKg": 32, "note": null },
+    { "month": "March 2026", "kg": 320, "biodegradableKg": 224, "nonBiodegradableKg": 96, "note": null },
+    { "month": "April 2026", "kg": 324, "biodegradableKg": 227, "nonBiodegradableKg": 97, "note": null }
+  ]
+}

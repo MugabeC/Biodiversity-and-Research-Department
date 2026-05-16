@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ResponsiveContainer, AreaChart, Area,
-  ComposedChart, ReferenceLine, Line,
+  ComposedChart, ReferenceLine,
 } from 'recharts';
 import TaxaIcon from '../TaxaIcon';
 import { parseBiodiversitySurvey, type BioComplianceSummary } from '@/app/lib/parseBiodiversityWater';
@@ -16,6 +16,7 @@ import TaxaShareBarChart from './TaxaShareBarChart';
 const BiodiversityWaterCompliance = dynamic(() => import('./BiodiversityWaterCompliance'), { ssr: false });
 const BiodiversityWaterExplorer = dynamic(() => import('./BiodiversityWaterExplorer'), { ssr: false });
 const WasacWaterPanel = dynamic(() => import('./WasacWaterPanel'), { ssr: false });
+const WasteDashboardCharts = dynamic(() => import('./WasteDashboardCharts'), { ssr: false });
 
 type Summary = {
   parkName: string;
@@ -37,7 +38,8 @@ type PassesData = {
 };
 
 type CommunityRow = { month: string; activity: string; participants: string; notes?: string | null };
-type WasteRow = { month: string; kg: number | null; note?: string | null };
+import type { WasteFile } from './WasteDashboardCharts';
+import { normalizeWasteData } from './WasteDashboardCharts';
 
 const SECTIONS = [
   { id: 'overview', label: 'Overview' },
@@ -45,6 +47,7 @@ const SECTIONS = [
   { id: 'education', label: 'Education' },
   { id: 'community', label: 'Community' },
   { id: 'waste', label: 'Waste' },
+  { id: 'water', label: 'Water quality' },
   { id: 'explore', label: 'Explore Data' },
 ] as const;
 
@@ -91,7 +94,8 @@ export default function DashboardExplorer() {
   const [schools, setSchools] = useState<SchoolVisits | null>(null);
   const [community, setCommunity] = useState<CommunityRow[]>([]);
   const [passes, setPasses] = useState<PassesData | null>(null);
-  const [waste, setWaste] = useState<WasteRow[]>([]);
+  const [wasteData, setWasteData] = useState<WasteFile>([]);
+  const waste = useMemo(() => normalizeWasteData(wasteData), [wasteData]);
   const [bioWater, setBioWater] = useState<BioComplianceSummary | null>(null);
   const [exploreTab, setExploreTab] = useState('schools');
   const [search, setSearch] = useState('');
@@ -114,7 +118,7 @@ export default function DashboardExplorer() {
         setSchools(sch);
         setCommunity(comm);
         setPasses(pass);
-        setWaste(wast);
+        setWasteData(wast);
         if (wq.biodiversitySurvey) {
           setBioWater(parseBiodiversitySurvey(wq.biodiversitySurvey));
         }
@@ -471,29 +475,22 @@ export default function DashboardExplorer() {
 
         {(section === 'overview' || section === 'waste') && (
           <>
-            <SectionTitle>Waste & water quality</SectionTitle>
+            <SectionTitle>Waste management</SectionTitle>
+            <WasteDashboardCharts data={wasteData} />
+          </>
+        )}
+
+        {(section === 'overview' || section === 'water') && (
+          <>
+            <SectionTitle>Water quality</SectionTitle>
             <div className="dashboard-charts-grid">
-              {wasteMonthly.length > 0 && (
-                <ChartCard title="Waste collected (kg per month)">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart data={wasteMonthly} margin={{ top: 8, right: 8, left: -8, bottom: 8 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke={c.grid} vertical={false} />
-                      <XAxis dataKey="monthShort" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 9 }} angle={-35} textAnchor="end" height={56} />
-                      <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} />
-                      <Tooltip {...tt} />
-                      <Bar dataKey="kg" name="Waste (kg)" fill={c.secondary} radius={[4, 4, 0, 0]} barSize={28} />
-                      <Line type="monotone" dataKey="kg" name="Trend" stroke={c.primary} strokeWidth={2} dot={false} />
-                    </ComposedChart>
-                  </ResponsiveContainer>
-                </ChartCard>
-              )}
               {bioWater && (
                 <ChartCard title="Park water quality — biodiversity survey compliance" content>
                   <BiodiversityWaterCompliance summary={bioWater} />
                 </ChartCard>
               )}
             </div>
-            <div className="dashboard-charts-grid">
+            <div className="dashboard-charts-grid" style={{ marginTop: '1.25rem' }}>
               {bioWater && (
                 <div style={{ gridColumn: '1 / -1' }}>
                   <ChartCard title="Explore park water parameters (biodiversity survey)" content>
@@ -517,7 +514,7 @@ export default function DashboardExplorer() {
               Search and browse department datasets. Water quality has two programmes: the{' '}
               <strong>biodiversity survey</strong> (park ponds & wetlands, Nov 2025) and{' '}
               <strong>WASAC / RS 109</strong> (industrial wastewater & Phoenix Apartment community effluent, Oct 2025).
-              Use the Waste tab to explore both with search — not the parameter pill toggles.
+              Use the <strong>Water quality</strong> tab for park parameters and WASAC monitoring charts.
             </p>
             <input
               type="search"
@@ -621,18 +618,26 @@ export default function DashboardExplorer() {
                   <thead>
                     <tr>
                       <th>Month</th>
-                      <th>kg collected</th>
+                      <th>Total (kg)</th>
+                      <th>Biodegradable (kg)</th>
+                      <th>Non-biodegradable (kg)</th>
                       <th>Note</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {waste.map((row, i) => (
-                      <tr key={i}>
-                        <td>{row.month}</td>
-                        <td>{row.kg ?? row.note ?? '—'}</td>
-                        <td>{row.note ?? '—'}</td>
-                      </tr>
-                    ))}
+                    {waste.map((row, i) => {
+                      const bio = row.biodegradableKg ?? (row.kg != null ? Math.round(row.kg * 0.7) : null);
+                      const nonBio = row.nonBiodegradableKg ?? (row.kg != null && bio != null ? row.kg - bio : null);
+                      return (
+                        <tr key={i}>
+                          <td>{row.month}</td>
+                          <td>{row.kg ?? '—'}</td>
+                          <td>{bio ?? '—'}</td>
+                          <td>{nonBio ?? '—'}</td>
+                          <td>{row.note ?? '—'}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               )}

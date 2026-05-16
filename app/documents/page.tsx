@@ -1,40 +1,9 @@
-const DOCUMENTS = [
-  {
-    title: 'School Visits',
-    description: 'Monthly student visit totals and individual school records.',
-    href: '/data/school_visits.json',
-  },
-  {
-    title: 'Water Quality',
-    description: 'WASAC compliance sampling — October 2025.',
-    href: '/data/water_quality.json',
-  },
-  {
-    title: 'Community Activities',
-    description: 'Community engagement and outreach records.',
-    href: '/data/community_activities.json',
-  },
-  {
-    title: 'Complementary Passes',
-    description: 'Complimentary visitor pass records.',
-    href: '/data/complementary_passes.json',
-  },
-  {
-    title: 'Waste Management',
-    description: 'Waste collection and management data.',
-    href: '/data/waste.json',
-  },
-  {
-    title: 'Biodiversity Summary',
-    description: 'Species counts by taxa — 2023 vs 2025.',
-    href: '/data/summary.json',
-  },
-  {
-    title: 'Species Checklist',
-    description: 'Full merged species dataset (870 species).',
-    href: '/data/species/species.json',
-  },
-];
+import Link from 'next/link';
+import {
+  DOCUMENT_LIBRARY,
+  documentHref,
+  documentTypeLabel,
+} from '@/app/lib/documents';
 
 export default function DocumentsPage() {
   return (
@@ -45,36 +14,33 @@ export default function DocumentsPage() {
             Documents
           </h1>
           <p style={{ fontSize: '15px', color: 'var(--text-secondary)', margin: '8px 0 0' }}>
-            Research data exports · Nyandungu Eco-Park
+            Park policies, plans, and research files · Nyandungu Eco-Park
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
-          {DOCUMENTS.map((doc) => (
-            <a
-              key={doc.href}
-              href={doc.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="glass-card"
-              style={{
-                display: 'block',
-                textDecoration: 'none',
-                color: 'inherit',
-                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-              }}
-            >
-              <h2 className="heading" style={{ fontSize: '18px', color: 'var(--meadow-green)', margin: '0 0 8px' }}>
-                {doc.title}
-              </h2>
-              <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: '0 0 12px', lineHeight: 1.5 }}>
-                {doc.description}
-              </p>
-              <span style={{ fontSize: '13px', color: 'var(--meadow-green)' }}>
-                Open JSON ↗
-              </span>
-            </a>
-          ))}
+        <div className="doc-library-grid">
+          {DOCUMENT_LIBRARY.map(doc => {
+            const href = documentHref(doc);
+            return (
+              <article key={doc.id} className="glass-card doc-library-card">
+                <div className="doc-library-card-head">
+                  <span className={`doc-type-badge doc-type-badge--${doc.type}`}>
+                    {documentTypeLabel(doc.type)}
+                  </span>
+                  <h2 className="heading doc-library-card-title">{doc.title}</h2>
+                </div>
+                <p className="doc-library-card-desc">{doc.description}</p>
+                <div className="doc-library-card-actions">
+                  <Link href={`/documents/view?id=${doc.id}`} className="doc-action-btn doc-action-btn--primary">
+                    View
+                  </Link>
+                  <a href={href} download={doc.filename} className="doc-action-btn doc-action-btn--ghost">
+                    Download
+                  </a>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </div>
     </div>

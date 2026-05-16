@@ -82,11 +82,11 @@ export default function BiodiversityWaterExplorer({ summary }: { summary: BioCom
       {param && (
         <>
           <p className="chart-limit-hint">
-            Limit: <strong style={{ color: '#D4251C' }}>{limitLabel(param.limit, param.unit)}</strong>
+            Limit: <strong className="chart-limit-fail">{limitLabel(param.limit, param.unit)}</strong>
             {param.method ? ` · ${param.method}` : ''}
             {' · '}
-            <span style={{ color: '#1A7D2E' }}>green = PASS</span>,{' '}
-            <span style={{ color: '#D4251C' }}>red = FAIL</span>
+            <span className="chart-limit-pass">green = PASS</span>,{' '}
+            <span className="chart-limit-fail">red = FAIL</span>
           </p>
           <ChartPlotArea height={plotHeight}>
             <BarChart
