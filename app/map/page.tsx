@@ -19,7 +19,7 @@ const LAYERS = [
   { id: 'park-boundary', label: 'Park Boundary',     color: '#E53935', mapIds: ['park-boundary'] },
   { id: 'restored-area', label: 'Restored Area',      color: '#F5A623', mapIds: ['restored-area-fill', 'restored-area-line'] },
   { id: 'trails',        label: 'Trails & Walkways',  color: '#c77dff', mapIds: ['trails'] },
-  { id: 'drainage',      label: 'Drainage & Streams', color: '#00B0FF', mapIds: ['drainage-casing', 'drainage'] },
+  { id: 'drainage',      label: 'Drainage & Streams', color: '#00B0FF', mapIds: ['drainage'] },
   { id: 'open-grounds',  label: 'Open Grounds',       color: '#8DA750', mapIds: ['open-grounds'] },
   { id: 'roads',         label: 'Roads',               color: '#adb5bd', mapIds: ['roads'] },
 ];
@@ -181,24 +181,13 @@ export default function MapPage() {
 
           mapInstance.addSource('drainage-src', { type: 'geojson', data: drainage });
           mapInstance.addLayer({
-            id: 'drainage-casing',
-            type: 'line',
-            source: 'drainage-src',
-            layout: { visibility: 'visible', 'line-cap': 'round', 'line-join': 'round' },
-            paint: {
-              'line-color': '#ffffff',
-              'line-width': 4,
-              'line-opacity': 0.55,
-            },
-          });
-          mapInstance.addLayer({
             id: 'drainage',
             type: 'line',
             source: 'drainage-src',
             layout: { visibility: 'visible', 'line-cap': 'round', 'line-join': 'round' },
             paint: {
               'line-color': '#00B0FF',
-              'line-width': 2.5,
+              'line-width': 1.5,
               'line-opacity': 1,
             },
           });

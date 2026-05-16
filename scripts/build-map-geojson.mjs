@@ -2,7 +2,8 @@
  * Extract only map-visible layers from full topo GeoJSON into small files.
  * Run after updating source shapefiles: node scripts/build-map-geojson.mjs
  *
- * Source (local only, gitignored): Topo_polylines.geojson, Topo_polygon.geojson
+ * Source (keep outside repo): Topo_polylines.geojson, Topo_polygon.geojson
+ *   Place them in public/data/geojson/ only when rebuilding map layers.
  * Output (committed): public/data/geojson/map/*.geojson
  */
 
