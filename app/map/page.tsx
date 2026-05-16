@@ -3,28 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { LayerSpecification, Map as MapLibreMap, StyleSpecification } from 'maplibre-gl';
 
-type GeoFeature = {
-  properties?: { Layer?: string };
-  geometry?: { type: string; coordinates: unknown };
-};
-
-function isDrainageLayer(layer?: string): boolean {
-  if (!layer) return false;
-  const L = layer.toUpperCase();
-  return L.includes('DRAINAGE') || L.includes('DRAIN');
-}
-
-/** Include polygon outlines that represent drainage areas. */
-function polygonRingToLineFeature(f: GeoFeature): GeoFeature | null {
-  const ring = (f.geometry as { coordinates?: number[][][] })?.coordinates?.[0];
-  if (!ring || ring.length < 2) return null;
-  return {
-    type: 'Feature',
-    properties: f.properties,
-    geometry: { type: 'LineString', coordinates: ring },
-  } as GeoFeature;
-}
-
 // ── Map style options ─────────────────────────────────────────────────────────
 
 const MAP_STYLES = [
@@ -186,33 +164,22 @@ export default function MapPage() {
             paint: { 'line-color': '#F5A623', 'line-width': 1.5 },
           });
 
-          // ── Polylines & polygons (polygons loaded early for drainage merge) ──
-          const [polylines, polygons] = await Promise.all([
-            fetch('/data/geojson/Topo_polylines.geojson').then(r => r.json()),
-            fetch('/data/geojson/Topo_polygon.geojson').then(r => r.json()),
+          // ── Optimized map layers (~10 MB total, built via npm run build-map-data) ──
+          const [trails, drainage, roads, openGrounds] = await Promise.all([
+            fetch('/data/geojson/map/trails.geojson').then(r => r.json()),
+            fetch('/data/geojson/map/drainage.geojson').then(r => r.json()),
+            fetch('/data/geojson/map/roads.geojson').then(r => r.json()),
+            fetch('/data/geojson/map/open-grounds.geojson').then(r => r.json()),
           ]);
 
-          const trailFeatures = polylines.features.filter((f: GeoFeature) => f.properties?.Layer === 'PEDESTRIAN WALKWAYS AND TRAILS');
-          mapInstance.addSource('trails-src', { type: 'geojson', data: { type: 'FeatureCollection', features: trailFeatures } });
+          mapInstance.addSource('trails-src', { type: 'geojson', data: trails });
           mapInstance.addLayer({
             id: 'trails', type: 'line', source: 'trails-src',
             layout: { visibility: 'visible' },
             paint: { 'line-color': '#c77dff', 'line-width': 1.5, 'line-opacity': 0.7, 'line-dasharray': [2, 2] },
           });
 
-          const drainageFromLines = polylines.features.filter((f: GeoFeature) =>
-            isDrainageLayer(f.properties?.Layer)
-          );
-          const drainageFromPolygons = polygons.features
-            .filter((f: GeoFeature) => isDrainageLayer(f.properties?.Layer))
-            .map(polygonRingToLineFeature)
-            .filter((f: GeoFeature | null): f is GeoFeature => f !== null);
-          const drainageFeatures = [...drainageFromLines, ...drainageFromPolygons];
-
-          mapInstance.addSource('drainage-src', {
-            type: 'geojson',
-            data: { type: 'FeatureCollection', features: drainageFeatures },
-          });
+          mapInstance.addSource('drainage-src', { type: 'geojson', data: drainage });
           mapInstance.addLayer({
             id: 'drainage-casing',
             type: 'line',
@@ -236,17 +203,14 @@ export default function MapPage() {
             },
           });
 
-          const roadFeatures = polylines.features.filter((f: GeoFeature) => ['MAIN ROAD_PEDESTRIAN', 'INTERNAL SERVICE ROAD', 'EXISTING EARTHROAD'].includes(f.properties?.Layer ?? ''));
-          mapInstance.addSource('roads-src', { type: 'geojson', data: { type: 'FeatureCollection', features: roadFeatures } });
+          mapInstance.addSource('roads-src', { type: 'geojson', data: roads });
           mapInstance.addLayer({
             id: 'roads', type: 'line', source: 'roads-src',
             layout: { visibility: 'visible' },
             paint: { 'line-color': '#adb5bd', 'line-width': 1.5, 'line-opacity': 0.6 },
           });
 
-          // Open Grounds (vegetation cover)
-          const openGroundsFeatures = polygons.features.filter((f: GeoFeature) => ['BAMBOO_TREE', 'GARDEN', 'BOTANIC GARDEN'].includes(f.properties?.Layer ?? ''));
-          mapInstance.addSource('open-grounds-src', { type: 'geojson', data: { type: 'FeatureCollection', features: openGroundsFeatures } });
+          mapInstance.addSource('open-grounds-src', { type: 'geojson', data: openGrounds });
           mapInstance.addLayer({
             id: 'open-grounds', type: 'fill', source: 'open-grounds-src',
             layout: { visibility: 'visible' },

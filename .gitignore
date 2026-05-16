@@ -34,3 +34,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Full topo exports (large); regenerate map layers with: npm run build-map-data
+public/data/geojson/Topo_polylines.geojson
+public/data/geojson/Topo_polygon.geojson
+public/data/geojson/Topo_dots.geojson

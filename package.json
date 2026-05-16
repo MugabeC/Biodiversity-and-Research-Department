@@ -11,7 +11,8 @@
     "lint": "next lint",
     "cache-species-images": "node scripts/cache-species-images.mjs",
     "enrich-species-descriptions": "node scripts/enrich-species-descriptions.mjs",
-    "enrich-species-all": "node scripts/enrich-species-descriptions.mjs && node scripts/cache-species-images.mjs --refresh"
+    "enrich-species-all": "node scripts/enrich-species-descriptions.mjs && node scripts/cache-species-images.mjs --refresh",
+    "build-map-data": "node scripts/build-map-geojson.mjs"
   },
   "dependencies": {
     "maplibre-gl": "^5.24.0",
