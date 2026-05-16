@@ -1,20 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comforter+Brush&family=Poppins:wght@400;700&display=swap');
 @import 'maplibre-gl/dist/maplibre-gl.css';
-
-@font-face {
-  font-family: 'ComforterBrush';
-  src: url('/ComforterBrush-Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
+:root,
+[data-theme='light'] {
   --meadow-green: #0C6038;
+  --meadow-green-light: #52b788;
   --outerspace: #2D4C39;
   --peach: #F1D2A1;
   --golden: #F5A623;
@@ -22,27 +16,315 @@
   --crimson: #6C2728;
   --mustard-green: #808847;
   --surface: #FFFFFF;
+  --surface-glass: rgba(255, 255, 255, 0.55);
+  --surface-glass-border: rgba(255, 255, 255, 0.75);
   --text-primary: #1A2E1F;
   --text-secondary: #4A5E4F;
-  --border: #E0E8E2;
+  --border: rgba(224, 232, 226, 0.9);
+  --nav-glass-bg: rgba(255, 255, 255, 0.72);
+  --nav-glass-border: rgba(255, 255, 255, 0.85);
+  --nav-shadow: 0 4px 24px rgba(12, 96, 56, 0.08);
+  --species-photo-bg: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+  --card-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.04),
+    0 8px 24px rgba(12, 96, 56, 0.1),
+    0 16px 40px rgba(12, 96, 56, 0.14);
+  --card-shadow-hover:
+    0 4px 8px rgba(0, 0, 0, 0.06),
+    0 14px 36px rgba(12, 96, 56, 0.16),
+    0 28px 56px rgba(12, 96, 56, 0.2);
+  --tile-float-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 6px 16px rgba(12, 96, 56, 0.1),
+    0 14px 28px rgba(12, 96, 56, 0.14),
+    0 22px 44px rgba(12, 96, 56, 0.12);
+  --tile-float-shadow-hover:
+    0 4px 8px rgba(0, 0, 0, 0.06),
+    0 12px 28px rgba(12, 96, 56, 0.16),
+    0 24px 48px rgba(12, 96, 56, 0.2),
+    0 32px 56px rgba(12, 96, 56, 0.14);
+  --tile-ground-shadow: rgba(12, 96, 56, 0.22);
+  --page-gradient: linear-gradient(135deg, #e8f5e9 0%, #F7F5EF 30%, #f0f7f0 60%, #e8f2eb 100%);
+  --accent-text: var(--meadow-green);
+  --chart-tick: #4A5E4F;
+  --chart-tooltip-bg: rgba(26, 46, 31, 0.94);
+  --chart-tooltip-text: #ffffff;
+  --chart-tooltip-item: #E8F5E9;
+  --chart-tooltip-border: rgba(255, 255, 255, 0.12);
+  --chart-glass-bg: rgba(255, 255, 255, 0.52);
+  --chart-glass-border: rgba(255, 255, 255, 0.72);
+}
+
+[data-theme='dark'] {
+  --meadow-green: #6ecf96;
+  --meadow-green-light: #9ee4b8;
+  --bg-main: #0a120e;
+  --surface: #1a2e22;
+  --surface-glass: rgba(255, 255, 255, 0.07);
+  --surface-glass-border: rgba(255, 255, 255, 0.14);
+  --text-primary: #e8f2eb;
+  --text-secondary: #a8bdb0;
+  --border: rgba(255, 255, 255, 0.1);
+  --nav-glass-bg: rgba(12, 28, 22, 0.62);
+  --nav-glass-border: rgba(255, 255, 255, 0.12);
+  --nav-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+  --species-photo-bg: linear-gradient(135deg, #1a3328, #0f1a14);
+  --card-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.3),
+    0 10px 28px rgba(0, 0, 0, 0.4),
+    0 20px 44px rgba(0, 0, 0, 0.35);
+  --card-shadow-hover:
+    0 6px 14px rgba(0, 0, 0, 0.35),
+    0 18px 40px rgba(0, 0, 0, 0.45),
+    0 30px 56px rgba(12, 96, 56, 0.25);
+  --tile-float-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.25),
+    0 14px 28px rgba(0, 0, 0, 0.35),
+    0 24px 44px rgba(12, 96, 56, 0.2);
+  --tile-float-shadow-hover:
+    0 8px 20px rgba(0, 0, 0, 0.35),
+    0 22px 44px rgba(0, 0, 0, 0.4),
+    0 32px 56px rgba(12, 96, 56, 0.28);
+  --tile-ground-shadow: rgba(110, 207, 150, 0.28);
+  --page-gradient:
+    radial-gradient(ellipse 90% 55% at 15% 15%, rgba(12, 96, 56, 0.42) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 45% at 85% 8%, rgba(45, 76, 57, 0.38) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 50% at 60% 95%, rgba(108, 39, 40, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 30% 70%, rgba(128, 136, 71, 0.15) 0%, transparent 50%),
+    linear-gradient(165deg, #060d09 0%, #0c1a12 22%, #143528 48%, #0f2419 72%, #081510 100%);
+  --accent-text: var(--meadow-green-light);
+  --chart-tick: #a8bdb0;
+  --chart-tooltip-bg: rgba(10, 20, 15, 0.95);
+  --chart-tooltip-text: #e8f2eb;
+  --chart-tooltip-item: #c8e6d0;
+  --chart-tooltip-border: rgba(255, 255, 255, 0.12);
+  --chart-glass-bg: rgba(255, 255, 255, 0.06);
+  --chart-glass-border: rgba(255, 255, 255, 0.14);
 }
 
 body {
-  background-color: var(--bg-main);
+  background: var(--page-gradient);
+  background-attachment: fixed;
   font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6,
+.heading {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
   color: var(--text-primary);
 }
 
-@layer utilities {
-  .font-comforter {
-    font-family: 'ComforterBrush', cursive;
-  }
-  .text-balance {
-    text-wrap: balance;
-  }
+/* ── Navigation — always visible, translucent glass ── */
+.site-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 68px;
+  background: var(--nav-glass-bg);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border-bottom: 1px solid var(--nav-glass-border);
+  box-shadow: var(--nav-shadow);
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Taxa cards responsive grid — 4 cols desktop, 2 tablet, 1 mobile */
+.site-nav-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.site-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.site-nav-brand-text {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--accent-text);
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.site-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.site-nav-links {
+  display: flex;
+  gap: 0.1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.site-nav-link {
+  display: block;
+  padding: 6px 14px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 8px 8px 0 0;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  white-space: nowrap;
+}
+
+.site-nav-link:hover {
+  color: var(--accent-text);
+  background: var(--surface-glass);
+}
+
+.site-nav-link--active {
+  color: var(--accent-text);
+  border-bottom-color: var(--meadow-green);
+}
+
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--nav-glass-border);
+  background: var(--surface-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--meadow-green);
+  transform: scale(1.05);
+}
+
+/* ── Floating glass tiles ── */
+.glass-card,
+.taxa-card,
+.species-card,
+.kpi-tile {
+  background: var(--nav-glass-bg);
+  backdrop-filter: blur(20px) saturate(1.35);
+  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  border: 1px solid var(--nav-glass-border);
+  box-shadow: var(--card-shadow);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.glass-card {
+  border-radius: 20px;
+  padding: 24px;
+}
+
+.wq-formula-box {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid var(--nav-glass-border);
+}
+
+.wq-rate-display {
+  text-align: center;
+  padding: 0.5rem 0;
+}
+
+.wq-rate-value {
+  font-size: clamp(2.5rem, 6vw, 3.5rem);
+  margin: 0;
+  line-height: 1;
+}
+
+.taxa-card {
+  position: relative;
+  z-index: 1;
+  border-radius: 20px;
+  cursor: default;
+  box-shadow: var(--tile-float-shadow);
+  transform: translateY(-3px);
+  isolation: isolate;
+}
+
+/* Visible shadow below the card (not clipped like box-shadow on scroll parents) */
+.taxa-card::after {
+  content: '';
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: -14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--tile-ground-shadow, rgba(12, 96, 56, 0.22));
+  filter: blur(10px);
+  opacity: 0.85;
+  z-index: -1;
+  pointer-events: none;
+  transition: opacity 0.25s ease, filter 0.25s ease, bottom 0.25s ease;
+}
+
+.taxa-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--tile-float-shadow-hover);
+}
+
+.taxa-card:hover::after {
+  bottom: -18px;
+  filter: blur(14px);
+  opacity: 1;
+}
+
+.glass-card:hover,
+.species-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+[data-theme='dark'] .taxa-card,
+[data-theme='dark'] .glass-card,
+[data-theme='dark'] .species-card {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+[data-theme='dark'] .taxa-card:hover,
+[data-theme='dark'] .glass-card:hover,
+[data-theme='dark'] .species-card:hover {
+  background: rgba(255, 255, 255, 0.11);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* Taxa grid */
 .taxa-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -59,28 +341,249 @@ body {
   .taxa-grid { grid-template-columns: 1fr; }
 }
 
-/* Species Explorer search input */
+/* Dashboard — title block directly under nav */
+.dashboard-title-block {
+  text-align: center;
+  padding: 1rem 1rem 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.dashboard-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: clamp(22px, 4vw, 36px);
+  color: var(--meadow-green);
+  line-height: 1.2;
+  margin: 0;
+}
+
+[data-theme='dark'] .dashboard-title {
+  color: var(--meadow-green-light);
+}
+
+.dashboard-subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin: 0 0 1.5rem;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.dashboard-shell {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem 2rem;
+}
+
+@media (min-width: 640px) {
+  .dashboard-shell { padding-left: 1.5rem; padding-right: 1.5rem; }
+}
+
+/* Taxa row — scroll wrapper keeps bottom shadow visible (overflow-x alone clips shadows) */
+.taxa-section-float {
+  overflow: visible;
+  margin-bottom: 2.5rem;
+}
+
+.taxa-row-scroll {
+  overflow-x: auto;
+  overflow-y: visible;
+  padding: 28px 12px 52px;
+  margin: 0 -12px 8px;
+  -webkit-overflow-scrolling: touch;
+  /* Room for ::after ground shadows under each tile */
+  scrollbar-width: thin;
+}
+
+.taxa-grid--row {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.75rem;
+  padding-top: 8px;
+  overflow: visible;
+  min-width: min(100%, 720px);
+}
+
+.taxa-card--compact {
+  padding: 28px 6px 12px !important;
+  min-width: 0;
+  margin-bottom: 4px;
+}
+
+.taxa-card--compact .taxa-card-count {
+  font-size: clamp(18px, 2.2vw, 28px) !important;
+}
+
+.taxa-card--compact .taxa-card-label {
+  font-size: 10px !important;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.taxa-card--compact .taxa-card-badge {
+  font-size: 9px !important;
+  padding: 2px 6px !important;
+}
+
+@media (max-width: 900px) {
+  .taxa-grid--row {
+    grid-template-columns: repeat(7, minmax(72px, 1fr));
+    gap: 0.35rem;
+  }
+}
+
+/* Charts — 2 per row on all sizes; stacks only if one full-width */
+.dashboard-charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-charts-grid--single {
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 520px) {
+  .dashboard-charts-grid {
+    gap: 0.75rem;
+  }
+  .chart-card-inner {
+    height: 240px !important;
+  }
+}
+
+.chart-card {
+  margin-bottom: 0;
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.chart-card-inner {
+  width: 100%;
+  height: 280px;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.chart-card-inner--tall {
+  height: 320px;
+}
+
+.chart-card-body {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.chart-plot-area {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.wq-compliance-tile {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.chart-card-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+
+.chart-card-body-content {
+  min-width: 0;
+}
+
+.chart-controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.chart-controls-row .species-search {
+  flex: 1 1 180px;
+  margin: 0;
+  max-width: none;
+}
+
+.chart-select {
+  flex: 1 1 200px;
+  max-width: 320px;
+}
+
+.chart-limit-hint {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 0 0 8px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.chart-table-in-card {
+  max-height: 300px;
+  overflow: auto;
+  border: none;
+  border-radius: 12px;
+}
+
+/* Site footer */
+.site-footer {
+  text-align: center;
+  padding: 2rem 1.5rem 2.5rem;
+  margin-top: 1rem;
+  border-top: 1px solid var(--surface-glass-border);
+  background: var(--nav-glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.site-footer-line {
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0 0 6px;
+  line-height: 1.6;
+}
+
+.site-footer-credits {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.site-footer strong {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
 .species-search {
   width: 100%;
   height: 48px;
   border-radius: 12px;
-  border: 1.5px solid #E0E8E2;
+  border: 1px solid var(--surface-glass-border);
   padding: 0 16px 0 44px;
   font-family: 'Poppins', sans-serif;
+  font-weight: 400;
   font-size: 15px;
   outline: none;
-  background: rgba(255,255,255,0.7);
+  background: var(--surface-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   box-sizing: border-box;
-  color: #1A2E1F;
+  color: var(--text-primary);
 }
 .species-search:focus {
-  border-color: #0C6038;
-  box-shadow: 0 0 0 3px rgba(12,96,56,0.08);
+  border-color: var(--meadow-green);
+  box-shadow: 0 0 0 3px rgba(12, 96, 56, 0.15);
 }
-.species-search::placeholder { color: #9E9E9E; }
+.species-search::placeholder { color: var(--text-secondary); opacity: 0.7; }
 
-/* Species cards grid */
 .species-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -93,19 +596,15 @@ body {
   .species-grid { grid-template-columns: 1fr; }
 }
 
-/* Species card hover */
 .species-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 16px;
   cursor: pointer;
   text-decoration: none;
   display: block;
-}
-.species-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 40px rgba(12, 96, 56, 0.18) !important;
+  overflow: hidden;
+  color: inherit;
 }
 
-/* Species detail hero layout */
 .species-hero {
   display: flex;
   gap: 2rem;
@@ -118,7 +617,6 @@ body {
   .species-hero-image { width: 100%; }
 }
 
-/* Species detail info grid */
 .species-detail-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -128,14 +626,123 @@ body {
   .species-detail-grid { grid-template-columns: 1fr; }
 }
 
-/* Glassmorphism taxa card hover */
-.taxa-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease, backdrop-filter 0.2s ease;
-  cursor: default;
+/* Page utility text */
+.text-accent { color: var(--accent-text); }
+.text-secondary { color: var(--text-secondary); }
+.text-primary { color: var(--text-primary); }
+
+/* Dashboard section navigation */
+.dashboard-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 2rem;
+  padding: 12px;
+  border-radius: 16px;
+  background: var(--surface-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--surface-glass-border);
+  position: sticky;
+  top: 76px;
+  z-index: 50;
 }
-.taxa-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 40px rgba(12, 96, 56, 0.18);
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
+
+.dashboard-nav-btn {
+  padding: 8px 16px;
+  border-radius: 9999px;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dashboard-nav-btn:hover {
+  border-color: var(--meadow-green);
+  color: var(--accent-text);
+}
+
+.dashboard-nav-btn--active {
+  background: var(--meadow-green);
+  border-color: var(--meadow-green);
+  color: #fff;
+}
+
+[data-theme='dark'] .dashboard-nav-btn--active {
+  background: var(--meadow-green);
+  color: #0a120e;
+}
+
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.kpi-tile {
+  padding: 1.25rem 1rem;
+  text-align: center;
+}
+
+.kpi-tile .kpi-value {
+  font-size: 2rem;
+  line-height: 1.1;
+  color: var(--accent-text);
+}
+
+.kpi-tile .kpi-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 6px;
+}
+
+.data-table-wrap {
+  max-height: 360px;
+  overflow: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.data-table th {
+  position: sticky;
+  top: 0;
+  background: var(--surface-glass);
+  backdrop-filter: blur(8px);
+  text-align: left;
+  padding: 10px 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border);
+}
+
+.data-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+
+.data-table tr:hover td {
+  background: rgba(12, 96, 56, 0.05);
+}
+
+[data-theme='dark'] .data-table tr:hover td {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+@media (max-width: 900px) {
+  .site-nav-brand-text { display: none; }
+  .site-nav-links { flex-wrap: wrap; justify-content: flex-end; }
+  .dashboard-nav { top: 68px; }
 }

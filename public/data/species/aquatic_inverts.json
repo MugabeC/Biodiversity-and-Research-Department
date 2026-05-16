@@ -45,7 +45,8 @@
       "order": "Caenogastropoda",
       "family": "Thiaridae",
       "genusSpecies": "Melanoides tuberculata",
-      "pollutionTolerance": "High"
+      "pollutionTolerance": "High",
+      "description_short": "The red-rimmed melania, also known as the Malayan livebearing snail or Malayan/Malaysian trumpet snail, is a species of freshwater snail with an operculum, a parthenogenetic, aquatic gastropod mollusk in the family Thiaridae."
     },
     {
       "taxa": "aquatic_inverts",
@@ -72,7 +73,8 @@
       "order": "Hygrophila",
       "family": "Physidae",
       "genusSpecies": "Unidentified",
-      "pollutionTolerance": "High"
+      "pollutionTolerance": "High",
+      "description_short": "Unidentified may refer to:Unidentified , an American film Unidentified , a Romanian film Unidentified, a Saudi thriller film"
     },
     {
       "taxa": "aquatic_inverts",
@@ -90,7 +92,8 @@
       "order": "Sphaerida",
       "family": "Sphaeridae",
       "genusSpecies": "Unidentified",
-      "pollutionTolerance": "High"
+      "pollutionTolerance": "High",
+      "description_short": "Unidentified may refer to:Unidentified , an American film Unidentified , a Romanian film Unidentified, a Saudi thriller film"
     },
     {
       "taxa": "aquatic_inverts",
@@ -162,7 +165,8 @@
       "order": "Diptera",
       "family": "Culicidae",
       "genusSpecies": "Unidentified",
-      "pollutionTolerance": "High"
+      "pollutionTolerance": "High",
+      "description_short": "Unidentified may refer to:Unidentified , an American film Unidentified , a Romanian film Unidentified, a Saudi thriller film"
     },
     {
       "taxa": "aquatic_inverts",
@@ -189,7 +193,8 @@
       "order": "Diptera",
       "family": "Tipulidae",
       "genusSpecies": "Unidentified",
-      "pollutionTolerance": "Moderate"
+      "pollutionTolerance": "Moderate",
+      "description_short": "Unidentified may refer to:Unidentified , an American film Unidentified , a Romanian film Unidentified, a Saudi thriller film"
     },
     {
       "taxa": "aquatic_inverts",
@@ -387,7 +392,8 @@
       "order": "Odonata",
       "family": "Protoneuridae",
       "genusSpecies": "Unidentified",
-      "pollutionTolerance": "Moderate"
+      "pollutionTolerance": "Moderate",
+      "description_short": "Unidentified may refer to:Unidentified , an American film Unidentified , a Romanian film Unidentified, a Saudi thriller film"
     },
     {
       "taxa": "aquatic_inverts",

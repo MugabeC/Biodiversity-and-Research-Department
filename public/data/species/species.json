@@ -109,7 +109,8 @@
       "family": "Accipitridae",
       "commonName": "African Goshawk",
       "scientificName": "Accipiter tachiro",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The African goshawk is an African species of bird of prey in the genus Aerospiza. It was formerly placed in the genus Accipiter. The African goshawk was previously sometimes split with the red-chested goshawk of west Africa treated as a separate species."
     },
     {
       "taxa": "birds",
@@ -118,7 +119,12 @@
       "family": "Accipitridae",
       "commonName": "Augur Buzzard",
       "scientificName": "Buteo augur",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The augur buzzard is a fairly large African bird of prey. This species is distinct in typical adult plumage for its blackish back, whitish underside and orange-red tail, while juvenile augur buzzards are generally rather brown in colour; however a dark morph is known, which causes the bird's entire body to become darker. This member of the Buteo genus is distributed in several parts of the central and southern Africa, normally being found from Ethiopia to southern Angola and central Namibia. It is resident and non-migratory throughout its range. This is a species of mountains, and adjacent savannah and grassland. It is a typical buteonine raptor, being a generalist predator which tends to prefer small mammals supplemented by reptiles and birds among various prey items.",
+      "habitat_types": [
+        "Grassland",
+        "Savanna"
+      ]
     },
     {
       "taxa": "birds",
@@ -127,7 +133,11 @@
       "family": "Accipitridae",
       "commonName": "African Marsh Harrier",
       "scientificName": "Circus ranivorus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The African marsh harrier is a bird of prey belonging to the harrier genus Circus. It is largely resident in wetland habitats in southern, central and eastern Africa from South Africa north to South Sudan.",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -136,7 +146,8 @@
       "family": "Accipitridae",
       "commonName": "Palm-nut Vulture",
       "scientificName": "Gypohierax angolensis",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The palm-nut vulture or vulturine fish eagle, is a large bird of prey in the family Accipitridae. It is the only member of the genus Gypohierax."
     },
     {
       "taxa": "birds",
@@ -145,7 +156,11 @@
       "family": "Accipitridae",
       "commonName": "African Fish Eagle",
       "scientificName": "Haliaeetus vocifer",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The African fish eagle or the African sea eagle is a large species of eagle found throughout sub-Saharan Africa wherever large bodies of open water with an abundant food supply occur. It is the national bird of Malawi, Namibia, Zambia, and Zimbabwe. As a result of its large range, it is known in many languages. Examples of names include: visarend in Afrikaans, nkwazi in Chewa, aigle pêcheur in French, idì in Yoruba, hungwe in Shona, inkwazi in isiZulu, and ntšhu in Northern Sotho. Though this species may superficially resemble the bald eagle in appearance they are not closely related and the two species occur on different continents, with the bald eagle being endemic to North America.",
+      "habitat_types": [
+        "Aquatic"
+      ]
     },
     {
       "taxa": "birds",
@@ -154,7 +169,12 @@
       "family": "Accipitridae",
       "commonName": "Wahlberg's Eagle",
       "scientificName": "Hieraaetus wahlbergi",
-      "status": "LC,I"
+      "status": "LC,I",
+      "description_short": "Wahlberg's eagle is a bird of prey that is native to sub-Saharan Africa, where it is a seasonal migrant in the woodlands and savannas.\nIt is named after the Swedish naturalist Johan August Wahlberg. Like all eagles, it belongs to the family Accipitridae.",
+      "habitat_types": [
+        "Savanna",
+        "Woodland"
+      ]
     },
     {
       "taxa": "birds",
@@ -163,7 +183,12 @@
       "family": "Accipitridae",
       "commonName": "Long-crested Eagle",
       "scientificName": "Lophaetus occipitalis",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The long-crested eagle is an African bird of prey characterised by its shaggy crest of feathers. In the family Accipitridae which includes all the eagles, it is currently placed in a monotypic genus Lophaetus. It is found throughout mid- and southern Africa, with differing home ranges due to food availability and suitable habitat area, but lives mainly on forest edges and near moist areas. Breeding may occur at any time of year, depending on food availability; it lays 1 or 2 eggs as is usual for raptors. It commonly eats smaller mammals, but will also eat other vertebrates and invertebrates.",
+      "habitat_types": [
+        "Forest",
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -172,7 +197,8 @@
       "family": "Accipitridae",
       "commonName": "Yellow-billed Kite",
       "scientificName": "Milvus aegyptius",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The yellow-billed kite is the Afrotropical counterpart of the black kite, of which it is most often considered a subspecies. However, DNA studies suggest that the yellow-billed kite differs significantly from black kites in the Eurasian clade, and should be considered as a separate, allopatric species."
     },
     {
       "taxa": "birds",
@@ -181,7 +207,8 @@
       "family": "Accipitridae",
       "commonName": "Black Kite",
       "scientificName": "Milvus migrans",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The black kite or fire kite is a medium-sized bird of prey in the family Accipitridae, which also includes many other diurnal raptors. It is thought to be the world's most abundant species of Accipitridae, although some populations have experienced dramatic declines or fluctuations. Current global population estimates run up to 6.7 million individuals."
     },
     {
       "taxa": "birds",
@@ -190,7 +217,11 @@
       "family": "Accipitridae",
       "commonName": "African Harrier-Hawk",
       "scientificName": "Polyboroides typus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The African harrier-hawk, harrier hawk or gymnogene is a bird of prey. It is about 60–66 centimetres (24–26 in) in length. It breeds in most of Africa south of the Sahara. The only other member of the genus is the allopatric Madagascar harrier-hawk.",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -199,7 +230,12 @@
       "family": "Anatidae",
       "commonName": "Yellow-billed Duck",
       "scientificName": "Anas undulata",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The yellow-billed duck is a 51–58 cm long dabbling duck which is an abundant resident breeder in southern and eastern Africa. This duck is not migratory, but wanders in the dry season to find suitable waters. It is highly gregarious outside the breeding season and forms large flocks.",
+      "habitat_types": [
+        "Aquatic",
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -208,7 +244,11 @@
       "family": "Anatidae",
       "commonName": "White-faced Whistling Duck",
       "scientificName": "Dendrocygna viduata",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The white-faced whistling duck is a whistling duck that breeds in sub-Saharan Africa and much of South America.",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -217,7 +257,11 @@
       "family": "Anatidae",
       "commonName": "Spur-winged Goose",
       "scientificName": "Plectropterus gambensis",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The spur-winged goose is a large, Sub-Saharan African waterbird in the family Anatidae, which includes geese and shelducks. However, P. gambensis developed unique environmental adaptations, which resulted in the evolution of several anatomical features that are not shared with other anatids; thus, the species has been classified one step further into its own subfamily, the Plectropterinae.",
+      "habitat_types": [
+        "Aquatic"
+      ]
     },
     {
       "taxa": "birds",
@@ -226,7 +270,8 @@
       "family": "Apodidae",
       "commonName": "Common Swift",
       "scientificName": "Apus apus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The common swift is a medium-sized bird, superficially similar to the barn swallow or house martin but somewhat larger, though not stemming from those passerine species, being in the order Apodiformes. The resemblances between the groups are due to convergent evolution, reflecting similar contextual development. The swifts' nearest relatives are the New World hummingbirds and the Southeast Asian treeswifts."
     },
     {
       "taxa": "birds",
@@ -235,7 +280,8 @@
       "family": "Apodidae",
       "commonName": "White-rumped Swift",
       "scientificName": "Apus caffer",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The white-rumped swift is a species of swift. Although this small bird is superficially similar to a house martin, it is not closely related to that passerine species. The resemblances between the swallows and swifts are due to convergent evolution reflecting similar life styles."
     },
     {
       "taxa": "birds",
@@ -244,7 +290,12 @@
       "family": "Caprimulgidae",
       "commonName": "Mozambique Nightjar",
       "scientificName": "Caprimulgus fossii",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The square-tailed nightjar is a species of nightjar in the family Caprimulgidae which is native to tropical and subtropical woodlands of the Afrotropics. It has an extensive range south of the African equator. Despite not having a completely \"square tail\", its naming highlights a distinguishing field mark. The similarly plumaged slender-tailed nightjar, found in dry bush country of the tropics, differs namely by its protruding central tail feathers. It is alternatively known as the Gabon nightjar or Gaboon nightjar or the Mozambique nightjar.",
+      "habitat_types": [
+        "Bushland",
+        "Woodland"
+      ]
     },
     {
       "taxa": "birds",
@@ -253,7 +304,8 @@
       "family": "Ciconiidae",
       "commonName": "African Openbill",
       "scientificName": "Anastomus lamelligerus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The African openbill is a species of stork from the family Ciconiidae. It is widely distributed in Sub-Saharan Africa and western regions of Madagascar. This species is considered common to locally abundant across its range, although it has a patchy distribution. Some experts consider there to be two sub-species, A. l. lamelligerus distributed on the continent and A. l. madagascariensis living on the island of Madagascar. Scientists distinguish between the two sub-species due to the more pronounced longitudinal ridges on the bills of adult A. l. madagascariensis. The Asian openbill found in Asia is the African openbill's closest relative. The two species share the same notably large bill of a peculiar shape that gives them their name."
     },
     {
       "taxa": "birds",
@@ -262,7 +314,8 @@
       "family": "Ciconiidae",
       "commonName": "Yellow-billed Stork",
       "scientificName": "Mycteria ibis",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The yellow-billed stork is a large African stork species in the family Ciconiidae. It is widespread south of the Sahara and also occurs in Madagascar."
     },
     {
       "taxa": "birds",
@@ -271,7 +324,8 @@
       "family": "Coliidae",
       "commonName": "Speckled Mousebird",
       "scientificName": "Colius striatus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The speckled mousebird is the largest species of mousebird, as well as one of the most common. It is found throughout most of Central, Eastern and Southern Africa."
     },
     {
       "taxa": "birds",
@@ -280,7 +334,13 @@
       "family": "Coliidae",
       "commonName": "Red-faced Mousebird",
       "scientificName": "Urocolius indicus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The red-faced mousebird is a species of mousebird or coly. It is a common in southern Africa from the Democratic Republic of Congo, Zambia and Tanzania south to the Cape. Its habitat is savanna with thickets, fynbos scrub, other open woodland, gardens and orchards.",
+      "habitat_types": [
+        "Savanna",
+        "Urban/Garden",
+        "Woodland"
+      ]
     },
     {
       "taxa": "birds",
@@ -289,7 +349,11 @@
       "family": "Columbidae",
       "commonName": "Laughing Dove",
       "scientificName": "Spilopelia senegalensis",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The laughing dove is a small pigeon that is a resident breeder in Africa, the Middle East, South Asia, and Western Australia where it has established itself in the wild after being released from Perth Zoo in 1898. This small long-tailed dove is found in dry scrub and semi-desert habitats where pairs can often be seen feeding on the ground. It is closely related to the spotted dove which is distinguished by a white and black chequered necklace. Other names include laughing turtle dove, palm dove and Senegal dove while in Asia the name little brown dove is often used.",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -298,7 +362,11 @@
       "family": "Columbidae",
       "commonName": "Ring-necked Dove",
       "scientificName": "Streptopelia capicola",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The ring-necked dove, also known as the Cape turtle dove, half-collared dove, or the Cape Lager is a widespread and often abundant dove species in East and southern Africa. It is a mostly sedentary bird, found in a variety of open habitats. Within range, its penetrating and rhythmic, three-syllabled crooning is a familiar sound at any time of the year. Its name is derived from the semi-collar of black feathers on the lower nape, a feature shared with a number of Streptopelia species. Like all doves, they depend on surface water. They congregate in large flocks at waterholes in dry regions to drink and bathe.",
+      "habitat_types": [
+        "Aquatic"
+      ]
     },
     {
       "taxa": "birds",
@@ -307,7 +375,8 @@
       "family": "Columbidae",
       "commonName": "Red-eyed Dove",
       "scientificName": "Streptopelia semitorquata",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The red-eyed dove is a dove that is widespread and common in Sub-Saharan Africa. It has been listed as Least Concern on the IUCN Red List since 2004."
     },
     {
       "taxa": "birds",
@@ -316,7 +385,8 @@
       "family": "Columbidae",
       "commonName": "Blue-spotted Wood Dove",
       "scientificName": "Turtur afer",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The blue-spotted wood dove or blue-spotted dove is a species of bird in the family Columbidae. It is abundantly present throughout Africa south of the Sahel; it is partially present in East Africa and absent in southern Africa."
     },
     {
       "taxa": "birds",
@@ -325,7 +395,8 @@
       "family": "Columbidae",
       "commonName": "Emerald-spotted Wood Dove",
       "scientificName": "Turtur chalcospilos",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The emerald-spotted wood dove or emerald-spotted dove is a bird of the family Columbidae, resident across eastern and southern Africa. It is a species of open drier deciduous woodland and second growth. It is absent from evergreen rainforests and semidesert areas."
     },
     {
       "taxa": "birds",
@@ -334,7 +405,8 @@
       "family": "Alcedinidae",
       "commonName": "Pied Kingfisher",
       "scientificName": "Ceryle rudis",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The pied kingfisher is a species of water kingfisher widely distributed across Africa and Asia. Originally described by Carl Linnaeus in 1758, it has five recognised subspecies, and is the only member of the genus Ceryle. Its black and white plumage and crest, as well as its habit of hovering over clear lakes and rivers before diving for fish, make it distinctive. Males have a double band across the breast, while females have a single broken breast band. They are usually found in pairs or small family groups. When perched, they often bob their head and flick up their tail."
     },
     {
       "taxa": "birds",
@@ -352,7 +424,8 @@
       "family": "Alcedinidae",
       "commonName": "Woodland Kingfisher",
       "scientificName": "Halcyon senegalensis",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The woodland kingfisher is a tree kingfisher that is widely distributed in Africa south of the Sahara."
     },
     {
       "taxa": "birds",
@@ -361,7 +434,8 @@
       "family": "Alcedinidae",
       "commonName": "African Pygmy Kingfisher",
       "scientificName": "Ispidina picta",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The African pygmy kingfisher is a small insectivorous kingfisher found in the Afrotropics, mostly in woodland habitats."
     },
     {
       "taxa": "birds",
@@ -370,7 +444,8 @@
       "family": "Alcedinidae",
       "commonName": "Giant Kingfisher",
       "scientificName": "Megaceryle maxima",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The giant kingfisher is the largest kingfisher in Africa, where it is a resident breeding bird over most of the continent south of the Sahara Desert, other than the arid southwest."
     },
     {
       "taxa": "birds",
@@ -379,7 +454,11 @@
       "family": "Meropidae",
       "commonName": "European Bee-eater",
       "scientificName": "Merops apiaster",
-      "status": "LC,P"
+      "status": "LC,P",
+      "description_short": "The European bee-eater is a bird species in the bee-eater family, Meropidae. It breeds in southern and central Europe, northern and southern Africa, and western Asia. Except for the resident southern African population, the species is strongly migratory, wintering in tropical Africa. This species occurs as a spring overshoot north of its usual range, with occasional breeding in northern Europe.",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -388,7 +467,13 @@
       "family": "Meropidae",
       "commonName": "Cinnamon-chested Bee-eater",
       "scientificName": "Merops oreobates",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The cinnamon-chested bee-eater is a species of bird in the family Meropidae. It is mainly native to the Albertine Rift montane forests and the East African montane forests of East Africa, in the regions surrounding Lake Victoria.",
+      "habitat_types": [
+        "Aquatic",
+        "Forest",
+        "Montane forest"
+      ]
     },
     {
       "taxa": "birds",
@@ -397,7 +482,8 @@
       "family": "Meropidae",
       "commonName": "Little Bee-eater",
       "scientificName": "Merops pusillus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The little bee-eater is a bird species in the bee-eater family, Meropidae. They are found in Sub-Saharan Africa. They should not be confused with the little green bee-eater. Migration is limited to seasonal movements depending on rainfall patterns."
     },
     {
       "taxa": "birds",
@@ -406,7 +492,12 @@
       "family": "Cuculidae",
       "commonName": "Blue-headed Coucal",
       "scientificName": "Centropus monachus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The blue-headed coucal is a species of cuckoo in the family Cuculidae. It is native to tropical central Africa where its typical habitat is swamps, river banks, forest edges and generally wet locations. It is a common bird with a wide range, and the International Union for Conservation of Nature has rated its conservation status as being of \"least concern\".",
+      "habitat_types": [
+        "Forest",
+        "Riparian"
+      ]
     },
     {
       "taxa": "birds",
@@ -415,7 +506,8 @@
       "family": "Cuculidae",
       "commonName": "White-browed Coucal",
       "scientificName": "Centropus superciliosus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The white-browed coucal or lark-heeled cuckoo, is a species of cuckoo in the family Cuculidae. It is found in sub-Saharan Africa. It inhabits areas with thick cover afforded by rank undergrowth and scrub, including in suitable coastal regions. Burchell's coucal is sometimes considered a subspecies."
     },
     {
       "taxa": "birds",
@@ -424,7 +516,8 @@
       "family": "Cuculidae",
       "commonName": "Klaas's Cuckoo",
       "scientificName": "Chrysococcyx klaas",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "Klaas's cuckoo is a species of cuckoo in the family Cuculidae which is native to the wooded regions of sub-Saharan Africa. The specific name honours Klaas, the Khoikhoi man who collected the type specimen."
     },
     {
       "taxa": "birds",
@@ -433,7 +526,11 @@
       "family": "Cuculidae",
       "commonName": "African Cuckoo",
       "scientificName": "Cuculus gularis",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The African cuckoo or African grey cuckoo is a species of cuckoo in the family Cuculidae. It is found in Sub-Saharan Africa where it migrates within the continent, generally arriving and breeding in any one locality during the rainy season. A fairly common bird, the International Union for Conservation of Nature has rated its conservation status as being of \"least concern\".",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -442,7 +539,8 @@
       "family": "Cuculidae",
       "commonName": "Red-chested Cuckoo",
       "scientificName": "Cuculus solitarius",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The red-chested cuckoo is a species of cuckoo in the family Cuculidae. It is a medium-sized bird found in Africa, south of the Sahara. In Afrikaans, it is known as \"Piet-my-vrou\", after its call."
     },
     {
       "taxa": "birds",
@@ -451,7 +549,8 @@
       "family": "Musophagidae",
       "commonName": "Bare-faced Go-away-bird",
       "scientificName": "Corythaixoides personatus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The bare-faced go-away-bird is a species of bird in the family Musophagidae which is native to the eastern Afrotropics. It is named for its distinctive and uniquely bare, black face."
     },
     {
       "taxa": "birds",
@@ -460,7 +559,8 @@
       "family": "Phasianidae",
       "commonName": "Red-necked Spurfowl",
       "scientificName": "Pternistis afer",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The red-necked spurfowl or red-necked francolin, is a gamebird in the pheasant family Phasianidae that is a resident species in southern Africa."
     },
     {
       "taxa": "birds",
@@ -469,7 +569,14 @@
       "family": "Gruidae",
       "commonName": "Grey Crowned Crane",
       "scientificName": "Balearica regulorum",
-      "status": "EN,R"
+      "status": "EN,R",
+      "description_short": "The grey crowned crane or gray crowned crane is a large crane species native to Sub-Saharan Africa. It occurs mainly in dry savannah, although it nests in somewhat wetter habitats, and can also be found in marshes, cultivated lands and grassy flatlands near rivers and lakes. Its body plumage is mainly grey and it has white cheeks, a red throat patch, and a stiff golden crown. It is omnivorous, consuming a wide variety of animal and plant matter, including plants, seeds, grain, insects, frogs, worms, snakes, small fish and the eggs of aquatic animals. It is listed as endangered on the IUCN Red List. It is the National bird of Uganda.",
+      "habitat_types": [
+        "Aquatic",
+        "Riparian",
+        "Savanna",
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -478,7 +585,8 @@
       "family": "Rallidae",
       "commonName": "Common Moorhen",
       "scientificName": "Gallinula chloropus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The common moorhen, also known as the waterhen, is a bird species in the rail family (Rallidae). It is distributed across many parts of the Old World, across Africa, Europe, and Asia. It lives around well-vegetated marshes, ponds, canals and other wetlands. The species is not found in the polar regions or many tropical rainforests; generally it is one of the most common Old World rail species, together with the Eurasian coot in some regions."
     },
     {
       "taxa": "birds",
@@ -487,7 +595,8 @@
       "family": "Rallidae",
       "commonName": "Red-chested Flufftail",
       "scientificName": "Sarothrura rufa",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The red-chested flufftail is a species of bird in the family Sarothruridae. It is found in sub-Saharan Africa from Liberia to Ethiopia and south to South Africa."
     },
     {
       "taxa": "birds",
@@ -496,7 +605,8 @@
       "family": "Rallidae",
       "commonName": "Black Crake",
       "scientificName": "Zapornia flavirostra",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The black crake is a waterbird in the rail and crake family, Rallidae. It breeds in most of sub-Saharan Africa except in very arid areas. It undertakes some seasonal movements in those parts of its range which are subject to drought. No subspecies have been described. It appears that the oldest available name for this species is actually Rallus niger J. F. Gmelin, 1788, but Swainson believed that the earlier name was unidentifiable, and his own has since become well embedded in the literature."
     },
     {
       "taxa": "birds",
@@ -559,7 +669,8 @@
       "family": "Ardeidae",
       "commonName": "Little Egret",
       "scientificName": "Egretta garzetta",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The little egret is a species of small heron in the family Ardeidae. It is a white bird with a slender black beak, long black legs and, in the western race, yellow feet. As an aquatic bird, it feeds in shallow water and on land, consuming a variety of small creatures. It breeds colonially, often with other species of water birds, making a platform nest of sticks in a tree, bush or reed bed. A clutch of three to five bluish-green eggs is laid and incubated by both parents for about three weeks. The young fledge at about six weeks of age."
     },
     {
       "taxa": "birds",
@@ -568,7 +679,8 @@
       "family": "Ardeidae",
       "commonName": "Black-crowned Night Heron",
       "scientificName": "Nycticorax nycticorax",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The black-crowned night heron or black-capped night heron, commonly shortened to just night heron in Eurasia, is a medium-sized heron found throughout a large part of the world, including parts of Europe, Asia, and North and South America. In Australasia it is replaced by the closely related Nankeen night heron, with which it has hybridised in the area of contact."
     },
     {
       "taxa": "birds",
@@ -577,7 +689,8 @@
       "family": "Campephagidae",
       "commonName": "Black Cuckoo-shrike",
       "scientificName": "Campephaga flava",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The black cuckooshrike is a species of bird in the cuckooshrike family Campephagidae. The species is closely related to Petit's cuckooshrike and the red-shouldered cuckooshrike, and forms a superspecies with them. It is also known as the African black cuckooshrike."
     },
     {
       "taxa": "birds",
@@ -586,7 +699,12 @@
       "family": "Cisticolidae",
       "commonName": "Black-throated Apalis",
       "scientificName": "Apalis jacksoni",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The black-throated apalis is a species of bird in the family Cisticolidae.\nIt is native to the Western High Plateau, the Albertine Rift montane forests and the east African montane forests and isolated lowland areas of Cameroon, the DRC and Angola.",
+      "habitat_types": [
+        "Forest",
+        "Montane forest"
+      ]
     },
     {
       "taxa": "birds",
@@ -595,7 +713,11 @@
       "family": "Cisticolidae",
       "commonName": "Grey-backed Camaroptera",
       "scientificName": "Camaroptera brevicaudata",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The grey-backed camaroptera is a small bird in the family Cisticolidae. This bird is a resident breeder in Africa south of the Sahara Desert. Recent studies suggest this species and the green-backed camaroptera may be the same species.",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -604,7 +726,12 @@
       "family": "Cisticolidae",
       "commonName": "Chubb's Cisticola",
       "scientificName": "Cisticola chubbi",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "Chubb's cisticola is a species of bird in the family Cisticolidae.\nIt is native to the Western High Plateau, the Albertine Rift montane forests and the East African montane forests.",
+      "habitat_types": [
+        "Forest",
+        "Montane forest"
+      ]
     },
     {
       "taxa": "birds",
@@ -613,7 +740,11 @@
       "family": "Cisticolidae",
       "commonName": "Red-faced Cisticola",
       "scientificName": "Cisticola erythrops",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The red-faced cisticola is a species of bird in the family Cisticolidae. It is widely present across sub-Saharan Africa. Its natural habitats are subtropical or tropical seasonally wet or flooded lowland grassland and swamps.",
+      "habitat_types": [
+        "Grassland"
+      ]
     },
     {
       "taxa": "birds",
@@ -622,7 +753,8 @@
       "family": "Cisticolidae",
       "commonName": "Winding Cisticola",
       "scientificName": "Cisticola marginatus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The winding cisticola is a species of bird in the family Cisticolidae. It has a scattered distribution across Africa south of the Sahara, and north of 11°S."
     },
     {
       "taxa": "birds",
@@ -631,7 +763,12 @@
       "family": "Cisticolidae",
       "commonName": "Trilling Cisticola",
       "scientificName": "Cisticola woosnami",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The trilling cisticola is a species of bird in the family Cisticolidae.\nIt is found in Burundi, Democratic Republic of the Congo, Kenya, Malawi, Rwanda, Tanzania, Uganda, and Zambia.\nIts natural habitats are dry savanna and subtropical or tropical dry lowland grassland.",
+      "habitat_types": [
+        "Grassland",
+        "Savanna"
+      ]
     },
     {
       "taxa": "birds",
@@ -640,7 +777,8 @@
       "family": "Cisticolidae",
       "commonName": "Grey-capped Warbler",
       "scientificName": "Eminia lepida",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The grey-capped warbler is a species of bird in the family Cisticolidae. It is monotypic in the genus Eminia. The grey-capped warbler is found in Burundi, Democratic Republic of the Congo, Kenya, Rwanda, South Sudan, Tanzania, and Uganda. It is a large, chunky, thin-tailed-warbler with a distinct…"
     },
     {
       "taxa": "birds",
@@ -649,7 +787,13 @@
       "family": "Cisticolidae",
       "commonName": "Buff-bellied Warbler",
       "scientificName": "Phyllolais pulchella",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The buff-bellied warbler is a species of bird in the family Cisticolidae. It is monotypic within the genus Phyllolais. It is found in Cameroon, Central African Republic, Chad, Democratic Republic of the Congo, Eritrea, Ethiopia, Kenya, Nigeria, Rwanda, Sudan, Tanzania, and Uganda, where its natur…",
+      "habitat_types": [
+        "Forest",
+        "Savanna",
+        "Shrubland"
+      ]
     },
     {
       "taxa": "birds",
@@ -658,7 +802,8 @@
       "family": "Cisticolidae",
       "commonName": "Tawny-flanked Prinia",
       "scientificName": "Prinia subflava",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The tawny-flanked prinia is a small passerine bird belonging to the genus Prinia in the family Cisticolidae, a family of Old World warblers. It is widespread and common in most parts of Africa south of the Sahara. The plain prinia of southern Asia was formerly included in this species but is now …"
     },
     {
       "taxa": "birds",
@@ -703,7 +848,8 @@
       "family": "Estrildidae",
       "commonName": "Black-crowned Waxbill",
       "scientificName": "Estrilda nonnula",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The black-crowned waxbill is a common species of estrildid finch found in western-central Africa. It has an estimated global extent of occurrence of 1,000,000 km2."
     },
     {
       "taxa": "birds",
@@ -712,7 +858,8 @@
       "family": "Estrildidae",
       "commonName": "Crimson-rumped Waxbill",
       "scientificName": "Estrilda charmosyna",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The black-cheeked waxbill or red-rumped waxbill is a common species of estrildid finch found in east Africa. It has an estimated global extent of occurrence of 400,000 km2 (150,000 sq mi)."
     },
     {
       "taxa": "birds",
@@ -721,7 +868,8 @@
       "family": "Estrildidae",
       "commonName": "Fawn-breasted Waxbill",
       "scientificName": "Estrilda paludicola",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The fawn-breasted waxbill is a common species of estrildid finch found in central Africa. It has an estimated global extent of occurrence of 1,800,000 km2. Estrilda paludicola, E. ochrogaster and E. poliopareia have been lumped into E. paludicola."
     },
     {
       "taxa": "birds",
@@ -730,7 +878,8 @@
       "family": "Estrildidae",
       "commonName": "White-collared Oliveback",
       "scientificName": "Nesocharis ansorgei",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The white-collared oliveback is a species of estrildid finch found in Africa. It has an estimated global extent of occurrence of 94,000 km2."
     },
     {
       "taxa": "birds",
@@ -739,7 +888,8 @@
       "family": "Estrildidae",
       "commonName": "Green-winged Pytilia",
       "scientificName": "Pytilia melba",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The green-winged pytilia is a small colourful seed-eating bird in the family Estrildidae. It is widespread throughout Sub-Saharan Africa, though it is more rarely seen in central, far southern and coastal western parts of the continent."
     },
     {
       "taxa": "birds",
@@ -748,7 +898,12 @@
       "family": "Estrildidae",
       "commonName": "Black-and-white Mannikin",
       "scientificName": "Spermestes bicolor",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The black-and-white mannikin also black-and-white munia or red-backed mannikin, is a species of estrildid finch, widely present throughout sub-Saharan Africa. It has an estimated global extent of occurrence of 4,200,000 km2 (1,600,000 sq mi).\nIt is found in moist savanna and subtropical or tropic…",
+      "habitat_types": [
+        "Forest",
+        "Savanna"
+      ]
     },
     {
       "taxa": "birds",
@@ -757,7 +912,12 @@
       "family": "Estrildidae",
       "commonName": "Bronze Mannikin",
       "scientificName": "Spermestes cucullata",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The bronze mannikin or bronze munia is a small passerine bird of the Afrotropics. This very social estrildid finch is an uncommon to locally abundant bird in much of Africa south of the Sahara Desert, where it is resident, nomadic or irruptive in mesic savanna or forest margin habitats. It has an…",
+      "habitat_types": [
+        "Forest",
+        "Savanna"
+      ]
     },
     {
       "taxa": "birds",
@@ -766,7 +926,11 @@
       "family": "Estrildidae",
       "commonName": "Red-cheeked Cordon-bleu",
       "scientificName": "Uraeginthus bengalus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The red-cheeked cordon-bleu or red-cheeked cordonbleu is a small passerine bird in the family Estrildidae. This estrildid finch is a resident breeding bird in drier regions of tropical Sub-Saharan Africa. Red-cheeked cordon-bleu has an estimated global extent of occurrence of 7,700,000 km2.",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -775,7 +939,8 @@
       "family": "Fringillidae",
       "commonName": "Streaky-headed Seedeater",
       "scientificName": "Crithagra frontalis",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The western citril, also known as the yellow-browed citril, is a species of finch in the family Fringillidae. It is found in central Africa."
     },
     {
       "taxa": "birds",
@@ -784,7 +949,8 @@
       "family": "Fringillidae",
       "commonName": "Yellow-fronted Canary",
       "scientificName": "Crithagra mozambica",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The yellow-fronted canary is a small passerine bird in the finch family. It is sometimes known in aviculture as the green singing finch or the green singer."
     },
     {
       "taxa": "birds",
@@ -793,7 +959,8 @@
       "family": "Fringillidae",
       "commonName": "Streaky Seedeater",
       "scientificName": "Crithagra striolata",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The streaky seedeater is a species of finch in the family Fringillidae. It is native to the eastern Afromontane."
     },
     {
       "taxa": "birds",
@@ -838,7 +1005,8 @@
       "family": "Hirundinidae",
       "commonName": "Barn Swallow",
       "scientificName": "Hirundo rustica",
-      "status": "LC,I"
+      "status": "LC,I",
+      "description_short": "The barn swallow is the most widespread species of swallow in the world, occurring on all continents, with vagrants reported even in Antarctica. It is a distinctive passerine bird with blue upperparts and a long, deeply forked tail. In Anglophone Europe, it is just called the swallow; in northern Europe, it is the only member of family Hirundinidae called a \"swallow\" rather than a \"martin\"."
     },
     {
       "taxa": "birds",
@@ -928,7 +1096,8 @@
       "family": "Malaconotidae",
       "commonName": "Ethiopian Boubou",
       "scientificName": "Laniarius aethiopicus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The Ethiopian boubou is a species of bird in the family Malaconotidae. It is found in Eritrea, Ethiopia, northwest Somalia, and northern Kenya. Its natural habitat is moist savanna."
     },
     {
       "taxa": "birds",
@@ -937,7 +1106,8 @@
       "family": "Malaconotidae",
       "commonName": "Black-headed Gonolek",
       "scientificName": "Laniarius erythrogaster",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The black-headed gonolek is a species of bird in the family Malaconotidae. It is found in the African countries of Burundi, Cameroon, Central African Republic, Chad, Democratic Republic of the Congo, Eritrea, Ethiopia, Kenya, Nigeria, Rwanda, South Sudan, Sudan, Tanzania, and Uganda."
     },
     {
       "taxa": "birds",
@@ -946,7 +1116,11 @@
       "family": "Monarchidae",
       "commonName": "African Paradise Flycatcher",
       "scientificName": "Terpsiphone viridis",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The African paradise flycatcher is a medium-sized passerine bird. The two central tail feathers of the male are extended into streamers that commonly are more than twice as long as the body. The female tail feathers are of moderate length and without streamers. The upper parts of the male body, wings, and tail are boldly coloured in chestnut or rusty shades, but the underparts and the head are variably grey to blue-gray, with the head of the mature male being darker, commonly glossy black with greenish highlights. The beak and other bare areas, including a wattle ring round the eye, match the colour of the surrounding feathers. The female coloration is similar, though not so showy and glossy and with the head paler.",
+      "habitat_types": [
+        "Riparian"
+      ]
     },
     {
       "taxa": "birds",
@@ -955,7 +1129,8 @@
       "family": "Motacillidae",
       "commonName": "Yellow-throated Longclaw",
       "scientificName": "Macronyx croceus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The yellow-throated longclaw is a species of bird in the family Motacillidae."
     },
     {
       "taxa": "birds",
@@ -964,7 +1139,8 @@
       "family": "Motacillidae",
       "commonName": "African Pied Wagtail",
       "scientificName": "Motacilla aguimp",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The African pied wagtail, or African wagtail, is a species of bird in the family Motacillidae."
     },
     {
       "taxa": "birds",
@@ -973,7 +1149,13 @@
       "family": "Motacillidae",
       "commonName": "Cape Wagtail",
       "scientificName": "Motacilla capensis",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The Cape wagtail, also known as Wells's wagtail, is a small insectivorous bird which is widespread in southern Africa. It frequents water's edge, lawns and gardens. It is a mostly resident, territorial species, but has been known to undertake limited altitudinal migration or form flocks outside of the breeding season. Like other wagtails they are passerine birds of the family Motacillidae, which also includes the pipits and longclaws.",
+      "habitat_types": [
+        "Aquatic",
+        "Urban/Garden",
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -982,7 +1164,11 @@
       "family": "Muscicapidae",
       "commonName": "White-browed Scrub Robin",
       "scientificName": "Cercotrichas leucophrys",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The white-browed scrub robin, also known as the red-backed scrub-robin, is a species of bird in the family Muscicapidae. It is native to sub-Saharan Africa, especially East and southern Africa. Within range, its Turdus-like song is one of the often-heard sounds of the bush. The flitting of the tail is characteristic of this species, but also of some near relatives.",
+      "habitat_types": [
+        "Bushland"
+      ]
     },
     {
       "taxa": "birds",
@@ -991,7 +1177,12 @@
       "family": "Muscicapidae",
       "commonName": "White-browed Robin-Chat",
       "scientificName": "Cossypha heuglini",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The white-browed robin-chat, also known as Heuglin's robin, is a species of bird in the family Muscicapidae. Found in east, central and southern Africa, its natural habitats include riverine forest and thickets, and it is also found near humans. The IUCN classifies it as a least-concern species.",
+      "habitat_types": [
+        "Forest",
+        "Riparian"
+      ]
     },
     {
       "taxa": "birds",
@@ -1000,7 +1191,8 @@
       "family": "Muscicapidae",
       "commonName": "Red-capped Robin-Chat",
       "scientificName": "Cossypha natalensis",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The red-capped robin-chat or Natal robin is a species of passerine bird belonging to the family Muscicapidae. This species is found in central and eastern Sub-Saharan Africa."
     },
     {
       "taxa": "birds",
@@ -1027,7 +1219,16 @@
       "family": "Muscicapidae",
       "commonName": "Dusky Flycatcher",
       "scientificName": "Muscicapa adusta",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The African dusky flycatcher, also known as the dusky-brown flycatcher or dusky alseonax, is a small passerine bird of the Old World flycatcher family, Muscicapidae. It is a resident breeder in elevated areas of Sub-Saharan Africa. It is very common in its woodland habitat, which includes riverin…",
+      "habitat_types": [
+        "Aquatic",
+        "Forest",
+        "Riparian",
+        "Urban/Garden",
+        "Wetland",
+        "Woodland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1045,7 +1246,11 @@
       "family": "Muscicapidae",
       "commonName": "Spotted Flycatcher",
       "scientificName": "Muscicapa striata",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The spotted flycatcher is a small passerine bird in the Old World flycatcher family. It breeds in most of Europe and in the Palearctic to Siberia, and is migratory, wintering in Africa and south western Asia. It is declining in parts of its range.",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1153,7 +1358,12 @@
       "family": "Phylloscopidae",
       "commonName": "Willow Warbler",
       "scientificName": "Phylloscopus trochilus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The willow warbler is a very common and widespread leaf warbler which breeds throughout northern and temperate Europe and the Palearctic, from Ireland east to the Anadyr River basin in eastern Siberia. It is strongly migratory, with almost all of the population wintering in sub-Saharan Africa.",
+      "habitat_types": [
+        "Riparian",
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1180,7 +1390,8 @@
       "family": "Ploceidae",
       "commonName": "Fan-tailed Widowbird",
       "scientificName": "Euplectes axillaris",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The fan-tailed widowbird, also known as the red-shouldered widowbird, is a species of bird in the family Ploceidae, which is native to grassy and swampy areas of the tropical and subtropical Afrotropics."
     },
     {
       "taxa": "birds",
@@ -1189,7 +1400,11 @@
       "family": "Ploceidae",
       "commonName": "Baglafecht Weaver",
       "scientificName": "Ploceus baglafecht",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The baglafecht weaver is a species of weaver bird from the family Ploceidae which is found in eastern and central Africa. There are several disjunct populations with distinguishable plumage patterns. Only some races display a discrete non-breeding plumage.",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1198,7 +1413,8 @@
       "family": "Ploceidae",
       "commonName": "Village Weaver",
       "scientificName": "Ploceus cucullatus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The village weaver , also known as the spotted-backed weaver or black-headed weaver, is a bird species in the family Ploceidae found in much of sub-Saharan Africa. It has also been introduced to Portugal and Venezuela as well as to the islands of Hispaniola, Martinique, Puerto Rico, Mauritius and…"
     },
     {
       "taxa": "birds",
@@ -1207,7 +1423,8 @@
       "family": "Ploceidae",
       "commonName": "Lesser Masked Weaver",
       "scientificName": "Ploceus intermedius",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The lesser masked weaver is a species of bird in the family Ploceidae. It builds its nests in large colonies, often alongside the village weaver and sometimes the red-billed buffalo weaver. This species is commonly parasitised by the Diederik cuckoo. It is found in eastern, south-eastern and southern Africa."
     },
     {
       "taxa": "birds",
@@ -1216,7 +1433,11 @@
       "family": "Ploceidae",
       "commonName": "Black-headed Weaver",
       "scientificName": "Ploceus melanocephalus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The black-headed weaver, also known as yellow-backed weaver, is a species of bird in the family Ploceidae. It is a resident breeder in damp areas in tropical Africa.",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1225,7 +1446,11 @@
       "family": "Ploceidae",
       "commonName": "Black-necked Weaver",
       "scientificName": "Ploceus nigricollis",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The black-necked weaver is a resident breeding bird species in much of central Africa from Cameroon in the west to Kenya and southern Somalia in the east.",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1234,7 +1459,14 @@
       "family": "Ploceidae",
       "commonName": "Spectacled Weaver",
       "scientificName": "Ploceus ocularis",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The spectacled weaver is a species of bird in the family Ploceidae. It is found widely in woodland, forest edge and gardens of central, eastern and south-eastern Africa, but is absent from the most arid regions and dense, primary rainforest. This common species breeds in solitary pairs, and both …",
+      "habitat_types": [
+        "Forest",
+        "Urban/Garden",
+        "Wetland",
+        "Woodland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1243,7 +1475,12 @@
       "family": "Ploceidae",
       "commonName": "Slender-billed Weaver",
       "scientificName": "Ploceus pelzelni",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The slender-billed weaver is a species of bird in the weaver family, Ploceidae.\nIt is sparsely distributed across equatorial Africa, namely along the shoreline of the Gulf of Guinea and Congo River and the Lake Victoria region.",
+      "habitat_types": [
+        "Aquatic",
+        "Riparian"
+      ]
     },
     {
       "taxa": "birds",
@@ -1261,7 +1498,8 @@
       "family": "Ploceidae",
       "commonName": "Red-billed Quelea",
       "scientificName": "Quelea quelea",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The red-billed quelea, also known as the red-billed weaver or red-billed dioch, is a small, seasonally nomadic, sparrow-like bird of the weaver family, Ploceidae, native to sub-Saharan Africa. It is approximately 12 cm (4.7 in) long and weighs 15 to 26 g."
     },
     {
       "taxa": "birds",
@@ -1270,7 +1508,13 @@
       "family": "Pycnonotidae",
       "commonName": "Yellow-throated Greenbul",
       "scientificName": "Atimastillas flavigula",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The pale-throated greenbul is a species of passerine bird in the bulbul family Pycnonotidae. It is found in western central Africa. Its natural habitats are subtropical or tropical dry forests, moist savanna, and subtropical or tropical moist shrubland.",
+      "habitat_types": [
+        "Forest",
+        "Savanna",
+        "Shrubland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1279,7 +1523,11 @@
       "family": "Pycnonotidae",
       "commonName": "Common Bulbul",
       "scientificName": "Pycnonotus barbatus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The common bulbul is a member of the bulbul family of passerine birds. It is widespread throughout most of Africa except for the very arid areas, and has recently begun breeding in southernmost Spain. Ten subspecies are recognised based on the geographical variation in plumage. Some of these were…",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1288,7 +1536,8 @@
       "family": "Sturnidae",
       "commonName": "Purple-headed Starling",
       "scientificName": "Lamprotornis purpuroptera",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "Rüppell's starling, also known as Rueppell's glossy-starling or Rueppell's long-tailed starling, is a species of starling in the family Sturnidae. It is found in the African countries of Burundi, Chad, the Democratic Republic of the Congo, Eritrea, Ethiopia, Kenya, Rwanda, Somalia, South Sudan, S…"
     },
     {
       "taxa": "birds",
@@ -1297,7 +1546,8 @@
       "family": "Turdidae",
       "commonName": "African Thrush",
       "scientificName": "Turdus pelios",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The African thrush or West African thrush is a passerine bird in the thrush family Turdidae. It is common in well-wooded areas over much of the western part of sub-Saharan Africa, it was once considered to be conspecific with the olive thrush but that species has now been split further. Populatio…"
     },
     {
       "taxa": "birds",
@@ -1306,7 +1556,11 @@
       "family": "Viduidae",
       "commonName": "Pin-tailed Whydah",
       "scientificName": "Vidua macroura",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The pin-tailed whydah is a small songbird with a conspicuous pennant-like tail in breeding males. It is a resident breeding bird in most of Africa south of the Sahara Desert.",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1315,7 +1569,8 @@
       "family": "Zosteropidae",
       "commonName": "Stuhlmann's White-eye",
       "scientificName": "Zosterops stuhlmanni",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The green white-eye is a bird species in the family Zosteropidae. It is found in Tanzania, Uganda and the Democratic Republic of the Congo."
     },
     {
       "taxa": "birds",
@@ -1324,7 +1579,13 @@
       "family": "Ardeidae",
       "commonName": "Grey Heron",
       "scientificName": "Ardea cinerea",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The grey heron is a long-legged wading bird of the heron family, Ardeidae, native throughout temperate Europe and Asia, and also parts of Africa. It is resident in much of its range, but some populations from the more northern parts migrate southwards in autumn. A bird of wetland areas, it can be seen around lakes, rivers, ponds, marshes and on the sea coast. It feeds mostly on aquatic creatures which it catches after standing stationary beside or in the water, or stalking its prey through the shallows.",
+      "habitat_types": [
+        "Aquatic",
+        "Riparian",
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1333,7 +1594,11 @@
       "family": "Ardeidae",
       "commonName": "Intermediate Egret",
       "scientificName": "Ardea intermedia",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The medium egret, median egret, smaller egret or intermediate egret, is a medium-sized heron. Some taxonomists put the species in the genus Egretta or Mesophoyx. It is a resident breeder in southern and eastern Asia.",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1342,7 +1607,8 @@
       "family": "Ardeidae",
       "commonName": "Cattle Egret",
       "scientificName": "Bubulcus ibis",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The western cattle egret is a species of heron found in the tropics, subtropics and warm temperate zones. Formerly, most taxonomic authorities lumped this species and the eastern cattle egret together, but the two cattle egrets are now treated as separate species. Despite the similarities in plum…"
     },
     {
       "taxa": "birds",
@@ -1351,7 +1617,11 @@
       "family": "Ardeidae",
       "commonName": "Striated Heron",
       "scientificName": "Butorides striata",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The striated heron also known as mangrove heron or little green heron, is a small heron, about 44 cm tall. It is mostly sedentary and noted for some interesting behavioural traits. The breeding habitat is in South America and the Caribbean. The striated heron was formerly considered to be conspecific with the little heron that is found in the Old World tropics from west Africa to Japan and Australia.",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1360,7 +1630,13 @@
       "family": "Scopidae",
       "commonName": "Hamerkop",
       "scientificName": "Scopus umbretta",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The hamerkop, also called the umbrette, is a medium-sized bird. It is the only living species in the genus Scopus and the family Scopidae. The species and family was long thought to sit with the Ciconiiformes but is now placed with the Pelecaniformes, and its closest relatives are thought to be t…",
+      "habitat_types": [
+        "Aquatic",
+        "Riparian",
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1369,7 +1645,8 @@
       "family": "Threskiornithidae",
       "commonName": "Hadada Ibis",
       "scientificName": "Bostrychia hagedash",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The hadada ibis or hadeda is an ibis native to Sub-Saharan Africa. It is named for its loud three to four note calls uttered in flight especially in the mornings and evenings when they fly out or return to their roost trees. Although not as dependent on water as some ibises, they are found near wetlands and often live in close proximity to humans, foraging in cultivated land and gardens. A medium-sized ibis with stout legs and a typical down-curved bill, the wing coverts are iridescent with a green or purple sheen. They are non-migratory but are known to make nomadic movements in response to rain particularly during droughts. Their ranges in southern Africa have increased with an increase in tree cover and irrigation in human-altered habitats."
     },
     {
       "taxa": "birds",
@@ -1432,7 +1709,11 @@
       "family": "Podicipedae",
       "commonName": "Little Grebe",
       "scientificName": "Tachybaptus ruficollis",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The little grebe, also known as the dabchick, is a member of the grebe family of water birds. The genus name is from Ancient Greek takhus \"fast\" and bapto \"to sink under\". The specific ruficollis is from Latin rufus \"red\" and Modern Latin -collis, \"-necked\", itself derived from Latin collum \"neck\".",
+      "habitat_types": [
+        "Aquatic"
+      ]
     },
     {
       "taxa": "birds",
@@ -1477,7 +1758,11 @@
       "family": "Phalacrocoracidae",
       "commonName": "Great Cormorant",
       "scientificName": "Phalacrocorax carbo",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The great cormorant, also known as just cormorant in Britain, as black shag or kawau in New Zealand, formerly also known as the great black cormorant across the Northern Hemisphere, the black cormorant in Australia, and the large cormorant in India, is a widespread member of the cormorant family …",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1486,7 +1771,8 @@
       "family": "Trogonidae",
       "commonName": "Narina Trogon",
       "scientificName": "Apaloderma narina",
-      "status": "LC,I"
+      "status": "LC,I",
+      "description_short": "The Narina trogon is a largely green and red, medium-sized, bird of the family Trogonidae. It is native to forests and woodlands of the Afrotropics. Though it is the most widespread and catholic in habitat choice of the three Apaloderma species, their numbers are locally depleted due to deforestation. Some populations are sedentary while others undertake regular movements."
     },
     {
       "taxa": "birds",
@@ -1495,7 +1781,8 @@
       "family": "Ploceidae",
       "commonName": "Vieillot's Black Weaver",
       "scientificName": "Ploceus nigerrimus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "Vieillot's black weaver is a species of bird in the family Ploceidae. It is found in southern Nigeria to Uganda, west Kenya, Angola and the Democratic Republic of the Congo. The common name is after the French ornithologist Louis Pierre Vieillot."
     },
     {
       "taxa": "birds",
@@ -1504,7 +1791,8 @@
       "family": "Estrildidae",
       "commonName": "Bronze Mannikin (2)",
       "scientificName": "Spermestes cucullata",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The bronze mannikin or bronze munia is a small passerine bird of the Afrotropics. This very social estrildid finch is an uncommon to locally abundant bird in much of Africa south of the Sahara Desert, where it is resident, nomadic or irruptive in mesic savanna or forest margin habitats. It has an estimated global extent of occurrence of 23,600,000 km2 (9,100,000 sq mi). It is the smallest and most widespread of four munia species on the African mainland, the other being black-and-white, red-backed and magpie mannikin. It co-occurs with the Madagascar mannikin on the Comoro Islands, and was introduced to Puerto Rico. Especially in the West Africa, it is considered a pest in grain and rice fields. It is locally trapped for the pet bird trade."
     },
     {
       "taxa": "birds",
@@ -1513,7 +1801,8 @@
       "family": "Numididae",
       "commonName": "Helmeted Guinea Fowl",
       "scientificName": "Numida meleagris",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The helmeted guinea fowl is the best known of the guinea fowl bird family, Numididae, and the only member of the genus Numida. It is native to Africa, mainly south of the Sahara, and has been widely introduced, as a domesticated species, into the West Indies, North America, Colombia, Brazil, Australia and Europe."
     },
     {
       "taxa": "birds",
@@ -1522,7 +1811,8 @@
       "family": "Phasianidae",
       "commonName": "Indian Peafowl",
       "scientificName": "Pavo cristatus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The Indian peafowl, also known as the common peafowl, or blue peafowl, is a species of peafowl native to the Indian subcontinent. While it originated in the Indian subcontinent, it has since been introduced to many other parts of the world. Male peafowl are referred to as peacocks, and female peafowl are referred to as peahens, although both sexes are often referred to colloquially as a \"peacock\"."
     },
     {
       "taxa": "birds",
@@ -1531,7 +1821,11 @@
       "family": "Columbidae",
       "commonName": "Speckled Pigeon",
       "scientificName": "Columba guinea",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The speckled pigeon, also known as the African rock pigeon or Guinea pigeon, is a pigeon that is a resident breeding bird in much of Africa south of the Sahara. It is a common and widespread species in open habitats over much of its range, although there are sizable gaps in its distribution.",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1540,7 +1834,12 @@
       "family": "Columbidae",
       "commonName": "Tambourine Dove",
       "scientificName": "Turtur tympanistria",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The tambourine dove is a pigeon which is a widespread resident breeding bird in woodlands and other thick vegetation in Africa south of the Sahara Desert. Its range extends from Senegal east to Ethiopia and Kenya and southwards through eastern Africa to south-eastern South Africa, but it is absent from the drier areas of south-western Africa. There is a population on the Comoros Islands.",
+      "habitat_types": [
+        "Wetland",
+        "Woodland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1549,7 +1848,8 @@
       "family": "Columbidae",
       "commonName": "African Green-Pigeon",
       "scientificName": "Treron calvus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The African green pigeon is a species of bird in the family Columbidae, and one of 5 green pigeon species in the Afrotropics. The species has a wide range in Sub-Saharan Africa with around 17 accepted races."
     },
     {
       "taxa": "birds",
@@ -1558,7 +1858,8 @@
       "family": "Musophagidae",
       "commonName": "Eastern Plantain-eater",
       "scientificName": "Crinifer zonurus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The eastern plantain-eater also known as the eastern grey plantain-eater, is a large member of the turaco family, a group of large arboreal near-passerine birds restricted to Africa."
     },
     {
       "taxa": "birds",
@@ -1567,7 +1868,8 @@
       "family": "Musophagidae",
       "commonName": "Purple-crested Turaco",
       "scientificName": "Gallirex porphyreolophus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The purple-crested turaco or, in South Africa, the purple-crested loerie, is a species of bird in the turaco clade with an unresolved phylogenetic placement. Initial analyses placed the purple-crested turaco in the family Musophagidae, but studies have indicated that these birds do not belong to this family and have been placed in the clade of turacos with an unresolved phylogeny. It is the National Bird of the Kingdom of Eswatini, and the crimson flight feathers of this and related turaco species are important in the ceremonial regalia of the Swazi royal family."
     },
     {
       "taxa": "birds",
@@ -1576,7 +1878,8 @@
       "family": "Cuculidae",
       "commonName": "Great Spotted Cuckoo",
       "scientificName": "Clamator glandarius",
-      "status": "LC,I"
+      "status": "LC,I",
+      "description_short": "The great spotted cuckoo is a member of the cuckoo order of birds, the Cuculiformes, which also includes the roadrunners, the anis and the coucals."
     },
     {
       "taxa": "birds",
@@ -1585,7 +1888,12 @@
       "family": "Cuculidae",
       "commonName": "Levaillant's Cuckoo",
       "scientificName": "Clamator levaillantii",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "Levaillant's cuckoo is a cuckoo which is a resident breeding species in Africa south of the Sahara. It is found in bushy habitats. It is a brood parasite, using the nests of bulbuls and babblers. It was named in honour of the French explorer, collector and ornithologist, François Le Vaillant.",
+      "habitat_types": [
+        "Bushland",
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1594,7 +1902,8 @@
       "family": "Cuculidae",
       "commonName": "Pied Cuckoo",
       "scientificName": "Clamator jacobinus",
-      "status": "LC,I"
+      "status": "LC,I",
+      "description_short": "The Jacobin cuckoo, also pied cuckoo or pied crested cuckoo, is a member of the cuckoo order of birds that is found in Africa and Asia. It is partially migratory and in India, it has been considered a harbinger of the monsoon rains due to the timing of its arrival. It has been associated with a bird in Indian mythology and poetry, known as the chātaka represented as a bird with a beak on its head that waits for rains to quench its thirst."
     },
     {
       "taxa": "birds",
@@ -1603,7 +1912,12 @@
       "family": "Caprimulgidae",
       "commonName": "Square-tailed Nightjar",
       "scientificName": "Caprimulgus fossii",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The square-tailed nightjar is a species of nightjar in the family Caprimulgidae which is native to tropical and subtropical woodlands of the Afrotropics. It has an extensive range south of the African equator. Despite not having a completely \"square tail\", its naming highlights a distinguishing field mark. The similarly plumaged slender-tailed nightjar, found in dry bush country of the tropics, differs namely by its protruding central tail feathers. It is alternatively known as the Gabon nightjar or Gaboon nightjar or the Mozambique nightjar.",
+      "habitat_types": [
+        "Bushland",
+        "Woodland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1612,7 +1926,12 @@
       "family": "Apodidae",
       "commonName": "Little Swift",
       "scientificName": "Apus affinis",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The little swift is a small species of swift found in Africa and southwestern Asia, and are vagrants and local breeders in southern Europe. They are found both in urban areas and at rocky cliffs where they build nests in a way typical of all members of the order Apodiformes. The genus name Apus is Latin for a swift, thought by the ancients to be a type of swallow without feet. The Latin specific affinis means similar to or related to, but in this case the species that the little swift supposedly resembles is not clear from the description. A population formerly considered to be an eastern subspecies of little swift is now separated as a distinct species, the house swift.",
+      "habitat_types": [
+        "Urban/Garden",
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1666,7 +1985,11 @@
       "family": "Scolopacidae",
       "commonName": "Common Sandpiper",
       "scientificName": "Actitis hypoleucos",
-      "status": "LC,P"
+      "status": "LC,P",
+      "description_short": "The common sandpiper is a small Palearctic wader. This bird and its American sister species, the spotted sandpiper, make up the genus Actitis. They are parapatric and replace each other geographically; stray birds of either species may settle down with breeders of the other and hybridize. Hybridi…",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1684,7 +2007,12 @@
       "family": "Ciconiidae",
       "commonName": "White Stork",
       "scientificName": "Ciconia ciconia",
-      "status": "LC,P"
+      "status": "LC,P",
+      "description_short": "The white stork is a large bird in the stork family, Ciconiidae. Its plumage is mainly white, with black on the bird's wings. Adults have long red legs and long pointed red beaks, and measure on average 100–115 cm (39–45 in) from beak tip to end of tail, with a 155–215 cm (61–85 in) wingspan. The…",
+      "habitat_types": [
+        "Aquatic",
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1693,7 +2021,8 @@
       "family": "Ciconiidae",
       "commonName": "Marabou Stork",
       "scientificName": "Leptoptilos crumenifer",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The marabou stork is a large wading bird in the stork family Ciconiidae native to sub-Saharan Africa. It breeds in both wet and arid habitats, often near human habitation, especially landfill sites. It is sometimes called the \"undertaker bird\" due to its shape from behind: cloak-like wings and back, skinny white legs, and sometimes a large white mass of \"hair\". It has often been credited with the largest wingspan of any land bird, with an average of 2.6 metres (8.5 ft) and some recorded examples of up to 3.2 metres (10 ft)."
     },
     {
       "taxa": "birds",
@@ -1702,7 +2031,8 @@
       "family": "Threskiornithidae",
       "commonName": "African Spoonbill",
       "scientificName": "Platalea alba",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The African spoonbill is a long-legged wading bird of the ibis and spoonbill family Threskiornithidae. The species is widespread across Africa and Madagascar, including Botswana, Kenya, Mozambique, Namibia, South Africa, and Zimbabwe. The species belongs to the genus Platalea, which also includes species such as the Black-faced spoonbill, Eurasian spoonbill, and Roseate spoonbill."
     },
     {
       "taxa": "birds",
@@ -1711,7 +2041,8 @@
       "family": "Ardeidae",
       "commonName": "Little Bittern",
       "scientificName": "Ixobrychus minutus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The little bittern is a wading bird in the heron family, Ardeidae. This species was formerly placed in the genus Ixobrychus."
     },
     {
       "taxa": "birds",
@@ -1720,7 +2051,8 @@
       "family": "Ardeidae",
       "commonName": "Rufous-bellied Heron",
       "scientificName": "Ardeola rufiventris",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The rufous-bellied heron is a species of heron in the genus Ardeola, the pond herons, of the family Ardeidae. It is found in southern Africa."
     },
     {
       "taxa": "birds",
@@ -1729,7 +2061,8 @@
       "family": "Ardeidae",
       "commonName": "Western Cattle Egret",
       "scientificName": "Ardea ibis",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The western cattle egret is a species of heron found in the tropics, subtropics and warm temperate zones. Formerly, most taxonomic authorities lumped this species and the eastern cattle egret together, but the two cattle egrets are now treated as separate species. Despite the similarities in plumage to the egrets of the genus Egretta, it is more closely related to the herons of Ardea. Originally native to parts of Africa, southwest Asia and southern Europe, it has undergone a rapid expansion in its distribution and successfully colonised much of the New World in the last century."
     },
     {
       "taxa": "birds",
@@ -1738,7 +2071,8 @@
       "family": "Ardeidae",
       "commonName": "Yellow-billed Egret",
       "scientificName": "Ardea brachyrhyncha",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The yellow-billed egret is a species of heron, a medium sized heron. This species is found in Sub-Saharan Africa. Until 2023 the yellow-billed egret was regarded as a subspecies of the intermediate egret of Asia, as was the plumed egret of Australia and Oceania."
     },
     {
       "taxa": "birds",
@@ -1747,7 +2081,8 @@
       "family": "Pelecanidae",
       "commonName": "Pink-backed Pelican",
       "scientificName": "Pelecanus rufescens",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The pink-backed pelican is a bird of the pelican family. It is a resident breeder in the swamps and shallow lakes of Africa and southern Arabia; it has also been extirpated from Madagascar."
     },
     {
       "taxa": "birds",
@@ -1756,7 +2091,8 @@
       "family": "Accipitridae",
       "commonName": "Black-winged Kite",
       "scientificName": "Elanus caeruleus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The black-winged kite, also known as the black-shouldered kite, is a small diurnal bird of prey in the family Accipitridae best known for its habit of hovering over open grasslands in the manner of the much smaller kestrels. This Palearctic and Afrotropical species was sometimes combined with the Australian black-shouldered kite and the white-tailed kite of North and South America which together form a superspecies. This kite is distinctive, with long wings; white, grey and black plumage; and owl-like forward-facing eyes with red irises. The owl-like behaviour is even more pronounced in the letter-winged kite, a nocturnal relative in Australia. Although mainly seen on plains, they are sometimes seen on grassy slopes of hills in the higher elevation regions of Asia. They are not migratory, but show nomadism in response to weather and food availability. They are well adapted to utilize periodic upsurges in rodent populations and can raise multiple broods in a single year unlike most birds of prey. Populations in southern Europe have grown in response to human activities, particularly agriculture and livestock rearing. It is now present in Southwest France."
     },
     {
       "taxa": "birds",
@@ -1765,7 +2101,8 @@
       "family": "Accipitridae",
       "commonName": "European Honey-buzzard",
       "scientificName": "Pernis apivorus",
-      "status": "LC,P"
+      "status": "LC,P",
+      "description_short": "The European honey buzzard, also known as the pern or common pern, is a bird of prey in the family Accipitridae."
     },
     {
       "taxa": "birds",
@@ -1774,7 +2111,8 @@
       "family": "Accipitridae",
       "commonName": "Western Banded Snake-Eagle",
       "scientificName": "Circaetus cinerascens",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The western banded snake eagle is a grey-brown African raptor with a short tail and a large head. Juveniles have paler and browner upper parts than adults, with white-edged feathers. The eagle's head, neck and breast are dark-streaked. The underparts are white with pale brown streaks, mainly on b…"
     },
     {
       "taxa": "birds",
@@ -1783,7 +2121,11 @@
       "family": "Accipitridae",
       "commonName": "Brown Snake Eagle",
       "scientificName": "Circaetus cinereus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The brown snake eagle is a fairly large species of bird of prey in the family Accipitridae. It is found in West, East and southern Africa. This species is an almost obligate predator of a variety of snakes. A very solitary bird, the brown snake eagle has a prolonged breeding cycle and raises a si…",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1792,7 +2134,11 @@
       "family": "Accipitridae",
       "commonName": "Booted Eagle",
       "scientificName": "Hieraaetus pennatus",
-      "status": "LC,I"
+      "status": "LC,I",
+      "description_short": "The booted eagle is a medium-sized mostly migratory bird of prey with a wide distribution in the Palearctic and southern Asia, wintering in the tropics of Africa and Asia, with a small, disjunct breeding population in south-western Africa. Like all eagles, it belongs to the family Accipitridae.",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1801,7 +2147,12 @@
       "family": "Accipitridae",
       "commonName": "Tawny Eagle",
       "scientificName": "Aquila rapax",
-      "status": "VU,R"
+      "status": "VU,R",
+      "description_short": "The tawny eagle is a large bird of prey. Like all eagles, it belongs to the family Accipitridae. Its heavily feathered legs mark it as a member of the subfamily Aquilinae, also known as booted eagles. Tawny eagles have an extensive but discontinuous breeding range that constitutes much of the African continent as well as the Indian subcontinent, with rare residency in the southern Middle East. Throughout its range, it favours open dry habitats such as semideserts, deserts steppes, or savanna plains. Despite its preference for arid areas, the species seldom occurs in areas where trees are entirely absent. It is a resident breeder which lays one to three eggs in a stick nest most commonly in the crown of a tree. The tawny eagle is perhaps the most highly opportunistic of all Aquilinae, and often scavenges on carrion or engages in kleptoparasitism towards other carnivorous animals but is also a bold and active predator, often of relatively large and diverse prey. It is estimated that tawny eagles can reach the age of 16 years old. Nonetheless, precipitous declines have been detected throughout the tawny eagle's range.",
+      "habitat_types": [
+        "Savanna",
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1810,7 +2161,11 @@
       "family": "Accipitridae",
       "commonName": "Bat Hawk",
       "scientificName": "Macheiramphus alcinus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The bat hawk is a raptor found in sub-Saharan Africa and south Asia to New Guinea. It is named for its diet, which consists mainly of bats. It requires open space in which to hunt, but will live anywhere from dense rainforest to semi-arid veld.",
+      "habitat_types": [
+        "Forest"
+      ]
     },
     {
       "taxa": "birds",
@@ -1819,7 +2174,8 @@
       "family": "Accipitridae",
       "commonName": "Gabar Goshawk",
       "scientificName": "Micronisus gabar",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The gabar goshawk is a small species of African and Arabian bird of prey in the family Accipitridae."
     },
     {
       "taxa": "birds",
@@ -1828,7 +2184,8 @@
       "family": "Accipitridae",
       "commonName": "Lizard Buzzard",
       "scientificName": "Kaupifalco monogrammicus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The lizard buzzard, or lizard hawk, is a bird of prey in the family Accipitridae. It is the only species placed in the genus Kaupifalco. It is native to Sub-Saharan Africa. Despite its name, it may be more closely related to the Accipiter hawks than the Buteo buzzards."
     },
     {
       "taxa": "birds",
@@ -1837,7 +2194,8 @@
       "family": "Accipitridae",
       "commonName": "Little Sparrowhawk",
       "scientificName": "Accipiter minullus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The little sparrowhawk is a species of Afrotropical bird of prey in the family Accipitridae. It was formerly placed in the genus Accipiter. It is the smallest member of the genus Tachyspiza and forms a superspecies with the red-thighed sparrowhawk."
     },
     {
       "taxa": "birds",
@@ -1846,7 +2204,11 @@
       "family": "Accipitridae",
       "commonName": "Common Buzzard",
       "scientificName": "Buteo buteo",
-      "status": "LC,P"
+      "status": "LC,P",
+      "description_short": "The common buzzard is a medium-to-large bird of prey which has a large range. It is a member of the genus Buteo in the family Accipitridae. The species lives in most of Europe and extends its breeding range across much of the Palearctic as far as northwestern China, far western Siberia and northw…",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1855,7 +2217,8 @@
       "family": "Accipitridae",
       "commonName": "Hooded Vulture",
       "scientificName": "Necrosyrtes monachus",
-      "status": "CR,R"
+      "status": "CR,R",
+      "description_short": "The  hooded vulture is an Old World vulture in the order Accipitriformes, which also includes eagles, kites, buzzards and hawks. It is the only member of the genus Necrosyrtes, which is sister to the larger Gyps genus, both of which are a part of the Aegypiinae subfamily of Old World vultures. It…"
     },
     {
       "taxa": "birds",
@@ -1864,7 +2227,8 @@
       "family": "Strigidae",
       "commonName": "Pearl-spotted Owlet",
       "scientificName": "Glaucidium perlatum",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The pearl-spotted owlet is a small bird of prey found in sub-Saharan Africa. They belong to the Strigidae family, otherwise known as the typical owls or the true owls, which contains most species of owl. As part of the genus Glaucidium, or pygmy owls, they are commonly referred to as 'owlets' due…"
     },
     {
       "taxa": "birds",
@@ -1873,7 +2237,14 @@
       "family": "Coraciidae",
       "commonName": "Lilac-breasted Roller",
       "scientificName": "Coracias caudatus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The lilac-breasted roller is an African bird of the roller family, Coraciidae. It is widely distributed in Southern and Eastern Africa, and is a vagrant to the southern Arabian Peninsula. It prefers open woodland and savanna, and it is for the most part absent from treeless places. Usually found …",
+      "habitat_types": [
+        "Riparian",
+        "Savanna",
+        "Wetland",
+        "Woodland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1882,7 +2253,11 @@
       "family": "Coraciidae",
       "commonName": "Broad-billed Roller",
       "scientificName": "Eurystomus glaucurus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The broad-billed roller is a member of the roller family of birds which breeds across tropical Africa and Madagascar in all but the driest regions. It is a wet season breeder, which migrates from the northern and southern areas of its range towards the moister equatorial belt in the dry season.",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1891,7 +2266,8 @@
       "family": "Lybiidae",
       "commonName": "Yellow-rumped Tinkerbird",
       "scientificName": "Pogoniulus bilineatus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The yellow-rumped tinkerbird is a bird species in the family Lybiidae, which is native to the moist tropical and subtropical regions of sub-Saharan Africa."
     },
     {
       "taxa": "birds",
@@ -1900,7 +2276,8 @@
       "family": "Indicatoridae",
       "commonName": "Brown-backed Honeybird",
       "scientificName": "Prodotiscus regulus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The brown-backed honeybird, also known as Wahlberg's honeybird, Wahlberg's honeyguide and sharp-billed honeyguide, is a species of bird in the family Indicatoridae. This bird is named after the Swedish naturalist Johan August Wahlberg."
     },
     {
       "taxa": "birds",
@@ -1909,7 +2286,8 @@
       "family": "Indicatoridae",
       "commonName": "Lesser Honeyguide",
       "scientificName": "Indicator minor",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The lesser honeyguide is a species of bird in the family Indicatoridae that is widely distributed across sub-Saharan Africa. Like other honeyguides, it is a brood parasite that lays eggs most commonly in the nests of African barbets, but will also occasionally use the nests of other birds as well…"
     },
     {
       "taxa": "birds",
@@ -1918,7 +2296,8 @@
       "family": "Indicatoridae",
       "commonName": "Greater Honeyguide",
       "scientificName": "Indicator indicator",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The greater honeyguide is a bird in the family Indicatoridae, paleotropical near passerine birds related to the woodpeckers. Its English and scientific names refer to its habit of guiding people to bee colonies. Claims that it also guides non-human animals are disputed."
     },
     {
       "taxa": "birds",
@@ -1927,7 +2306,12 @@
       "family": "Picidae",
       "commonName": "Green-backed Woodpecker",
       "scientificName": "Campethera maculosa",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The little green woodpecker, or green-backed woodpecker is a species of bird in the family Picidae. It is widely distributed in tropical Africa, living in forest edges, clearings, and forest-shrub mosaics. The International Union for Conservation of Nature (IUCN) has assessed it as a least-concer…",
+      "habitat_types": [
+        "Forest",
+        "Shrubland"
+      ]
     },
     {
       "taxa": "birds",
@@ -1936,7 +2320,8 @@
       "family": "Picidae",
       "commonName": "Nubian Woodpecker",
       "scientificName": "Campethera nubica",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The Nubian woodpecker is a species of bird in the family Picidae. It is distributed widely in Central and Eastern Africa, from Chad in west to Somalia in east and Tanzania in south. It is a fairly common species with a wide range, the population seems stable, and the International Union for Conse…"
     },
     {
       "taxa": "birds",
@@ -1945,7 +2330,8 @@
       "family": "Picidae",
       "commonName": "Golden-tailed Woodpecker",
       "scientificName": "Campethera abingoni",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The golden-tailed woodpecker is a species of bird in the family Picidae. Its specific name commemorates the 5th Earl of Abingdon. It belongs to a species complex that includes the Knysna woodpecker to the south of its range, and the mostly allopatric Mombasa woodpecker to the northeast, with whic…"
     },
     {
       "taxa": "birds",
@@ -1954,7 +2340,8 @@
       "family": "Falconidae",
       "commonName": "Eurasian Kestrel",
       "scientificName": "Falco tinnunculus",
-      "status": "LC,P"
+      "status": "LC,P",
+      "description_short": "The common kestrel, also known as the European kestrel, Eurasian kestrel or Old World kestrel, is a species of predatory bird belonging to the kestrel group of the falcon family Falconidae. In the United Kingdom, where no other kestrel species commonly occurs, it is generally just called the \"kes…"
     },
     {
       "taxa": "birds",
@@ -1963,7 +2350,8 @@
       "family": "Falconidae",
       "commonName": "Grey Kestrel",
       "scientificName": "Falco ardosiaceus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The grey kestrel is an African bird of prey belonging to the falcon family Falconidae. Its closest relatives are the banded kestrel and Dickinson's kestrel and the three are sometimes placed in the subgenus Dissodectes."
     },
     {
       "taxa": "birds",
@@ -2053,7 +2441,8 @@
       "family": "Malaconotidae",
       "commonName": "Brubru",
       "scientificName": "Nilaus afer",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The brubru is a species of bushshrike found in most of Sub-Saharan Africa. It is the only member of the genus Nilaus."
     },
     {
       "taxa": "birds",
@@ -2062,7 +2451,11 @@
       "family": "Laniidae",
       "commonName": "Red-backed Shrike",
       "scientificName": "Lanius collurio",
-      "status": "LC,P"
+      "status": "LC,P",
+      "description_short": "The red-backed shrike is a carnivorous passerine bird and member of the shrike family, Laniidae. Its breeding range stretches from Western Europe east to central Russia. It is migratory and winters in the eastern areas of tropical Africa and southern Africa.",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -2089,7 +2482,8 @@
       "family": "Cisticolidae",
       "commonName": "Yellow-breasted Apalis",
       "scientificName": "Apalis flavida",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The yellow-breasted apalis is a species of bird in the family Cisticolidae."
     },
     {
       "taxa": "birds",
@@ -2116,7 +2510,11 @@
       "family": "Acrocephalidae",
       "commonName": "Icterine Warbler",
       "scientificName": "Hippolais icterina",
-      "status": "LC,P"
+      "status": "LC,P",
+      "description_short": "The icterine warbler is an Old World warbler in the tree warbler genus Hippolais. It breeds in mainland Europe except the southwest, where it is replaced by its western counterpart, the melodious warbler. It is migratory, wintering in sub-Saharan Africa.",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -2125,7 +2523,11 @@
       "family": "Acrocephalidae",
       "commonName": "Sedge Warbler",
       "scientificName": "Acrocephalus schoenobaenus",
-      "status": "LC,P"
+      "status": "LC,P",
+      "description_short": "The sedge warbler is an Old World warbler in the genus Acrocephalus. It is a medium-sized warbler with a brown, streaked back and wings and a distinct pale supercilium. Sedge warblers are migratory, crossing the Sahara to get from their European and Asian breeding grounds to spend winter in Afric…",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -2134,7 +2536,8 @@
       "family": "Acrocephalidae",
       "commonName": "Great Swamp Warbler",
       "scientificName": "Acrocephalus rufescens",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The greater swamp warbler is a species of Old World warbler in the family Acrocephalidae. It is found in the African countries of Angola, Botswana, Burundi, Cameroon, Central African Republic, Chad, Republic of the Congo, Democratic Republic of the Congo, Equatorial Guinea, Gabon, Ghana, Kenya, M…"
     },
     {
       "taxa": "birds",
@@ -2143,7 +2546,13 @@
       "family": "Acrocephalidae",
       "commonName": "Great Reed Warbler",
       "scientificName": "Acrocephalus arundinaceus",
-      "status": "LC,P"
+      "status": "LC,P",
+      "description_short": "The great reed warbler is an insectivorous bird in the family Acrocephalidae. It is a medium-sized passerine bird and the largest of the European warblers. It breeds throughout mainland Europe and the Western Palearctic and migrates to sub-Saharan Africa in the winter. It favours reed beds during…",
+      "habitat_types": [
+        "Bushland",
+        "Forest",
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -2152,7 +2561,8 @@
       "family": "Hirundinidae",
       "commonName": "Banded Martin",
       "scientificName": "Riparia cincta",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The banded martin or banded sand martin is a small passerine bird in the swallow family Hirundinidae that is endemic to Africa. It is the only species placed in the genus Neophedina."
     },
     {
       "taxa": "birds",
@@ -2161,7 +2571,8 @@
       "family": "Hirundinidae",
       "commonName": "African Red-rumped Swallow",
       "scientificName": "Cecropis melanocrissus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The African red-rumped swallow is small passerine bird in the swallow family Hirundinidae. It is found in north tropical areas of Africa south of the Sahara."
     },
     {
       "taxa": "birds",
@@ -2170,7 +2581,11 @@
       "family": "Hirundinidae",
       "commonName": "Mosque Swallow",
       "scientificName": "Cecropis senegalensis",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The mosque swallow is a large species of swallow. It is a resident breeder in much of sub-Saharan Africa, although most common in the west. It does not migrate but follows the rains to some extent.",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -2179,7 +2594,8 @@
       "family": "Hirundinidae",
       "commonName": "European/African-rumped Swallow",
       "scientificName": "Cecropis rufula",
-      "status": "LC,P"
+      "status": "LC,P",
+      "description_short": "The European red-rumped swallow is a small passerine bird in the swallow family Hirundinidae. Historically, it was usually treated in a broad concept of the genus Hirundo, but is now treated in the genus Cecropis. It was formerly considered to be a subspecies of the eastern red-rumped swallow, un…"
     },
     {
       "taxa": "birds",
@@ -2188,7 +2604,13 @@
       "family": "Sturnidae",
       "commonName": "Violet-backed Starling",
       "scientificName": "Cinnyricinclus leucogaster",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The violet-backed starling, also known as the plum-coloured starling or amethyst starling, or Ndambamukula in the Venda language, is a relatively small species (17 cm) of starling in the family Sturnidae. It is the only member of the genus Cinnyricinclus. This strongly sexually dimorphic species is found widely in the woodlands and savannah forest edges of mainland sub-Saharan Africa. It is rarely seen on the ground, but instead found in trees and other locations away from the ground.",
+      "habitat_types": [
+        "Forest",
+        "Savanna",
+        "Woodland"
+      ]
     },
     {
       "taxa": "birds",
@@ -2197,7 +2619,8 @@
       "family": "Muscicapidae",
       "commonName": "Pale Flycatcher",
       "scientificName": "Agricola pallidus",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The pale flycatcher is a passerine bird of the Old World flycatcher family Muscicapidae, native to Sub-Saharan Africa."
     },
     {
       "taxa": "birds",
@@ -2206,7 +2629,8 @@
       "family": "Muscicapidae",
       "commonName": "Southern Black-Flycatcher",
       "scientificName": "Melaenornis pammelaina",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The southern black flycatcher is a small passerine bird of the genus Melaenornis in the flycatcher family, Muscicapidae, native to open and lightly wooded areas of eastern and southern Africa."
     },
     {
       "taxa": "birds",
@@ -2314,7 +2738,11 @@
       "family": "Motacillidae",
       "commonName": "Western Yellow Wagtail",
       "scientificName": "Motacilla flava",
-      "status": "LC,P"
+      "status": "LC,P",
+      "description_short": "The western yellow wagtail is a small passerine bird in the wagtail family Motacillidae, which also includes the pipits and longclaws. This species breeds in much of temperate Europe and Asia. Most populations are migratory, moving south to tropical Africa and southern Asia for the winter; the sm…",
+      "habitat_types": [
+        "Wetland"
+      ]
     },
     {
       "taxa": "birds",
@@ -2341,7 +2769,8 @@
       "family": "Fringillidae",
       "commonName": "Western Citril",
       "scientificName": "Crithagra frontalis",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The western citril, also known as the yellow-browed citril, is a species of finch in the family Fringillidae. It is found in central Africa."
     },
     {
       "taxa": "birds",
@@ -2359,7 +2788,13 @@
       "family": "Emberizidae",
       "commonName": "Golden-breasted Bunting",
       "scientificName": "Emberiza flaviventris",
-      "status": "LC,R"
+      "status": "LC,R",
+      "description_short": "The golden-breasted bunting is a passerine bird in the bunting family Emberizidae. It occurs in dry open woodlands and moist savanna in Africa south of the Sahara, but is absent from the equatorial forest belt.",
+      "habitat_types": [
+        "Forest",
+        "Savanna",
+        "Woodland"
+      ]
     },
     {
       "taxa": "plants",
@@ -2377,7 +2812,8 @@
       "family": "Araceae",
       "scientificName": "Zantedeschia aethiopica",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Zantedeschia aethiopica, commonly known as calla lily and arum lily, is a species of flowering plant in the family Araceae, native to southern Africa in Lesotho, South Africa, and Eswatini."
     },
     {
       "taxa": "plants",
@@ -2395,7 +2831,8 @@
       "family": "Apiaceae",
       "scientificName": "Anethum graveolens",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Dill is an annual herb in the celery family Apiaceae. Native to North Africa and West Asia, dill is grown widely in Eurasia, where its leaves and seeds are used as a herb or spice for flavouring food."
     },
     {
       "taxa": "plants",
@@ -2467,7 +2904,8 @@
       "family": "Asparagaceae",
       "scientificName": "Agave sisalana",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Sisal is a species of flowering plant native to southern Mexico, but widely cultivated and naturalized in many other countries. It yields a stiff leaf fiber used in making rope and various other products. The sisal fiber is traditionally used for rope and twine, and has many other uses, including cloth, footwear, hats, bags, carpets, geotextiles, and dartboards. It is also used as fiber reinforcements for composite fiberglass, rubber, and concrete products. Like other agaves, the pith of the leaves can be fermented and distilled to make mezcal."
     },
     {
       "taxa": "plants",
@@ -2494,7 +2932,8 @@
       "family": "Asparagaceae",
       "scientificName": "Asparagus flagellaris",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Asparagus flagellaris is a flowering plant that is native to tropical Africa."
     },
     {
       "taxa": "plants",
@@ -2548,7 +2987,8 @@
       "family": "Asphodelaceae",
       "scientificName": "Hymenocallis littoralis",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Hymenocallis littoralis, commonly known as the beach spider lily or lirio de playa, is a species of plant in the amaryllis family Amaryllidaceae. It is native to warmer coastal regions of Latin America and a widely cultivated and naturalized plant in many tropical countries."
     },
     {
       "taxa": "plants",
@@ -2602,7 +3042,8 @@
       "family": "Asteraceae",
       "scientificName": "Aspilia africana",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Aspilia africana, also known as the haemorrhage plant or wild sunflower, is one of about 50 species of the genus Aspilia."
     },
     {
       "taxa": "plants",
@@ -2665,7 +3106,8 @@
       "family": "Asteraceae",
       "scientificName": "Erigeron sumatrensis",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Erigeron sumatrensis is an annual herb probably native to South America, but widely naturalised in tropical and subtropical regions, and regarded as an invasive weed in many places.It is a perenial in the Western Cape of South Africa."
     },
     {
       "taxa": "plants",
@@ -2998,7 +3440,8 @@
       "family": "Capparidaceae",
       "scientificName": "Capparis tomentosa",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Capparis tomentosa, the woolly caper bush or African caper, is a plant in the family Capparaceae and is native to Africa."
     },
     {
       "taxa": "plants",
@@ -3034,7 +3477,8 @@
       "family": "Brassicaceae",
       "scientificName": "Lepidium sativum",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Cress, sometimes referred to as garden cress to distinguish it from similar plants also referred to as cress, is a fast-growing, edible herb."
     },
     {
       "taxa": "plants",
@@ -3061,7 +3505,8 @@
       "family": "Amaranthaceae",
       "scientificName": "Aerva lanata",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Ouret lanata, the mountain knotgrass, is a woody, prostrate or succulent, perennial herb in the family Amaranthaceae, native to the tropics of Africa and Asia. It has been included as occurring in Australia by the US government, but it is not recognised as occurring in Australia by any Australian state herbarium or Plants of the World Online. The plant sometimes flowers in the first year."
     },
     {
       "taxa": "plants",
@@ -3088,7 +3533,8 @@
       "family": "Amaranthaceae",
       "scientificName": "Amaranthus graecizans",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Amaranthus graecizans, the Mediterranean amaranth or short-tepalled pigweed, is an annual species in the botanical family Amaranthaceae. It is native to Africa, southern Europe, East Asia to India and Central Asia. It is naturalized in North America. More general common names include tumbleweed and pigweed."
     },
     {
       "taxa": "plants",
@@ -3106,7 +3552,8 @@
       "family": "Amaranthaceae",
       "scientificName": "Amaranthus spinosus",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Amaranthus spinosus, commonly known as the spiny amaranth, spiny pigweed, prickly amaranth or thorny amaranth, is a plant that is native to the tropical Americas, but is present on most continents as an introduced species and sometimes a noxious weed. It can be a serious weed of rice cultivation in Asia."
     },
     {
       "taxa": "plants",
@@ -3142,7 +3589,8 @@
       "family": "Nyctaginaceae",
       "scientificName": "Bougainvillea spectabilis",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Bougainvillea spectabilis, also known as great bougainvillea, is a species of flowering plant. It is native to Brazil, Bolivia, Peru, and Argentina's Chubut Province. It is widely grown as an ornamental plant."
     },
     {
       "taxa": "plants",
@@ -3214,7 +3662,8 @@
       "family": "Polygonaceae",
       "scientificName": "Persicaria senegalensis",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Persicaria senegalensis is a species of perennial herb in the family Polygonaceae. They have a self-supporting growth form and simple, broad leaves."
     },
     {
       "taxa": "plants",
@@ -3466,7 +3915,8 @@
       "family": "Fabaceae",
       "scientificName": "Albizia adianthifolia",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Albizia adianthifolia is a tree in the family Fabaceae. It is commonly known as the flat-crown. Its range extends from eastern South Africa to Tropical Africa."
     },
     {
       "taxa": "plants",
@@ -3565,7 +4015,8 @@
       "family": "Fabaceae",
       "scientificName": "Crotalaria longirostrata",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Crotalaria longirostrata, the chipilín, is a perennial legume that is native to Mexico and Central America. Other common names include chepil, chepilin, chipilin and longbeak rattlebox."
     },
     {
       "taxa": "plants",
@@ -3673,7 +4124,8 @@
       "family": "Fabaceae",
       "scientificName": "Neonotonia wightii",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Neonotonia wightii, the perennial soybean, is a species of flowering plant in the family Fabaceae, native to sub‑Saharan Africa, Yemen, India, and Sri Lanka, and widely introduced as a forage in Brazil, Bolivia, Paraguay, northern Argentina, the Mascarene Islands, Peninsular Malaysia, Java, New Guinea, Queensland and New South Wales in Australia, and Fiji. It is shade tolerant."
     },
     {
       "taxa": "plants",
@@ -3745,7 +4197,8 @@
       "family": "Fabaceae",
       "scientificName": "Neonotonia wightii",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Neonotonia wightii, the perennial soybean, is a species of flowering plant in the family Fabaceae, native to sub‑Saharan Africa, Yemen, India, and Sri Lanka, and widely introduced as a forage in Brazil, Bolivia, Paraguay, northern Argentina, the Mascarene Islands, Peninsular Malaysia, Java, New Guinea, Queensland and New South Wales in Australia, and Fiji. It is shade tolerant."
     },
     {
       "taxa": "plants",
@@ -4006,7 +4459,8 @@
       "family": "Fabaceae",
       "scientificName": "Pseudarthria hookeri",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Pseudarthria hookeri, the pink velvet bean, is a lanky, perennial Afrotropical herb in the legume family, Fabaceae. It is named after William Hooker. It is widespread in the African tropics and moist uplands of the African subtropics, from Senegal and Ethiopia southwards to eastern South Africa. It bears rough trifoliolate leaves along the stem, and produces terminal, pink flowers in late summer. The stem may grow up to 2 or 3 meters in height annually, before it dies back in the dry season."
     },
     {
       "taxa": "plants",
@@ -4015,7 +4469,8 @@
       "family": "Casuarinaceae",
       "scientificName": "Casuarina equisetifolia",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Casuarina equisetifolia, commonly known as coastal she-oak, horsetail she-oak, ironwood, beach sheoak, beach casuarina, whistling tree or Australian pine is a species of flowering plant in the family Casuarinaceae and is native to Australia, New Guinea, Southeast Asia and India. It is a small to medium-sized, monoecious tree with scaly or furrowed bark on older specimens, drooping branchlets, the leaves reduced to scales in whorls of 7 or 8, the fruit 10–24 mm (0.4–0.9 in) long containing winged seeds (samaras) 6–8 mm (0.2–0.3 in) long."
     },
     {
       "taxa": "plants",
@@ -4339,7 +4794,8 @@
       "family": "Bignoniaceae",
       "scientificName": "Jacaranda mimosifolia",
       "iucnGlobal": "VU",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Jacaranda mimosifolia is a sub-tropical tree native to south-central South America that has been widely planted elsewhere because of its attractive and long-lasting violet-colored flowers. It is also known as the jacaranda, blue jacaranda, black poui, Nupur or fern tree. Older sources call it J. acutifolia, but modern authorities usually classify it as J. mimosifolia. In scientific usage, the name \"jacaranda\" refers to the genus Jacaranda, which has many other members, but in horticultural and everyday usage, it nearly always means the blue jacaranda."
     },
     {
       "taxa": "plants",
@@ -4366,7 +4822,8 @@
       "family": "Bignoniaceae",
       "scientificName": "Kigelia africana",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Kigelia is a genus of flowering plants in the trumpet vine family Bignoniaceae. The genus consists of only one species, Kigelia africana, syn. Kigelia pinnata, which occurs throughout tropical Africa and is cultivated elsewhere in the tropics."
     },
     {
       "taxa": "plants",
@@ -4429,7 +4886,8 @@
       "family": "Bignoniaceae",
       "scientificName": "Markhamia lutea",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Markhamia lutea, the Nile tulip, Nile trumpet or siala tree is a tree species of the family Bignoniaceae, native to eastern Africa and cultivated for its large bright yellow flowers. It is related to the African tulip tree. Native to Africa, Markhamia was named in the honour of Clements Markham (1830–1916), who worked in India. An evergreen small tree that grows to 4–5 m in height outside of native zones, although it can reach more than 10 m in its zones of origin. Leaves, of 20–30 cm in length, normally arranged in groups in the ends of the branches. Flowers in terminal clusters. They are trumpet shaped, yellow in colour, with orange-reddish spots in the throat. They measure 5–6 cm in length. Fruit is a capsule, of up to 70 cm in length, with abundant winged seeds. It is propagated by seeds."
     },
     {
       "taxa": "plants",
@@ -4672,7 +5130,8 @@
       "family": "Euphorbiaceae",
       "scientificName": "Euphorbia hirta",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Euphorbia hirta is a pantropical weed, originating from the tropical regions of the Americas. It is a hairy herb that grows in open grasslands, roadsides and pathways. It is widely used in traditional herbal medicine across many cultures, particularly for asthma, skin ailments, and hypertension. It is also consumed in herbal tea form as folk medicine for fevers in the Philippines, particularly for dengue fever and malaria."
     },
     {
       "taxa": "plants",
@@ -4861,7 +5320,8 @@
       "family": "Malvaceae",
       "scientificName": "Waltheria indica",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Waltheria indica is a species of flowering plant in the mallow family, Malvaceae, that has a pantropical distribution. It is believed to have originated in the Neotropics. Common names include sleepy morning, basora prieta, hierba de soldado, guimauve, mauve-gris, moto-branco, fulutafu, kafaki, and ʻuhaloa (Hawaii). W. indica is a short-lived subshrub or shrub, reaching a height of 2 m (6.6 ft) and a stem diameter of 2 cm (0.79 in). It is most common in dry, disturbed or well-drained, moist habitats. In Puerto Rico, it grows in areas that receive 750–1,800 mm (30–71 in) of annual rainfall and at elevations from sea level to more 400 m (1,300 ft)."
     },
     {
       "taxa": "plants",
@@ -5068,7 +5528,8 @@
       "family": "Oxalidaceae",
       "scientificName": "Oxalis latifolia",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Oxalis latifolia is a species of flowering plant in the woodsorrel family known by the common names garden pink-sorrel and broadleaf woodsorrel. It is native to Mexico and parts of Central and South America. However, it has propagated to other parts of the world."
     },
     {
       "taxa": "plants",
@@ -5086,7 +5547,8 @@
       "family": "Podocarpaceae",
       "scientificName": "Afrocarpus falcatus",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Afrocarpus falcatus is a species of tree in the family Podocarpaceae. It is native to the montane forests of southern Africa, where it is distributed in Malawi, Mozambique, South Africa, and Eswatini. Common names include common yellowwood, bastard yellowwood, outeniqua yellowwood, African pine tree, weeping yew, Afrikaans: outeniekwageelhout, kalander, Sotho: mogôbagôba, Xhosa: umkhoba and Zulu: umsonti. It is widespread, in some areas abundant, and not considered threatened, but it is a protected tree in South Africa. It is grown as an ornamental tree, especially in South Africa, and occasionally abroad."
     },
     {
       "taxa": "plants",
@@ -5419,7 +5881,8 @@
       "family": "Poaceae",
       "scientificName": "Dactyloctenium aegyptium",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Dactyloctenium aegyptium, or Egyptian crowfoot grass is a member of the family Poaceae native to Africa and Asia. The plant mostly grows in heavy soils at damp sites."
     },
     {
       "taxa": "plants",
@@ -5473,7 +5936,8 @@
       "family": "Poaceae",
       "scientificName": "Echinochloa colona",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Echinochloa colona, commonly known as jungle rice, wild rice, deccan grass, jharua or awnless barnyard grass, is a type of wild grass originating from tropical Asia. It was formerly classified as a species of Panicum. It is the wild ancestor of the cultivated cereal crop Echinochloa frumentacea, sawa millet. Some taxonomists treat the two taxa as one species, in which case the domesticated forms may also be referred to as E. colona."
     },
     {
       "taxa": "plants",
@@ -5500,7 +5964,8 @@
       "family": "Poaceae",
       "scientificName": "Eleusine indica",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Eleusine indica, the Indian goosegrass, yard-grass, goosegrass, wiregrass, or crowfootgrass, is a species of grass in the family Poaceae. It is a small annual grass distributed throughout the warmer areas of the world to about 50 degrees latitude. It is an invasive species in some areas."
     },
     {
       "taxa": "plants",
@@ -5518,7 +5983,8 @@
       "family": "Poaceae",
       "scientificName": "Hyparrhenia filipendula",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Hyparrhenia filipendula is a species of perennial bunchgrass commonly known as Tambookie grass, fine thatching grass, and fine hood grass. It grows to a height of 1 to 1.5 metres."
     },
     {
       "taxa": "plants",
@@ -5644,7 +6110,8 @@
       "family": "Poaceae",
       "scientificName": "Panicum maximum",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Megathyrsus maximus, known as Guinea grass and green panic grass, is a large perennial bunch grass that is native to Africa and Yemen. It has been introduced in the tropics around the world. It has previously been called Urochloa maxima and Panicum maximum. It was moved to the genus Megathyrsus in 2003."
     },
     {
       "taxa": "plants",
@@ -5662,7 +6129,8 @@
       "family": "Poaceae",
       "scientificName": "Paspalum scrobiculatum",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Paspalum scrobiculatum, commonly called kodo millet or koda millet, is an annual grain that is grown primarily in Nepal and also in India, Philippines, Indonesia, Vietnam, Thailand, and in West Africa from where it originated. It is grown as a minor crop in most of these areas, with the exception of the Deccan plateau in India where it is grown as a major food source. It is a very hardy crop that is drought tolerant and can survive on marginal soils where other crops may not survive, and can supply 450–900 kg of grain per hectare. Kodo millet has large potential to provide nourishing food to subsistence farmers in Africa and elsewhere."
     },
     {
       "taxa": "plants",
@@ -5680,7 +6148,8 @@
       "family": "Poaceae",
       "scientificName": "Paspalum notatum",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Paspalum notatum, known commonly as bahiagrass, common bahia, and Pensacola bahia, is a tropical to subtropical perennial grass. It is known for its prominent V-shaped inflorescence consisting of two spike-like racemes containing multiple tiny spikelets, each about 2.8–3.5 millimetres (0.11–0.14 in) long."
     },
     {
       "taxa": "plants",
@@ -5851,7 +6320,8 @@
       "family": "Typhaceae",
       "scientificName": "Typha latifolia",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Typha latifolia is a perennial herbaceous wetland plant in the genus Typha. It is known in English as bulrush, and in North America as broadleaf cattail. It is found as a native plant species throughout most of Eurasia and North America, and more locally in Africa and South America. The genome of T. latifolia was published in 2022."
     },
     {
       "taxa": "plants",
@@ -6103,7 +6573,8 @@
       "family": "Moraceae",
       "scientificName": "Ficus thonningii",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Ficus thonningii is a species of Ficus. It is native to Africa. It is commonly known as Mũgumo to the Agikuyu or the Strangler Fig in common English. Recent phylogenetic analysis suggests it may be a species complex."
     },
     {
       "taxa": "plants",
@@ -6265,7 +6736,8 @@
       "family": "Anacardiaceae",
       "scientificName": "Mangifera indica",
       "iucnGlobal": "DD",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Mangifera indica, commonly known as the mango after its fruit, is an evergreen species of flowering plant in the family Anacardiaceae. It is a large fruit tree, capable of growing to a height and width of 30 m (100 ft). There are two distinct genetic populations in modern mangoes – the \"Indian type\" and the \"Southeast Asian type\"."
     },
     {
       "taxa": "plants",
@@ -6355,7 +6827,8 @@
       "family": "Solanaceae",
       "scientificName": "Capsicum frutescens",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Capsicum frutescens is a wild chili pepper that has genetic proximity to the cultivated pepper Capsicum chinense. It is native to Central and South America as well as Mexico. Pepper cultivars of C. frutescens can be annual or short-lived perennial plants."
     },
     {
       "taxa": "plants",
@@ -6400,7 +6873,8 @@
       "family": "Convolvulaceae",
       "scientificName": "Ipomoea purpurea",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Ipomoea purpurea, the common morning-glory, tall morning-glory, or purple morning glory, is a species in the genus Ipomoea."
     },
     {
       "taxa": "plants",
@@ -6472,7 +6946,8 @@
       "family": "Solanaceae",
       "scientificName": "Solanum incanum",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Solanum incanum is a species of nightshade, a flowering plant in the family Solanaceae. It is native to East Africa, West Africa, the Middle East, and eastwards to India. The species was introduced to Taiwan and Vietnam."
     },
     {
       "taxa": "plants",
@@ -6490,7 +6965,8 @@
       "family": "Solanaceae",
       "scientificName": "Solanum nigrum",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Solanum nigrum, the European black nightshade or simply black nightshade or blackberry nightshade, is a species of flowering plant in the family Solanaceae, native to Eurasia and introduced in the Americas, Australasia, and South Africa. Ripe berries and cooked leaves of edible strains are used as food in some locales, and plant parts are used as a traditional medicine. Some other species may also be referred to as \"black nightshade\"."
     },
     {
       "taxa": "plants",
@@ -6562,7 +7038,8 @@
       "family": "Cannaceae",
       "scientificName": "Canna indica",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Canna indica, commonly known as Indian shot, African arrowroot, edible canna, purple arrowroot, Sierra Leone arrowroot, is a plant species in the family Cannaceae. It is native to the Americas and naturalized elsewhere. The edible rhizomes are a source of starch."
     },
     {
       "taxa": "plants",
@@ -6899,7 +7376,8 @@
       "order": "Caenogastropoda",
       "family": "Thiaridae",
       "genusSpecies": "Melanoides tuberculata",
-      "pollutionTolerance": "High"
+      "pollutionTolerance": "High",
+      "description_short": "The red-rimmed melania, also known as the Malayan livebearing snail or Malayan/Malaysian trumpet snail, is a species of freshwater snail with an operculum, a parthenogenetic, aquatic gastropod mollusk in the family Thiaridae."
     },
     {
       "taxa": "aquatic_inverts",
@@ -6926,7 +7404,8 @@
       "order": "Hygrophila",
       "family": "Physidae",
       "genusSpecies": "Unidentified",
-      "pollutionTolerance": "High"
+      "pollutionTolerance": "High",
+      "description_short": "Unidentified may refer to:Unidentified , an American film Unidentified , a Romanian film Unidentified, a Saudi thriller film"
     },
     {
       "taxa": "aquatic_inverts",
@@ -6944,7 +7423,8 @@
       "order": "Sphaerida",
       "family": "Sphaeridae",
       "genusSpecies": "Unidentified",
-      "pollutionTolerance": "High"
+      "pollutionTolerance": "High",
+      "description_short": "Unidentified may refer to:Unidentified , an American film Unidentified , a Romanian film Unidentified, a Saudi thriller film"
     },
     {
       "taxa": "aquatic_inverts",
@@ -7016,7 +7496,8 @@
       "order": "Diptera",
       "family": "Culicidae",
       "genusSpecies": "Unidentified",
-      "pollutionTolerance": "High"
+      "pollutionTolerance": "High",
+      "description_short": "Unidentified may refer to:Unidentified , an American film Unidentified , a Romanian film Unidentified, a Saudi thriller film"
     },
     {
       "taxa": "aquatic_inverts",
@@ -7043,7 +7524,8 @@
       "order": "Diptera",
       "family": "Tipulidae",
       "genusSpecies": "Unidentified",
-      "pollutionTolerance": "Moderate"
+      "pollutionTolerance": "Moderate",
+      "description_short": "Unidentified may refer to:Unidentified , an American film Unidentified , a Romanian film Unidentified, a Saudi thriller film"
     },
     {
       "taxa": "aquatic_inverts",
@@ -7241,7 +7723,8 @@
       "order": "Odonata",
       "family": "Protoneuridae",
       "genusSpecies": "Unidentified",
-      "pollutionTolerance": "Moderate"
+      "pollutionTolerance": "Moderate",
+      "description_short": "Unidentified may refer to:Unidentified , an American film Unidentified , a Romanian film Unidentified, a Saudi thriller film"
     },
     {
       "taxa": "aquatic_inverts",
@@ -7502,7 +7985,8 @@
       "scientificName": "Charaxes candiope",
       "commonName": "Green-veined Charaxes",
       "iucn": "LC",
-      "feedingGroup": "Fruit feeder"
+      "feedingGroup": "Fruit feeder",
+      "description_short": "Charaxes candiope, the green-veined emperor or green-veined charaxes, is a butterfly of the family Nymphalidae. It is common in sub-Saharan Africa."
     },
     {
       "taxa": "butterflies",
@@ -7511,7 +7995,8 @@
       "scientificName": "Colotis euippe",
       "commonName": "Smoky Orange Tip",
       "iucn": "LC",
-      "feedingGroup": "Nectar feeder"
+      "feedingGroup": "Nectar feeder",
+      "description_short": "Colotis euippe is a butterfly of the family Pieridae that is found in the Afrotropical realm."
     },
     {
       "taxa": "butterflies",
@@ -7520,7 +8005,8 @@
       "scientificName": "Danaus chrysippus",
       "commonName": "Plain Tiger",
       "iucn": "LC",
-      "feedingGroup": "Nectar feeder"
+      "feedingGroup": "Nectar feeder",
+      "description_short": "Danaus chrysippus, also known as the plain tiger, African queen, or African monarch, is a medium-sized butterfly widespread in Asia, Australia and Africa. It belongs to the Danainae subfamily of the brush-footed butterfly family Nymphalidae. Danainae primarily consume plants in the genus Asclepias, more commonly called milkweed. Milkweed contains toxic compounds, cardenolides, which are often consumed and stored by many butterflies. Because of their emetic properties, the plain tiger is unpalatable to most predators. As a result, its colouration is widely mimicked by other species of butterflies. The plain tiger inhabits a wide variety of habitats, although it is less likely to thrive in jungle-like conditions and is most often found in drier, wide-open areas."
     },
     {
       "taxa": "butterflies",
@@ -7538,7 +8024,8 @@
       "scientificName": "Eicochrysops masai",
       "commonName": "Masai Blue",
       "iucn": "NE",
-      "feedingGroup": "Nectar feeder"
+      "feedingGroup": "Nectar feeder",
+      "description_short": "Eicochrysops masai, the Masai blue, is a butterfly in the family Lycaenidae. It is found in Ethiopia, northern Uganda, central and northern Kenya and northern Tanzania. Their habitat consists of grassy savanna."
     },
     {
       "taxa": "butterflies",
@@ -7547,7 +8034,8 @@
       "scientificName": "Eretis lugens",
       "commonName": "Lugens Skipper",
       "iucn": "NE",
-      "feedingGroup": "Nectar feeder"
+      "feedingGroup": "Nectar feeder",
+      "description_short": "Eretis lugens, commonly known as the savanna elf, is a species of butterfly in the family Hesperiidae. It is found in Senegal, northern Guinea, northern Sierra Leone, Liberia, northern Ivory Coast, Ghana, Togo, Benin, Nigeria, Cameroon, the Central African Republic, Angola, the Democratic Republic of the Congo, southern Sudan, Ethiopia, Uganda, Burundi, Kenya, Tanzania and north-western Zambia. The habitat consists of Sudan savanna, open Guinea savanna, forest margins, forests and dense woodland."
     },
     {
       "taxa": "butterflies",

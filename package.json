@@ -3,10 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "clean": "node scripts/clean-next.mjs",
     "dev": "next dev",
+    "dev:clean": "node scripts/clean-next.mjs && next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "cache-species-images": "node scripts/cache-species-images.mjs",
+    "enrich-species-descriptions": "node scripts/enrich-species-descriptions.mjs",
+    "enrich-species-all": "node scripts/enrich-species-descriptions.mjs && node scripts/cache-species-images.mjs --refresh"
   },
   "dependencies": {
     "maplibre-gl": "^5.24.0",
@@ -25,6 +30,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.35",
     "postcss": "^8",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

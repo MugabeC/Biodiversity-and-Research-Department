@@ -18,7 +18,8 @@
       "family": "Araceae",
       "scientificName": "Zantedeschia aethiopica",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Zantedeschia aethiopica, commonly known as calla lily and arum lily, is a species of flowering plant in the family Araceae, native to southern Africa in Lesotho, South Africa, and Eswatini."
     },
     {
       "taxa": "plants",
@@ -36,7 +37,8 @@
       "family": "Apiaceae",
       "scientificName": "Anethum graveolens",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Dill is an annual herb in the celery family Apiaceae. Native to North Africa and West Asia, dill is grown widely in Eurasia, where its leaves and seeds are used as a herb or spice for flavouring food."
     },
     {
       "taxa": "plants",
@@ -108,7 +110,8 @@
       "family": "Asparagaceae",
       "scientificName": "Agave sisalana",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Sisal is a species of flowering plant native to southern Mexico, but widely cultivated and naturalized in many other countries. It yields a stiff leaf fiber used in making rope and various other products. The sisal fiber is traditionally used for rope and twine, and has many other uses, including cloth, footwear, hats, bags, carpets, geotextiles, and dartboards. It is also used as fiber reinforcements for composite fiberglass, rubber, and concrete products. Like other agaves, the pith of the leaves can be fermented and distilled to make mezcal."
     },
     {
       "taxa": "plants",
@@ -135,7 +138,8 @@
       "family": "Asparagaceae",
       "scientificName": "Asparagus flagellaris",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Asparagus flagellaris is a flowering plant that is native to tropical Africa."
     },
     {
       "taxa": "plants",
@@ -189,7 +193,8 @@
       "family": "Asphodelaceae",
       "scientificName": "Hymenocallis littoralis",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Hymenocallis littoralis, commonly known as the beach spider lily or lirio de playa, is a species of plant in the amaryllis family Amaryllidaceae. It is native to warmer coastal regions of Latin America and a widely cultivated and naturalized plant in many tropical countries."
     },
     {
       "taxa": "plants",
@@ -243,7 +248,8 @@
       "family": "Asteraceae",
       "scientificName": "Aspilia africana",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Aspilia africana, also known as the haemorrhage plant or wild sunflower, is one of about 50 species of the genus Aspilia."
     },
     {
       "taxa": "plants",
@@ -306,7 +312,8 @@
       "family": "Asteraceae",
       "scientificName": "Erigeron sumatrensis",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Erigeron sumatrensis is an annual herb probably native to South America, but widely naturalised in tropical and subtropical regions, and regarded as an invasive weed in many places.It is a perenial in the Western Cape of South Africa."
     },
     {
       "taxa": "plants",
@@ -639,7 +646,8 @@
       "family": "Capparidaceae",
       "scientificName": "Capparis tomentosa",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Capparis tomentosa, the woolly caper bush or African caper, is a plant in the family Capparaceae and is native to Africa."
     },
     {
       "taxa": "plants",
@@ -675,7 +683,8 @@
       "family": "Brassicaceae",
       "scientificName": "Lepidium sativum",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Cress, sometimes referred to as garden cress to distinguish it from similar plants also referred to as cress, is a fast-growing, edible herb."
     },
     {
       "taxa": "plants",
@@ -702,7 +711,8 @@
       "family": "Amaranthaceae",
       "scientificName": "Aerva lanata",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Ouret lanata, the mountain knotgrass, is a woody, prostrate or succulent, perennial herb in the family Amaranthaceae, native to the tropics of Africa and Asia. It has been included as occurring in Australia by the US government, but it is not recognised as occurring in Australia by any Australian state herbarium or Plants of the World Online. The plant sometimes flowers in the first year."
     },
     {
       "taxa": "plants",
@@ -729,7 +739,8 @@
       "family": "Amaranthaceae",
       "scientificName": "Amaranthus graecizans",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Amaranthus graecizans, the Mediterranean amaranth or short-tepalled pigweed, is an annual species in the botanical family Amaranthaceae. It is native to Africa, southern Europe, East Asia to India and Central Asia. It is naturalized in North America. More general common names include tumbleweed and pigweed."
     },
     {
       "taxa": "plants",
@@ -747,7 +758,8 @@
       "family": "Amaranthaceae",
       "scientificName": "Amaranthus spinosus",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Amaranthus spinosus, commonly known as the spiny amaranth, spiny pigweed, prickly amaranth or thorny amaranth, is a plant that is native to the tropical Americas, but is present on most continents as an introduced species and sometimes a noxious weed. It can be a serious weed of rice cultivation in Asia."
     },
     {
       "taxa": "plants",
@@ -783,7 +795,8 @@
       "family": "Nyctaginaceae",
       "scientificName": "Bougainvillea spectabilis",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Bougainvillea spectabilis, also known as great bougainvillea, is a species of flowering plant. It is native to Brazil, Bolivia, Peru, and Argentina's Chubut Province. It is widely grown as an ornamental plant."
     },
     {
       "taxa": "plants",
@@ -855,7 +868,8 @@
       "family": "Polygonaceae",
       "scientificName": "Persicaria senegalensis",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Persicaria senegalensis is a species of perennial herb in the family Polygonaceae. They have a self-supporting growth form and simple, broad leaves."
     },
     {
       "taxa": "plants",
@@ -1107,7 +1121,8 @@
       "family": "Fabaceae",
       "scientificName": "Albizia adianthifolia",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Albizia adianthifolia is a tree in the family Fabaceae. It is commonly known as the flat-crown. Its range extends from eastern South Africa to Tropical Africa."
     },
     {
       "taxa": "plants",
@@ -1206,7 +1221,8 @@
       "family": "Fabaceae",
       "scientificName": "Crotalaria longirostrata",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Crotalaria longirostrata, the chipilín, is a perennial legume that is native to Mexico and Central America. Other common names include chepil, chepilin, chipilin and longbeak rattlebox."
     },
     {
       "taxa": "plants",
@@ -1314,7 +1330,8 @@
       "family": "Fabaceae",
       "scientificName": "Neonotonia wightii",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Neonotonia wightii, the perennial soybean, is a species of flowering plant in the family Fabaceae, native to sub‑Saharan Africa, Yemen, India, and Sri Lanka, and widely introduced as a forage in Brazil, Bolivia, Paraguay, northern Argentina, the Mascarene Islands, Peninsular Malaysia, Java, New Guinea, Queensland and New South Wales in Australia, and Fiji. It is shade tolerant."
     },
     {
       "taxa": "plants",
@@ -1386,7 +1403,8 @@
       "family": "Fabaceae",
       "scientificName": "Neonotonia wightii",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Neonotonia wightii, the perennial soybean, is a species of flowering plant in the family Fabaceae, native to sub‑Saharan Africa, Yemen, India, and Sri Lanka, and widely introduced as a forage in Brazil, Bolivia, Paraguay, northern Argentina, the Mascarene Islands, Peninsular Malaysia, Java, New Guinea, Queensland and New South Wales in Australia, and Fiji. It is shade tolerant."
     },
     {
       "taxa": "plants",
@@ -1647,7 +1665,8 @@
       "family": "Fabaceae",
       "scientificName": "Pseudarthria hookeri",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Pseudarthria hookeri, the pink velvet bean, is a lanky, perennial Afrotropical herb in the legume family, Fabaceae. It is named after William Hooker. It is widespread in the African tropics and moist uplands of the African subtropics, from Senegal and Ethiopia southwards to eastern South Africa. It bears rough trifoliolate leaves along the stem, and produces terminal, pink flowers in late summer. The stem may grow up to 2 or 3 meters in height annually, before it dies back in the dry season."
     },
     {
       "taxa": "plants",
@@ -1656,7 +1675,8 @@
       "family": "Casuarinaceae",
       "scientificName": "Casuarina equisetifolia",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Casuarina equisetifolia, commonly known as coastal she-oak, horsetail she-oak, ironwood, beach sheoak, beach casuarina, whistling tree or Australian pine is a species of flowering plant in the family Casuarinaceae and is native to Australia, New Guinea, Southeast Asia and India. It is a small to medium-sized, monoecious tree with scaly or furrowed bark on older specimens, drooping branchlets, the leaves reduced to scales in whorls of 7 or 8, the fruit 10–24 mm (0.4–0.9 in) long containing winged seeds (samaras) 6–8 mm (0.2–0.3 in) long."
     },
     {
       "taxa": "plants",
@@ -1980,7 +2000,8 @@
       "family": "Bignoniaceae",
       "scientificName": "Jacaranda mimosifolia",
       "iucnGlobal": "VU",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Jacaranda mimosifolia is a sub-tropical tree native to south-central South America that has been widely planted elsewhere because of its attractive and long-lasting violet-colored flowers. It is also known as the jacaranda, blue jacaranda, black poui, Nupur or fern tree. Older sources call it J. acutifolia, but modern authorities usually classify it as J. mimosifolia. In scientific usage, the name \"jacaranda\" refers to the genus Jacaranda, which has many other members, but in horticultural and everyday usage, it nearly always means the blue jacaranda."
     },
     {
       "taxa": "plants",
@@ -2007,7 +2028,8 @@
       "family": "Bignoniaceae",
       "scientificName": "Kigelia africana",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Kigelia is a genus of flowering plants in the trumpet vine family Bignoniaceae. The genus consists of only one species, Kigelia africana, syn. Kigelia pinnata, which occurs throughout tropical Africa and is cultivated elsewhere in the tropics."
     },
     {
       "taxa": "plants",
@@ -2070,7 +2092,8 @@
       "family": "Bignoniaceae",
       "scientificName": "Markhamia lutea",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Markhamia lutea, the Nile tulip, Nile trumpet or siala tree is a tree species of the family Bignoniaceae, native to eastern Africa and cultivated for its large bright yellow flowers. It is related to the African tulip tree. Native to Africa, Markhamia was named in the honour of Clements Markham (1830–1916), who worked in India. An evergreen small tree that grows to 4–5 m in height outside of native zones, although it can reach more than 10 m in its zones of origin. Leaves, of 20–30 cm in length, normally arranged in groups in the ends of the branches. Flowers in terminal clusters. They are trumpet shaped, yellow in colour, with orange-reddish spots in the throat. They measure 5–6 cm in length. Fruit is a capsule, of up to 70 cm in length, with abundant winged seeds. It is propagated by seeds."
     },
     {
       "taxa": "plants",
@@ -2313,7 +2336,8 @@
       "family": "Euphorbiaceae",
       "scientificName": "Euphorbia hirta",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Euphorbia hirta is a pantropical weed, originating from the tropical regions of the Americas. It is a hairy herb that grows in open grasslands, roadsides and pathways. It is widely used in traditional herbal medicine across many cultures, particularly for asthma, skin ailments, and hypertension. It is also consumed in herbal tea form as folk medicine for fevers in the Philippines, particularly for dengue fever and malaria."
     },
     {
       "taxa": "plants",
@@ -2502,7 +2526,8 @@
       "family": "Malvaceae",
       "scientificName": "Waltheria indica",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Waltheria indica is a species of flowering plant in the mallow family, Malvaceae, that has a pantropical distribution. It is believed to have originated in the Neotropics. Common names include sleepy morning, basora prieta, hierba de soldado, guimauve, mauve-gris, moto-branco, fulutafu, kafaki, and ʻuhaloa (Hawaii). W. indica is a short-lived subshrub or shrub, reaching a height of 2 m (6.6 ft) and a stem diameter of 2 cm (0.79 in). It is most common in dry, disturbed or well-drained, moist habitats. In Puerto Rico, it grows in areas that receive 750–1,800 mm (30–71 in) of annual rainfall and at elevations from sea level to more 400 m (1,300 ft)."
     },
     {
       "taxa": "plants",
@@ -2709,7 +2734,8 @@
       "family": "Oxalidaceae",
       "scientificName": "Oxalis latifolia",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Oxalis latifolia is a species of flowering plant in the woodsorrel family known by the common names garden pink-sorrel and broadleaf woodsorrel. It is native to Mexico and parts of Central and South America. However, it has propagated to other parts of the world."
     },
     {
       "taxa": "plants",
@@ -2727,7 +2753,8 @@
       "family": "Podocarpaceae",
       "scientificName": "Afrocarpus falcatus",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Afrocarpus falcatus is a species of tree in the family Podocarpaceae. It is native to the montane forests of southern Africa, where it is distributed in Malawi, Mozambique, South Africa, and Eswatini. Common names include common yellowwood, bastard yellowwood, outeniqua yellowwood, African pine tree, weeping yew, Afrikaans: outeniekwageelhout, kalander, Sotho: mogôbagôba, Xhosa: umkhoba and Zulu: umsonti. It is widespread, in some areas abundant, and not considered threatened, but it is a protected tree in South Africa. It is grown as an ornamental tree, especially in South Africa, and occasionally abroad."
     },
     {
       "taxa": "plants",
@@ -3060,7 +3087,8 @@
       "family": "Poaceae",
       "scientificName": "Dactyloctenium aegyptium",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Dactyloctenium aegyptium, or Egyptian crowfoot grass is a member of the family Poaceae native to Africa and Asia. The plant mostly grows in heavy soils at damp sites."
     },
     {
       "taxa": "plants",
@@ -3114,7 +3142,8 @@
       "family": "Poaceae",
       "scientificName": "Echinochloa colona",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Echinochloa colona, commonly known as jungle rice, wild rice, deccan grass, jharua or awnless barnyard grass, is a type of wild grass originating from tropical Asia. It was formerly classified as a species of Panicum. It is the wild ancestor of the cultivated cereal crop Echinochloa frumentacea, sawa millet. Some taxonomists treat the two taxa as one species, in which case the domesticated forms may also be referred to as E. colona."
     },
     {
       "taxa": "plants",
@@ -3141,7 +3170,8 @@
       "family": "Poaceae",
       "scientificName": "Eleusine indica",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Eleusine indica, the Indian goosegrass, yard-grass, goosegrass, wiregrass, or crowfootgrass, is a species of grass in the family Poaceae. It is a small annual grass distributed throughout the warmer areas of the world to about 50 degrees latitude. It is an invasive species in some areas."
     },
     {
       "taxa": "plants",
@@ -3159,7 +3189,8 @@
       "family": "Poaceae",
       "scientificName": "Hyparrhenia filipendula",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Hyparrhenia filipendula is a species of perennial bunchgrass commonly known as Tambookie grass, fine thatching grass, and fine hood grass. It grows to a height of 1 to 1.5 metres."
     },
     {
       "taxa": "plants",
@@ -3285,7 +3316,8 @@
       "family": "Poaceae",
       "scientificName": "Panicum maximum",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Megathyrsus maximus, known as Guinea grass and green panic grass, is a large perennial bunch grass that is native to Africa and Yemen. It has been introduced in the tropics around the world. It has previously been called Urochloa maxima and Panicum maximum. It was moved to the genus Megathyrsus in 2003."
     },
     {
       "taxa": "plants",
@@ -3303,7 +3335,8 @@
       "family": "Poaceae",
       "scientificName": "Paspalum scrobiculatum",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Paspalum scrobiculatum, commonly called kodo millet or koda millet, is an annual grain that is grown primarily in Nepal and also in India, Philippines, Indonesia, Vietnam, Thailand, and in West Africa from where it originated. It is grown as a minor crop in most of these areas, with the exception of the Deccan plateau in India where it is grown as a major food source. It is a very hardy crop that is drought tolerant and can survive on marginal soils where other crops may not survive, and can supply 450–900 kg of grain per hectare. Kodo millet has large potential to provide nourishing food to subsistence farmers in Africa and elsewhere."
     },
     {
       "taxa": "plants",
@@ -3321,7 +3354,8 @@
       "family": "Poaceae",
       "scientificName": "Paspalum notatum",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Paspalum notatum, known commonly as bahiagrass, common bahia, and Pensacola bahia, is a tropical to subtropical perennial grass. It is known for its prominent V-shaped inflorescence consisting of two spike-like racemes containing multiple tiny spikelets, each about 2.8–3.5 millimetres (0.11–0.14 in) long."
     },
     {
       "taxa": "plants",
@@ -3492,7 +3526,8 @@
       "family": "Typhaceae",
       "scientificName": "Typha latifolia",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Typha latifolia is a perennial herbaceous wetland plant in the genus Typha. It is known in English as bulrush, and in North America as broadleaf cattail. It is found as a native plant species throughout most of Eurasia and North America, and more locally in Africa and South America. The genome of T. latifolia was published in 2022."
     },
     {
       "taxa": "plants",
@@ -3744,7 +3779,8 @@
       "family": "Moraceae",
       "scientificName": "Ficus thonningii",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Ficus thonningii is a species of Ficus. It is native to Africa. It is commonly known as Mũgumo to the Agikuyu or the Strangler Fig in common English. Recent phylogenetic analysis suggests it may be a species complex."
     },
     {
       "taxa": "plants",
@@ -3906,7 +3942,8 @@
       "family": "Anacardiaceae",
       "scientificName": "Mangifera indica",
       "iucnGlobal": "DD",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Mangifera indica, commonly known as the mango after its fruit, is an evergreen species of flowering plant in the family Anacardiaceae. It is a large fruit tree, capable of growing to a height and width of 30 m (100 ft). There are two distinct genetic populations in modern mangoes – the \"Indian type\" and the \"Southeast Asian type\"."
     },
     {
       "taxa": "plants",
@@ -3996,7 +4033,8 @@
       "family": "Solanaceae",
       "scientificName": "Capsicum frutescens",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Capsicum frutescens is a wild chili pepper that has genetic proximity to the cultivated pepper Capsicum chinense. It is native to Central and South America as well as Mexico. Pepper cultivars of C. frutescens can be annual or short-lived perennial plants."
     },
     {
       "taxa": "plants",
@@ -4041,7 +4079,8 @@
       "family": "Convolvulaceae",
       "scientificName": "Ipomoea purpurea",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Ipomoea purpurea, the common morning-glory, tall morning-glory, or purple morning glory, is a species in the genus Ipomoea."
     },
     {
       "taxa": "plants",
@@ -4113,7 +4152,8 @@
       "family": "Solanaceae",
       "scientificName": "Solanum incanum",
       "iucnGlobal": "LC",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Solanum incanum is a species of nightshade, a flowering plant in the family Solanaceae. It is native to East Africa, West Africa, the Middle East, and eastwards to India. The species was introduced to Taiwan and Vietnam."
     },
     {
       "taxa": "plants",
@@ -4131,7 +4171,8 @@
       "family": "Solanaceae",
       "scientificName": "Solanum nigrum",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Solanum nigrum, the European black nightshade or simply black nightshade or blackberry nightshade, is a species of flowering plant in the family Solanaceae, native to Eurasia and introduced in the Americas, Australasia, and South Africa. Ripe berries and cooked leaves of edible strains are used as food in some locales, and plant parts are used as a traditional medicine. Some other species may also be referred to as \"black nightshade\"."
     },
     {
       "taxa": "plants",
@@ -4203,7 +4244,8 @@
       "family": "Cannaceae",
       "scientificName": "Canna indica",
       "iucnGlobal": "NE",
-      "albertineRiftEndemic": "No"
+      "albertineRiftEndemic": "No",
+      "description_short": "Canna indica, commonly known as Indian shot, African arrowroot, edible canna, purple arrowroot, Sierra Leone arrowroot, is a plant species in the family Cannaceae. It is native to the Americas and naturalized elsewhere. The edible rhizomes are a source of starch."
     },
     {
       "taxa": "plants",

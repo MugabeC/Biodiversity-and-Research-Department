@@ -1,32 +1,27 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ReferenceLine, ResponsiveContainer, Cell,
 } from 'recharts';
+import {
+  parseWQParams,
+  WQ_SITES,
+  type WQParamData,
+  type WQSite,
+} from '../lib/parseWaterQuality';
 
-type WQSite = 'R1' | 'R2' | 'Outlet' | 'S5';
-const WQ_SITES: WQSite[] = ['R1', 'R2', 'Outlet', 'S5'];
-
-type WQParamData = { unit: string; limit: number; R1: number; R2: number; Outlet: number; S5: number };
-
-const WQ_PARAMS_DATA: Record<string, WQParamData> = {
-  'Iron':                    { unit: 'mg/L',      limit: 3.5,  R1: 6.06,   R2: 5.87,   Outlet: 0.42,   S5: 1.03   },
-  'Manganese':               { unit: 'mg/L',      limit: 0.1,  R1: 0.784,  R2: 0.905,  Outlet: 0.199,  S5: 0.387  },
-  'Oil & Grease':            { unit: 'mg/L',      limit: 10,   R1: 105,    R2: 12,     Outlet: 8,      S5: 91     },
-  'Total Suspended Solids':  { unit: 'mg/L',      limit: 50,   R1: 750,    R2: 39,     Outlet: 1,      S5: 419    },
-  'Phosphates':              { unit: 'mg/L',      limit: 2.2,  R1: 3.47,   R2: 0.81,   Outlet: 0.15,   S5: 1.40   },
-  'Nitrites':                { unit: 'mg/L',      limit: 0.9,  R1: 0.000,  R2: 0.102,  Outlet: 0.005,  S5: 0.025  },
-  'Ammonia Nitrogen':        { unit: 'mg/L',      limit: 20,   R1: 12.3,   R2: 4.1,    Outlet: 0.02,   S5: 350    },
-  'Electrical Conductivity': { unit: 'µS/cm',     limit: 1500, R1: 983,    R2: 910,    Outlet: 653,    S5: 3930   },
-  'Total Coliforms':         { unit: 'CFU/100mL', limit: 400,  R1: 25000,  R2: 173200, Outlet: 155300, S5: 41100  },
-  'E.Coli':                  { unit: 'CFU/100mL', limit: 100,  R1: 19200,  R2: 3500,   Outlet: 32600,  S5: 3000   },
+type WQTooltipDatum = {
+  site: WQSite;
+  value: number;
+  pass: boolean;
+  limit: number;
+  unit: string;
+  paramName: string;
 };
 
-const WQ_PARAMS_LIST = Object.keys(WQ_PARAMS_DATA);
-
-function WQTooltip({ active, payload }: { active?: boolean; payload?: any[] }) {
+function WQTooltip({ active, payload }: { active?: boolean; payload?: ReadonlyArray<{ payload: WQTooltipDatum }> }) {
   if (!active || !payload?.length) return null;
   const { site, value, pass, limit, unit, paramName } = payload[0].payload;
   return (
@@ -45,30 +40,52 @@ function WQTooltip({ active, payload }: { active?: boolean; payload?: any[] }) {
   );
 }
 
-const CARD: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.5)',
-  backdropFilter: 'blur(16px)',
-  WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255,255,255,0.6)',
-  borderRadius: '20px',
-  padding: '24px',
-  boxShadow: '0 8px 32px rgba(12,96,56,0.10)',
-};
-
 const HEADING: React.CSSProperties = {
-  fontFamily: 'Poppins, sans-serif',
-  fontWeight: 700,
   fontSize: '16px',
-  color: '#1A2E1F',
   margin: '0 0 20px',
 };
 
 const TICK_STYLE = { fontSize: 12, fill: '#4A5E4F', fontFamily: 'Poppins' };
 
 export default function WaterQualityChart() {
-  const [selectedParam, setSelectedParam] = useState('Iron');
+  const [paramsData, setParamsData] = useState<Record<string, WQParamData>>({});
+  const [selectedParam, setSelectedParam] = useState('');
+  const [loading, setLoading] = useState(true);
 
-  const paramData = WQ_PARAMS_DATA[selectedParam];
+  useEffect(() => {
+    fetch('/data/water_quality.json')
+      .then(r => r.json())
+      .then(data => {
+        const parsed = parseWQParams(data.wasac.parameters);
+        setParamsData(parsed);
+        const names = Object.keys(parsed);
+        if (names.length > 0) setSelectedParam(names[0]);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  const paramList = Object.keys(paramsData);
+  const paramData = paramsData[selectedParam];
+
+  if (loading) {
+    return (
+      <div className="glass-card">
+        <h2 style={HEADING}>Water Quality Compliance — Oct 2025</h2>
+        <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: '14px', color: '#4A5E4F' }}>Loading…</p>
+      </div>
+    );
+  }
+
+  if (!paramData || paramList.length === 0) {
+    return (
+      <div className="glass-card">
+        <h2 style={HEADING}>Water Quality Compliance — Oct 2025</h2>
+        <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: '14px', color: '#4A5E4F' }}>No chart data available.</p>
+      </div>
+    );
+  }
+
   const wqChartData = WQ_SITES.map(site => ({
     site,
     value: paramData[site],
@@ -80,11 +97,11 @@ export default function WaterQualityChart() {
   const xMax = Math.max(...wqChartData.map(d => d.value), paramData.limit) * 1.25;
 
   return (
-    <div style={CARD}>
-      <h2 style={HEADING}>Water Quality Compliance — Oct 2025</h2>
+    <div className="glass-card">
+      <h2 className="heading" style={HEADING}>Water Quality Compliance — Oct 2025</h2>
 
       <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
-        {WQ_PARAMS_LIST.map(param => {
+        {paramList.map(param => {
           const active = param === selectedParam;
           return (
             <button

@@ -1,0 +1,176 @@
+{
+  "monthlyTotals": [
+    {
+      "month": "August 2025",
+      "totalPasses": 52
+    },
+    {
+      "month": "October 2025",
+      "totalPasses": 129
+    },
+    {
+      "month": "November 2025",
+      "totalPasses": 86
+    },
+    {
+      "month": "December 2025",
+      "totalPasses": 71
+    },
+    {
+      "month": "January 2026",
+      "totalPasses": 45
+    },
+    {
+      "month": "February 2026",
+      "totalPasses": 39
+    },
+    {
+      "month": "March 2026",
+      "totalPasses": 407
+    },
+    {
+      "month": "April 2026",
+      "totalPasses": 617
+    }
+  ],
+  "detail": [
+    {
+      "month": "April 2025",
+      "group": "4 French tour operators from RDB (fam trip)",
+      "passes": 4,
+      "notes": "21 Apr \u2013 not complimentary per se; VIP visit"
+    },
+    {
+      "month": "August 2025",
+      "group": "Prime Minister Dr. Justin Nsengiyumva",
+      "passes": 1,
+      "notes": "Right Honourable Prime Minister of Rwanda"
+    },
+    {
+      "month": "August 2025",
+      "group": "Igihe.com (UCI content development)",
+      "passes": 4,
+      "notes": null
+    },
+    {
+      "month": "August 2025",
+      "group": "Surrounding community members (6 children + 19 adults)",
+      "passes": 25,
+      "notes": "Community outreach / goodwill"
+    },
+    {
+      "month": "August 2025",
+      "group": "Imena Club (surrounding community)",
+      "passes": 22,
+      "notes": null
+    },
+    {
+      "month": "October 2025",
+      "group": "Rwiza Village residents (complimentary visit)",
+      "passes": 39,
+      "notes": "Fostering community engagement in conservation"
+    },
+    {
+      "month": "October 2025",
+      "group": "Global Birding Event participants",
+      "passes": 45,
+      "notes": "Hosted at NEP; 91 bird species recorded on eBird"
+    },
+    {
+      "month": "October 2025",
+      "group": "Urwibutso village community members (Umuganda)",
+      "passes": 45,
+      "notes": "Rwimbogo cell \u2013 Nyarugunga sector"
+    },
+    {
+      "month": "November 2025",
+      "group": "Residents from surrounding sectors (complementary visits)",
+      "passes": 86,
+      "notes": "Community engagement / conservation awareness"
+    },
+    {
+      "month": "December 2025",
+      "group": "Rwibutso Village residents",
+      "passes": 51,
+      "notes": "Complementary park access for stewardship"
+    },
+    {
+      "month": "December 2025",
+      "group": "Retirees from Rwimbogo & Nonko Cells, Rwimbogo Sector",
+      "passes": 20,
+      "notes": null
+    },
+    {
+      "month": "January 2026",
+      "group": "IMENA Sports Club members",
+      "passes": 23,
+      "notes": "Complementary park entry for sport activities"
+    },
+    {
+      "month": "January 2026",
+      "group": "Retirees \u2013 Rwimbogo & Nonko cells, Nyarugunga sector",
+      "passes": 22,
+      "notes": "Community engagement"
+    },
+    {
+      "month": "February 2026",
+      "group": "IMENA Sports Club members",
+      "passes": 20,
+      "notes": "Complementary park entry for sport activities"
+    },
+    {
+      "month": "February 2026",
+      "group": "Retirees \u2013 Rwimbogo & Nonko cells, Nyarugunga sector",
+      "passes": 19,
+      "notes": null
+    },
+    {
+      "month": "March 2026",
+      "group": "Complimentary visitors (Kids U5 + other comp categories)",
+      "passes": 407,
+      "notes": "407 total complimentary per monthly report; includes 232 Kids U5"
+    },
+    {
+      "month": "April 2026",
+      "group": "Kids U5",
+      "passes": 287,
+      "notes": null
+    },
+    {
+      "month": "April 2026",
+      "group": "Students \u2013 Conservation Awareness Program",
+      "passes": 201,
+      "notes": null
+    },
+    {
+      "month": "April 2026",
+      "group": "Safari guides",
+      "passes": 60,
+      "notes": null
+    },
+    {
+      "month": "April 2026",
+      "group": "Best Cities Global Alliance representatives",
+      "passes": 3,
+      "notes": null
+    },
+    {
+      "month": "April 2026",
+      "group": "Rwanda Green Fund staff (filming session)",
+      "passes": 18,
+      "notes": null
+    },
+    {
+      "month": "April 2026",
+      "group": "Rwanda Safari Guide Association guides",
+      "passes": 13,
+      "notes": null
+    },
+    {
+      "month": "April 2026",
+      "group": "Malcolm X College students (USA)",
+      "passes": 32,
+      "notes": null
+    }
+  ]
+}

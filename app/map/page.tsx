@@ -1,6 +1,29 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import type { LayerSpecification, Map as MapLibreMap, StyleSpecification } from 'maplibre-gl';
+
+type GeoFeature = {
+  properties?: { Layer?: string };
+  geometry?: { type: string; coordinates: unknown };
+};
+
+function isDrainageLayer(layer?: string): boolean {
+  if (!layer) return false;
+  const L = layer.toUpperCase();
+  return L.includes('DRAINAGE') || L.includes('DRAIN');
+}
+
+/** Include polygon outlines that represent drainage areas. */
+function polygonRingToLineFeature(f: GeoFeature): GeoFeature | null {
+  const ring = (f.geometry as { coordinates?: number[][][] })?.coordinates?.[0];
+  if (!ring || ring.length < 2) return null;
+  return {
+    type: 'Feature',
+    properties: f.properties,
+    geometry: { type: 'LineString', coordinates: ring },
+  } as GeoFeature;
+}
 
 // ── Map style options ─────────────────────────────────────────────────────────
 
@@ -15,10 +38,10 @@ type StyleId = typeof MAP_STYLES[number]['id'];
 // ── Layer config ──────────────────────────────────────────────────────────────
 
 const LAYERS = [
-  { id: 'park-boundary', label: 'Park Boundary',     color: '#1a1a1a', mapIds: ['park-boundary'] },
+  { id: 'park-boundary', label: 'Park Boundary',     color: '#E53935', mapIds: ['park-boundary'] },
   { id: 'restored-area', label: 'Restored Area',      color: '#F5A623', mapIds: ['restored-area-fill', 'restored-area-line'] },
   { id: 'trails',        label: 'Trails & Walkways',  color: '#c77dff', mapIds: ['trails'] },
-  { id: 'drainage',      label: 'Drainage & Streams', color: '#4895ef', mapIds: ['drainage'] },
+  { id: 'drainage',      label: 'Drainage & Streams', color: '#00B0FF', mapIds: ['drainage-casing', 'drainage'] },
   { id: 'open-grounds',  label: 'Open Grounds',       color: '#8DA750', mapIds: ['open-grounds'] },
   { id: 'roads',         label: 'Roads',               color: '#adb5bd', mapIds: ['roads'] },
 ];
@@ -36,7 +59,7 @@ const INIT_VISIBILITY: Record<string, boolean> = {
 
 export default function MapPage() {
   const mapContainer  = useRef<HTMLDivElement>(null);
-  const map           = useRef<any>(null);
+  const map           = useRef<MapLibreMap | null>(null);
   const visibilityRef = useRef<Record<string, boolean>>({ ...INIT_VISIBILITY });
 
   const [is3D,        setIs3D]        = useState(true);
@@ -48,10 +71,11 @@ export default function MapPage() {
     const newVal = !visibilityRef.current[key];
     visibilityRef.current[key] = newVal;
     setLayerStates(prev => ({ ...prev, [key]: newVal }));
-    if (map.current) {
+    const m = map.current;
+    if (m) {
       layerIds.forEach(id => {
-        if (map.current.getLayer(id)) {
-          map.current.setLayoutProperty(id, 'visibility', newVal ? 'visible' : 'none');
+        if (m.getLayer(id)) {
+          m.setLayoutProperty(id, 'visibility', newVal ? 'visible' : 'none');
         }
       });
     }
@@ -92,7 +116,7 @@ export default function MapPage() {
     const initMap = async () => {
       const maplibregl = (await import('maplibre-gl')).default;
 
-      map.current = new maplibregl.Map({
+      const mapInstance = new maplibregl.Map({
         container: mapContainer.current!,
         style: {
           version: 8,
@@ -105,25 +129,27 @@ export default function MapPage() {
             },
           },
           layers: [{ id: 'esri-satellite-layer', type: 'raster', source: 'esri-satellite' }],
-        } as any,
+        } as StyleSpecification,
         center: [30.1491, -1.9555],
         zoom: 15,
         pitch: 60,
         bearing: -17,
       });
 
-      map.current.addControl(new maplibregl.NavigationControl(), 'top-right');
+      map.current = mapInstance;
+      mapInstance.addControl(new maplibregl.NavigationControl(), 'top-right');
 
-      map.current.on('load', async () => {
+      mapInstance.on('load', async () => {
         try {
           // ── Terrain & sky (3D, enabled by default) ──────────────────────
-          map.current.addSource('terrain-source', {
+          mapInstance.addSource('terrain-source', {
             type: 'raster-dem',
             url: 'https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=g8UGiMdXyHomD5NmJULL',
             tileSize: 256,
           });
-          map.current.setTerrain({ source: 'terrain-source', exaggeration: 1.8 });
-          map.current.addLayer({
+          mapInstance.setTerrain({ source: 'terrain-source', exaggeration: 1.8 });
+          // MapLibre supports sky layers at runtime; bundled typings lag behind for some versions.
+          mapInstance.addLayer({
             id: 'sky-layer',
             type: 'sky',
             paint: {
@@ -131,65 +157,97 @@ export default function MapPage() {
               'sky-atmosphere-sun': [0.0, 90.0],
               'sky-atmosphere-sun-intensity': 15,
             },
-          } as any);
+          } as unknown as LayerSpecification);
 
           // ── Park boundary ───────────────────────────────────────────────
           const boundary = await fetch('/data/geojson/Surveyed_boundary.geojson').then(r => r.json());
-          map.current.addSource('park-boundary-src', { type: 'geojson', data: boundary });
-          map.current.addLayer({
+          mapInstance.addSource('park-boundary-src', { type: 'geojson', data: boundary });
+          mapInstance.addLayer({
             id: 'park-boundary', type: 'line', source: 'park-boundary-src',
             layout: { visibility: 'visible' },
-            paint: { 'line-color': '#1a1a1a', 'line-width': 1.5, 'line-opacity': 0.85 },
+            paint: {
+              'line-color': '#E53935',
+              'line-width': 1.5,
+              'line-opacity': 1,
+            },
           });
 
           // ── Restored area ───────────────────────────────────────────────
           const restored = await fetch('/data/geojson/Nyandungu.geojson').then(r => r.json());
-          map.current.addSource('restored-src', { type: 'geojson', data: restored });
-          map.current.addLayer({
+          mapInstance.addSource('restored-src', { type: 'geojson', data: restored });
+          mapInstance.addLayer({
             id: 'restored-area-fill', type: 'fill', source: 'restored-src',
             layout: { visibility: 'visible' },
             paint: { 'fill-color': '#F5A623', 'fill-opacity': 0.2 },
           });
-          map.current.addLayer({
+          mapInstance.addLayer({
             id: 'restored-area-line', type: 'line', source: 'restored-src',
             layout: { visibility: 'visible' },
             paint: { 'line-color': '#F5A623', 'line-width': 1.5 },
           });
 
-          // ── Polylines ───────────────────────────────────────────────────
-          const polylines = await fetch('/data/geojson/Topo_polylines.geojson').then(r => r.json());
+          // ── Polylines & polygons (polygons loaded early for drainage merge) ──
+          const [polylines, polygons] = await Promise.all([
+            fetch('/data/geojson/Topo_polylines.geojson').then(r => r.json()),
+            fetch('/data/geojson/Topo_polygon.geojson').then(r => r.json()),
+          ]);
 
-          const trailFeatures = polylines.features.filter((f: any) => f.properties.Layer === 'PEDESTRIAN WALKWAYS AND TRAILS');
-          map.current.addSource('trails-src', { type: 'geojson', data: { type: 'FeatureCollection', features: trailFeatures } });
-          map.current.addLayer({
+          const trailFeatures = polylines.features.filter((f: GeoFeature) => f.properties?.Layer === 'PEDESTRIAN WALKWAYS AND TRAILS');
+          mapInstance.addSource('trails-src', { type: 'geojson', data: { type: 'FeatureCollection', features: trailFeatures } });
+          mapInstance.addLayer({
             id: 'trails', type: 'line', source: 'trails-src',
             layout: { visibility: 'visible' },
             paint: { 'line-color': '#c77dff', 'line-width': 1.5, 'line-opacity': 0.7, 'line-dasharray': [2, 2] },
           });
 
-          const drainageFeatures = polylines.features.filter((f: any) => ['DRAINAGE', 'MASONRY DRAINAGE'].includes(f.properties.Layer));
-          map.current.addSource('drainage-src', { type: 'geojson', data: { type: 'FeatureCollection', features: drainageFeatures } });
-          map.current.addLayer({
-            id: 'drainage', type: 'line', source: 'drainage-src',
-            layout: { visibility: 'visible' },
-            paint: { 'line-color': '#4895ef', 'line-width': 1, 'line-opacity': 0.6 },
+          const drainageFromLines = polylines.features.filter((f: GeoFeature) =>
+            isDrainageLayer(f.properties?.Layer)
+          );
+          const drainageFromPolygons = polygons.features
+            .filter((f: GeoFeature) => isDrainageLayer(f.properties?.Layer))
+            .map(polygonRingToLineFeature)
+            .filter((f: GeoFeature | null): f is GeoFeature => f !== null);
+          const drainageFeatures = [...drainageFromLines, ...drainageFromPolygons];
+
+          mapInstance.addSource('drainage-src', {
+            type: 'geojson',
+            data: { type: 'FeatureCollection', features: drainageFeatures },
+          });
+          mapInstance.addLayer({
+            id: 'drainage-casing',
+            type: 'line',
+            source: 'drainage-src',
+            layout: { visibility: 'visible', 'line-cap': 'round', 'line-join': 'round' },
+            paint: {
+              'line-color': '#ffffff',
+              'line-width': 4,
+              'line-opacity': 0.55,
+            },
+          });
+          mapInstance.addLayer({
+            id: 'drainage',
+            type: 'line',
+            source: 'drainage-src',
+            layout: { visibility: 'visible', 'line-cap': 'round', 'line-join': 'round' },
+            paint: {
+              'line-color': '#00B0FF',
+              'line-width': 2.5,
+              'line-opacity': 1,
+            },
           });
 
-          const roadFeatures = polylines.features.filter((f: any) => ['MAIN ROAD_PEDESTRIAN', 'INTERNAL SERVICE ROAD', 'EXISTING EARTHROAD'].includes(f.properties.Layer));
-          map.current.addSource('roads-src', { type: 'geojson', data: { type: 'FeatureCollection', features: roadFeatures } });
-          map.current.addLayer({
+          const roadFeatures = polylines.features.filter((f: GeoFeature) => ['MAIN ROAD_PEDESTRIAN', 'INTERNAL SERVICE ROAD', 'EXISTING EARTHROAD'].includes(f.properties?.Layer ?? ''));
+          mapInstance.addSource('roads-src', { type: 'geojson', data: { type: 'FeatureCollection', features: roadFeatures } });
+          mapInstance.addLayer({
             id: 'roads', type: 'line', source: 'roads-src',
             layout: { visibility: 'visible' },
             paint: { 'line-color': '#adb5bd', 'line-width': 1.5, 'line-opacity': 0.6 },
           });
 
-          // ── Polygons ────────────────────────────────────────────────────
-          const polygons = await fetch('/data/geojson/Topo_polygon.geojson').then(r => r.json());
-
           // Open Grounds (vegetation cover)
-          const openGroundsFeatures = polygons.features.filter((f: any) => ['BAMBOO_TREE', 'GARDEN', 'BOTANIC GARDEN'].includes(f.properties.Layer));
-          map.current.addSource('open-grounds-src', { type: 'geojson', data: { type: 'FeatureCollection', features: openGroundsFeatures } });
-          map.current.addLayer({
+          const openGroundsFeatures = polygons.features.filter((f: GeoFeature) => ['BAMBOO_TREE', 'GARDEN', 'BOTANIC GARDEN'].includes(f.properties?.Layer ?? ''));
+          mapInstance.addSource('open-grounds-src', { type: 'geojson', data: { type: 'FeatureCollection', features: openGroundsFeatures } });
+          mapInstance.addLayer({
             id: 'open-grounds', type: 'fill', source: 'open-grounds-src',
             layout: { visibility: 'visible' },
             paint: { 'fill-color': '#8DA750', 'fill-opacity': 0.4 },

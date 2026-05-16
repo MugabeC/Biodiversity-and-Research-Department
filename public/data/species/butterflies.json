@@ -180,7 +180,8 @@
       "scientificName": "Charaxes candiope",
       "commonName": "Green-veined Charaxes",
       "iucn": "LC",
-      "feedingGroup": "Fruit feeder"
+      "feedingGroup": "Fruit feeder",
+      "description_short": "Charaxes candiope, the green-veined emperor or green-veined charaxes, is a butterfly of the family Nymphalidae. It is common in sub-Saharan Africa."
     },
     {
       "taxa": "butterflies",
@@ -189,7 +190,8 @@
       "scientificName": "Colotis euippe",
       "commonName": "Smoky Orange Tip",
       "iucn": "LC",
-      "feedingGroup": "Nectar feeder"
+      "feedingGroup": "Nectar feeder",
+      "description_short": "Colotis euippe is a butterfly of the family Pieridae that is found in the Afrotropical realm."
     },
     {
       "taxa": "butterflies",
@@ -198,7 +200,8 @@
       "scientificName": "Danaus chrysippus",
       "commonName": "Plain Tiger",
       "iucn": "LC",
-      "feedingGroup": "Nectar feeder"
+      "feedingGroup": "Nectar feeder",
+      "description_short": "Danaus chrysippus, also known as the plain tiger, African queen, or African monarch, is a medium-sized butterfly widespread in Asia, Australia and Africa. It belongs to the Danainae subfamily of the brush-footed butterfly family Nymphalidae. Danainae primarily consume plants in the genus Asclepias, more commonly called milkweed. Milkweed contains toxic compounds, cardenolides, which are often consumed and stored by many butterflies. Because of their emetic properties, the plain tiger is unpalatable to most predators. As a result, its colouration is widely mimicked by other species of butterflies. The plain tiger inhabits a wide variety of habitats, although it is less likely to thrive in jungle-like conditions and is most often found in drier, wide-open areas."
     },
     {
       "taxa": "butterflies",
@@ -216,7 +219,8 @@
       "scientificName": "Eicochrysops masai",
       "commonName": "Masai Blue",
       "iucn": "NE",
-      "feedingGroup": "Nectar feeder"
+      "feedingGroup": "Nectar feeder",
+      "description_short": "Eicochrysops masai, the Masai blue, is a butterfly in the family Lycaenidae. It is found in Ethiopia, northern Uganda, central and northern Kenya and northern Tanzania. Their habitat consists of grassy savanna."
     },
     {
       "taxa": "butterflies",
@@ -225,7 +229,8 @@
       "scientificName": "Eretis lugens",
       "commonName": "Lugens Skipper",
       "iucn": "NE",
-      "feedingGroup": "Nectar feeder"
+      "feedingGroup": "Nectar feeder",
+      "description_short": "Eretis lugens, commonly known as the savanna elf, is a species of butterfly in the family Hesperiidae. It is found in Senegal, northern Guinea, northern Sierra Leone, Liberia, northern Ivory Coast, Ghana, Togo, Benin, Nigeria, Cameroon, the Central African Republic, Angola, the Democratic Republic of the Congo, southern Sudan, Ethiopia, Uganda, Burundi, Kenya, Tanzania and north-western Zambia. The habitat consists of Sudan savanna, open Guinea savanna, forest margins, forests and dense woodland."
     },
     {
       "taxa": "butterflies",

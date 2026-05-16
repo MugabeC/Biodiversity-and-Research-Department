@@ -2,35 +2,8 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-
-// ── Bird image helper ─────────────────────────────────────────────────────────
-
-const BIRD_BASE = '/images/species/bird images';
-
-function birdPrimaryCandidates(n: number): string[] {
-  return [
-    `${BIRD_BASE}/birds-${n}.jpg`,
-    `${BIRD_BASE}/birds-${n}.JPG`,
-    `${BIRD_BASE}/Birds-${n}.jpg`,
-    `${BIRD_BASE}/Birds-${n}.JPG`,
-  ];
-}
-
-// Cycles through candidate srcs on error; hides when all fail.
-function BirdPhoto({ num, alt }: { num: number; alt: string }) {
-  const candidates = birdPrimaryCandidates(num);
-  const [idx, setIdx] = useState(0);
-  if (idx >= candidates.length) return null;
-  return (
-    <img
-      src={candidates[idx]}
-      alt={alt}
-      style={{ position: 'absolute', inset: '8px', width: 'calc(100% - 16px)', height: 'calc(100% - 16px)', objectFit: 'contain' }}
-      onError={() => setIdx(i => i + 1)}
-    />
-  );
-}
+import SpeciesPhoto from '../components/SpeciesPhoto';
+import { loadSpeciesImageCache, getCachedSpeciesImage } from '../lib/speciesImageCache';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -42,11 +15,28 @@ type Species = {
   family: string;
   iucn: string;
   endemism: string;
+  imageUrl: string | null;
+};
+
+/** Loose species row shape from merged species.json (all taxa). */
+type SpeciesJsonRow = {
+  taxa: string;
+  id: number;
+  commonName?: string;
+  genusSpecies?: string;
+  scientificName?: string;
+  family?: string;
+  status?: string;
+  iucn?: string;
+  iucnGlobal?: string;
+  endemism?: string;
+  albertineRiftEndemic?: string;
+  origin?: string;
 };
 
 // ── Endemism normalization ────────────────────────────────────────────────────
 
-function getEndemism(s: any): string {
+function getEndemism(s: SpeciesJsonRow): string {
   if (s.taxa === 'birds') {
     const code = s.status?.split(',')[1];
     if (code === 'R') return 'Native';
@@ -71,7 +61,7 @@ function getEndemism(s: any): string {
   return ''; // butterflies, aquatic_inverts — no endemism data
 }
 
-function normalize(s: any): Species {
+function normalize(s: SpeciesJsonRow): Species {
   let iucn = 'NE';
   if (s.taxa === 'birds' && s.status) {
     iucn = s.status.split(',')[0];
@@ -88,7 +78,14 @@ function normalize(s: any): Species {
     family: (s.family || '') as string,
     iucn,
     endemism: getEndemism(s),
+    imageUrl: null,
   };
+}
+
+function withImageUrl(s: Species, cache: Awaited<ReturnType<typeof loadSpeciesImageCache>>): Species {
+  const entry = getCachedSpeciesImage(cache, s.uid);
+  if (entry === undefined) return s;
+  return { ...s, imageUrl: entry?.url ?? null };
 }
 
 // ── Static lookup tables ──────────────────────────────────────────────────────
@@ -111,16 +108,6 @@ const TAXA_KEY: Record<string, string> = {
   'Amphibians & Reptiles':   'amphibians-reptiles',
   'Mammals':                 'mammals',
   'Fish':                    'fish',
-};
-
-const TAXA_ICONS: Record<string, string> = {
-  birds:                 '/images/icons/bird-icon.png',
-  plants:                '/images/icons/plant-icon.png',
-  butterflies:           '/images/icons/butterfly-icon.png',
-  aquatic_inverts:       '/images/icons/aquatic-icon.png',
-  'amphibians-reptiles': '/images/icons/amphibian-icon.png',
-  mammals:               '/images/icons/mammal-icon.png',
-  fish:                  '/images/icons/fish-icon.png',
 };
 
 const IUCN_STYLE: Record<string, { bg: string; color: string }> = {
@@ -178,9 +165,9 @@ function Chip({ label, active, onClick }: { label: string; active: boolean; onCl
 
 function FilterLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span style={{
-      fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '12px',
-      color: '#4A5E4F', textTransform: 'uppercase', letterSpacing: '0.06em',
+    <span className="heading" style={{
+      fontSize: '12px',
+      color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em',
       alignSelf: 'center', whiteSpace: 'nowrap',
     }}>
       {children}
@@ -192,50 +179,20 @@ function FilterLabel({ children }: { children: React.ReactNode }) {
 
 function SpeciesCard({ species }: { species: Species }) {
   const iucnStyle = IUCN_STYLE[species.iucn] ?? IUCN_STYLE.NE;
-  const icon = TAXA_ICONS[species.taxa];
   const displayName = species.commonName || species.scientificName;
 
-  // Extract bird number from uid like "birds-45" → 45
-  const birdNumMatch = species.uid.match(/^birds-(\d+)$/);
-  const birdNum = birdNumMatch ? parseInt(birdNumMatch[1]) : null;
-
   return (
-    <Link
-      href={`/species/${species.uid}`}
-      className="species-card"
-      style={{
-        background: 'rgba(255,255,255,0.5)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
-        border: '1px solid rgba(255,255,255,0.6)',
-        borderRadius: '16px',
-        boxShadow: '0 8px 32px rgba(12,96,56,0.10)',
-        overflow: 'hidden',
-      }}
-    >
-      {/* Image area: gradient background, contain fit, 8px padding */}
-      <div style={{
-        position: 'relative',
-        height: '160px',
-        background: 'linear-gradient(135deg, #e8f5e9, #c8e6c9)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexShrink: 0,
-        overflow: 'hidden',
-      }}>
-        {icon && (
-          <Image
-            src={icon}
-            alt={species.taxa}
-            width={64}
-            height={64}
-            style={{ objectFit: 'contain', opacity: 0.55 }}
-            unoptimized
-          />
-        )}
-        {/* Real photo overlays placeholder; hides itself if all candidates fail */}
-        {birdNum !== null && <BirdPhoto num={birdNum} alt={displayName || species.taxa} />}
+    <Link href={`/species/${species.uid}`} className="species-card">
+      <div style={{ position: 'relative', flexShrink: 0 }}>
+        <SpeciesPhoto
+          uid={species.uid}
+          scientificName={species.scientificName}
+          commonName={species.commonName}
+          taxa={species.taxa}
+          alt={displayName || species.taxa}
+          imageUrl={species.imageUrl}
+          height={160}
+        />
         <span style={{
           position: 'absolute',
           top: 10,
@@ -244,8 +201,6 @@ function SpeciesCard({ species }: { species: Species }) {
           color: iucnStyle.color,
           borderRadius: '9999px',
           padding: '3px 9px',
-          fontFamily: 'Poppins, sans-serif',
-          fontWeight: 600,
           fontSize: '11px',
           lineHeight: 1.6,
           boxShadow: '0 1px 4px rgba(0,0,0,0.10)',
@@ -257,9 +212,9 @@ function SpeciesCard({ species }: { species: Species }) {
 
       {/* Content */}
       <div style={{ padding: '14px 16px 16px' }}>
-        <p style={{
-          fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '15px',
-          color: '#1A2E1F', margin: '0 0 2px',
+        <p className="heading" style={{
+          fontSize: '15px',
+          color: 'var(--text-primary)', margin: '0 0 2px',
           overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis',
         }}>
           {displayName || '—'}
@@ -309,24 +264,18 @@ export default function SpeciesExplorerPage() {
   const [endemFilters, setEndemFilters] = useState<string[]>([]);
 
   useEffect(() => {
-    fetch('/data/species/species.json')
-      .then(r => r.json())
-      .then(data => {
-        const normalized = (data.species as any[]).map(normalize);
-
-        // Debug: log the unique endemism values produced by normalization
-        const uniqueEndemism = Array.from(
-          new Set(normalized.map((s: Species) => s.endemism))
-        ).sort();
-        console.log('[Species] Unique endemism values:', uniqueEndemism);
-        console.log('[Species] Endemism counts:', uniqueEndemism.map(v => ({
-          value: v || '(empty)',
-          count: normalized.filter((s: Species) => s.endemism === v).length,
-        })));
-
+    Promise.all([
+      fetch('/data/species/species.json').then(r => r.json()),
+      loadSpeciesImageCache(),
+    ])
+      .then(([data, imageCache]) => {
+        const normalized = (data.species as SpeciesJsonRow[])
+          .map(normalize)
+          .map(s => withImageUrl(s, imageCache));
         setAllSpecies(normalized);
         setLoading(false);
-      });
+      })
+      .catch(() => setLoading(false));
   }, []);
 
   const filtered = useMemo(() => {
@@ -353,15 +302,13 @@ export default function SpeciesExplorerPage() {
 
         {/* ── Title ── */}
         <div style={{ marginBottom: '1.75rem' }}>
-          <h1 style={{
-            fontFamily: 'Poppins, sans-serif', fontWeight: 700,
-            fontSize: '32px', color: '#0C6038', margin: 0, lineHeight: 1.2,
+          <h1 className="heading" style={{
+            fontSize: '32px', color: 'var(--accent-text)', margin: 0, lineHeight: 1.2,
           }}>
             Species Explorer
           </h1>
           <p style={{
-            fontFamily: 'Poppins, sans-serif', fontWeight: 400,
-            fontSize: '15px', color: '#4A5E4F', margin: '6px 0 0',
+            fontSize: '15px', color: 'var(--text-secondary)', margin: '6px 0 0',
           }}>
             Nyandungu Eco-Park · 870 Species Recorded
           </p>

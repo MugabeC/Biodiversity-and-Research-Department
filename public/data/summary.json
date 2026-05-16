@@ -1,0 +1,44 @@
+{
+  "parkName": "Nyandungu Eco-Park",
+  "parkSize": "219 Ha",
+  "location": "Kigali, Rwanda",
+  "surveyYear": "2025/2026",
+  "totalSpecies": 870,
+  "taxa": {
+    "birds": {
+      "count2025": 251,
+      "count2023": 83,
+      "orders": 20,
+      "families": 53
+    },
+    "plants": {
+      "count2025": 468,
+      "count2023": 260,
+      "families": "multiple"
+    },
+    "amphibians_reptiles": {
+      "count2025": 22,
+      "count2023": 12,
+      "amphibians": 11,
+      "reptiles": 11
+    },
+    "fish": {
+      "count2025": 7,
+      "count2023": 7
+    },
+    "aquatic_inverts": {
+      "count2025": 52,
+      "count2023": 29,
+      "families": 41
+    },
+    "butterflies": {
+      "count2025": 57,
+      "count2023": 56,
+      "families": 4
+    },
+    "mammals": {
+      "count2025": 13,
+      "count2023": 9
+    }
+  }
+}
