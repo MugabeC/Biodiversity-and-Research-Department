@@ -1,4 +1,4 @@
-/** Species photo resolver: Wikipedia REST → Wikidata → iNaturalist. */
+/** Species photo resolver: iNaturalist → Wikipedia → IUCN Red List. */
 
 const WIKI_API = 'https://en.wikipedia.org/w/api.php';
 const WIKI_REST = 'https://en.wikipedia.org/api/rest_v1/page/summary';
@@ -19,16 +19,37 @@ function upscaleWikiThumb(url) {
   return url.replace(/\/(\d+)px-/g, '/800px-');
 }
 
-/** Skip historic plates / wrong taxon artwork when a photo exists elsewhere. */
 function isLikelyIllustration(url) {
   if (!url) return false;
   return /Plate|plate_|illustration|engraving|drawing|_print\.|Rohrweihe|John_Gould|Gould/i.test(url);
+}
+
+function isGenericIucnImage(url) {
+  return /logo|iucn-red-list|placeholder|default-image/i.test(url);
 }
 
 async function fetchJson(url) {
   const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT } });
   if (!res.ok) return null;
   return res.json();
+}
+
+async function fetchHtml(url) {
+  const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT } });
+  if (!res.ok) return null;
+  return res.text();
+}
+
+function parseOgImage(html) {
+  const patterns = [
+    /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i,
+    /<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i,
+  ];
+  for (const re of patterns) {
+    const url = re.exec(html)?.[1];
+    if (url && !isGenericIucnImage(url)) return url;
+  }
+  return null;
 }
 
 async function fetchWikiRestThumb(title) {
@@ -81,7 +102,7 @@ async function searchWiki(query) {
   return null;
 }
 
-async function fetchWikidataImage(scientific) {
+async function fetchWikidataClaims(scientific) {
   const searchParams = new URLSearchParams({
     action: 'wbsearchentities',
     search: scientific,
@@ -91,7 +112,7 @@ async function fetchWikidataImage(scientific) {
   });
   const search = await fetchJson(`${WIKIDATA_API}?${searchParams}`);
   const id = search?.search?.[0]?.id;
-  if (!id) return null;
+  if (!id) return {};
 
   const entityParams = new URLSearchParams({
     action: 'wbgetentities',
@@ -100,13 +121,14 @@ async function fetchWikidataImage(scientific) {
     format: 'json',
   });
   const entityData = await fetchJson(`${WIKIDATA_API}?${entityParams}`);
-  const claims = entityData?.entities?.[id]?.claims?.P18;
-  const fileName = claims?.[0]?.mainsnak?.datavalue?.value;
-  if (!fileName) return null;
+  const claims = entityData?.entities?.[id]?.claims;
+  const imageFile = claims?.P18?.[0]?.mainsnak?.datavalue?.value;
+  const iucnRaw = claims?.P809?.[0]?.mainsnak?.datavalue?.value;
 
-  const url = `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(fileName)}?width=800`;
-  if (isLikelyIllustration(url)) return null;
-  return url;
+  return {
+    imageFile: imageFile ?? undefined,
+    iucnTaxonId: iucnRaw != null ? String(iucnRaw) : undefined,
+  };
 }
 
 async function fetchInatPhoto(scientific) {
@@ -127,6 +149,23 @@ async function fetchInatPhoto(scientific) {
   return photo?.medium_url ?? photo?.url ?? null;
 }
 
+async function resolveIucnSpeciesPageUrl(scientific, iucnTaxonId) {
+  if (iucnTaxonId) return `https://www.iucnredlist.org/species/${iucnTaxonId}/0`;
+  const html = await fetchHtml(
+    `https://www.iucnredlist.org/search?query=${encodeURIComponent(scientific)}`,
+  );
+  const path = html?.match(/href=["'](\/species\/\d+\/0)["']/i)?.[1];
+  return path ? `https://www.iucnredlist.org${path}` : null;
+}
+
+async function fetchIucnPhoto(scientific, iucnTaxonId) {
+  const pageUrl = await resolveIucnSpeciesPageUrl(scientific, iucnTaxonId);
+  if (!pageUrl) return null;
+  const html = await fetchHtml(pageUrl);
+  if (!html) return null;
+  return parseOgImage(html);
+}
+
 async function tryTitles(titles, fetcher) {
   for (const t of titles) {
     if (!t?.trim()) continue;
@@ -142,7 +181,10 @@ export async function resolveSpeciesImageUrl(scientificName, commonName) {
 
   const titles = [scientific, commonName].filter(Boolean);
 
-  let url = await tryTitles(titles, fetchWikiRestThumb);
+  let url = await fetchInatPhoto(scientific);
+  if (url) return { url, source: 'inaturalist' };
+
+  url = await tryTitles(titles, fetchWikiRestThumb);
   if (url) return { url, source: 'wikipedia' };
 
   url = await tryTitles(titles, fetchWikiThumb);
@@ -156,11 +198,16 @@ export async function resolveSpeciesImageUrl(scientificName, commonName) {
     if (url) return { url, source: 'wikipedia' };
   }
 
-  url = await fetchWikidataImage(scientific);
-  if (url) return { url, source: 'wikipedia' };
+  const wikidata = await fetchWikidataClaims(scientific);
+  if (wikidata.imageFile) {
+    const commonsUrl = `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(wikidata.imageFile)}?width=800`;
+    if (!isLikelyIllustration(commonsUrl)) {
+      return { url: commonsUrl, source: 'wikipedia' };
+    }
+  }
 
-  url = await fetchInatPhoto(scientific);
-  if (url) return { url, source: 'inaturalist' };
+  url = await fetchIucnPhoto(scientific, wikidata.iucnTaxonId);
+  if (url) return { url, source: 'iucn' };
 
   return null;
 }

@@ -1,4 +1,7 @@
-export type SpeciesImageEntry = { url: string; source: 'wikipedia' | 'inaturalist' } | null;
+export type SpeciesImageEntry = {
+  url: string;
+  source: 'inaturalist' | 'wikipedia' | 'iucn';
+} | null;
 
 export type SpeciesImageCacheFile = {
   generatedAt: string | null;

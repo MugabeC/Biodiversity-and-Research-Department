@@ -160,8 +160,13 @@ export default function SpeciesPhoto({
             objectPosition: 'center',
           }}
           onError={() => {
-            setSrc(null);
-            setKnownMissing(true);
+            memoryCache.delete(uid);
+            setLoading(true);
+            fetchImageUrlFromApi(uid, scientificName, commonName).then(url => {
+              setSrc(url);
+              setKnownMissing(url === null);
+              setLoading(false);
+            });
           }}
         />
       ) : showPlaceholder ? (
