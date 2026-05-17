@@ -9,6 +9,12 @@ import {
 } from 'recharts';
 import TaxaIcon from '../TaxaIcon';
 import { parseBiodiversitySurvey, type BioComplianceSummary } from '@/app/lib/parseBiodiversityWater';
+import {
+  flattenBiodiversityExplore,
+  flattenWasacExplore,
+  filterWaterExploreRows,
+  type WasacRawParam,
+} from '@/app/lib/exploreWaterQuality';
 import { TAXA_META, sortByMonth, parseParticipantCount, withShortMonths } from '@/app/lib/dashboardUtils';
 import { useChartColors, chartTooltipProps } from './chartTheme';
 import TaxaShareBarChart from './TaxaShareBarChart';
@@ -61,6 +67,19 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
   );
 }
 
+function ExploreResultCell({ result }: { result: string }) {
+  const normalized = result.trim().toUpperCase();
+  const variant =
+    normalized === 'PASS' ? 'pass' : normalized === 'FAIL' ? 'fail' : 'neutral';
+  return (
+    <td className={`data-table-result data-table-result--${variant}`}>
+      <span className={`data-table-result-label data-table-result-label--${variant}`}>
+        {result}
+      </span>
+    </td>
+  );
+}
+
 function ChartCard({
   title,
   description,
@@ -97,34 +116,74 @@ export default function DashboardExplorer() {
   const [wasteData, setWasteData] = useState<WasteFile>([]);
   const waste = useMemo(() => normalizeWasteData(wasteData), [wasteData]);
   const [bioWater, setBioWater] = useState<BioComplianceSummary | null>(null);
+  const [wasacParams, setWasacParams] = useState<WasacRawParam[]>([]);
+  const [wasacSiteLabels, setWasacSiteLabels] = useState<string[]>([]);
   const [exploreTab, setExploreTab] = useState('schools');
   const [search, setSearch] = useState('');
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const c = useChartColors();
   const tt = chartTooltipProps(c);
   const STUDENT_TARGET = 500;
 
   useEffect(() => {
-    Promise.all([
-      fetch('/data/summary.json').then(r => r.json()),
-      fetch('/data/school_visits.json').then(r => r.json()),
-      fetch('/data/community_activities.json').then(r => r.json()),
-      fetch('/data/complementary_passes.json').then(r => r.json()),
-      fetch('/data/waste.json').then(r => r.json()),
-      fetch('/data/water_quality.json').then(r => r.json()),
-    ])
-      .then(([sum, sch, comm, pass, wast, wq]) => {
+    let cancelled = false;
+
+    async function loadDashboard() {
+      const urls = [
+        '/data/summary.json',
+        '/data/school_visits.json',
+        '/data/community_activities.json',
+        '/data/complementary_passes.json',
+        '/data/waste.json',
+        '/data/water_quality.json',
+      ] as const;
+
+      try {
+        const responses = await Promise.all(urls.map(url => fetch(url)));
+        const failed = responses.find(r => !r.ok);
+        if (failed) {
+          throw new Error(`Failed to load ${failed.url} (${failed.status})`);
+        }
+
+        const [sum, sch, comm, pass, wast, wq] = await Promise.all(
+          responses.map(r => r.json()),
+        );
+
+        if (cancelled) return;
+
         setSummary(sum);
         setSchools(sch);
-        setCommunity(comm);
+        setCommunity(comm ?? []);
         setPasses(pass);
         setWasteData(wast);
-        if (wq.biodiversitySurvey) {
-          setBioWater(parseBiodiversitySurvey(wq.biodiversitySurvey));
+
+        try {
+          if (wq?.biodiversitySurvey) {
+            setBioWater(parseBiodiversitySurvey(wq.biodiversitySurvey));
+          }
+        } catch {
+          setBioWater(null);
         }
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+
+        setWasacParams(wq?.wasac?.parameters ?? []);
+        setWasacSiteLabels(wq?.wasac?.samplingPoints ?? []);
+        setLoadError(null);
+      } catch {
+        if (!cancelled) {
+          setLoadError(
+            'Could not load dashboard data. Check that JSON files exist under public/data, then refresh the page.',
+          );
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    loadDashboard();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const taxaCards = useMemo(() => {
@@ -244,10 +303,40 @@ export default function DashboardExplorer() {
     );
   }, [community, search]);
 
+  const bioWaterExplore = useMemo(() => {
+    if (!bioWater) return [];
+    return flattenBiodiversityExplore(bioWater);
+  }, [bioWater]);
+
+  const wasacWaterExplore = useMemo(() => {
+    return flattenWasacExplore(wasacParams, wasacSiteLabels);
+  }, [wasacParams, wasacSiteLabels]);
+
+  const filteredBioWaterExplore = useMemo(
+    () => filterWaterExploreRows(bioWaterExplore, search),
+    [bioWaterExplore, search],
+  );
+
+  const filteredWasacWaterExplore = useMemo(
+    () => filterWaterExploreRows(wasacWaterExplore, search),
+    [wasacWaterExplore, search],
+  );
+
   if (loading) {
     return (
       <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--text-secondary)' }}>
         Loading dashboard data…
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div style={{ textAlign: 'center', padding: '4rem', maxWidth: 520, margin: '0 auto' }}>
+        <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, margin: '0 0 1rem' }}>{loadError}</p>
+        <button type="button" className="doc-action-btn doc-action-btn--primary" onClick={() => window.location.reload()}>
+          Retry
+        </button>
       </div>
     );
   }
@@ -309,26 +398,15 @@ export default function DashboardExplorer() {
                       <div
                         key={card.taxa}
                         className="taxa-card taxa-card--compact"
-                        style={{
-                          overflow: 'visible',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          gap: 4,
-                        }}
                       >
-                        <div style={{ position: 'absolute', top: -18, left: '50%', transform: 'translateX(-50%)' }}>
-                          <TaxaIcon taxa={card.taxa} size={36} />
+                        <div className="taxa-card-icon-float" aria-hidden>
+                          <TaxaIcon taxa={card.taxa} size={52} />
                         </div>
                         <span
+                          className="taxa-card-badge"
                           style={{
-                            alignSelf: 'flex-end',
                             background: card.stable ? 'rgba(74,94,79,0.15)' : 'rgba(12,96,56,0.15)',
                             color: card.stable ? 'var(--text-secondary)' : 'var(--accent-text)',
-                            borderRadius: '9999px',
-                            padding: '2px 6px',
-                            fontSize: 9,
-                            fontWeight: 700,
                           }}
                         >
                           {card.badge}
@@ -514,12 +592,12 @@ export default function DashboardExplorer() {
               Search and browse department datasets. Water quality has two programmes: the{' '}
               <strong>biodiversity survey</strong> (park ponds & wetlands, Nov 2025) and{' '}
               <strong>WASAC / RS 109</strong> (industrial wastewater & Phoenix Apartment community effluent, Oct 2025).
-              Use the <strong>Water quality</strong> tab for park parameters and WASAC monitoring charts.
+              Use the <strong>Water quality</strong> tab for charts and compliance summaries.
             </p>
             <input
               type="search"
               className="species-search"
-              placeholder="Search schools, activities, groups…"
+              placeholder="Search schools, activities, water parameters, sites…"
               value={search}
               onChange={e => setSearch(e.target.value)}
               style={{ marginBottom: '1rem' }}
@@ -530,6 +608,8 @@ export default function DashboardExplorer() {
                 { id: 'community', label: `Activities (${community.length})` },
                 { id: 'passes', label: `Complementary pass (${passes?.detail.length ?? 0})` },
                 { id: 'waste', label: `Waste (${waste.length})` },
+                { id: 'water-bio', label: `Water — Biodiversity (${bioWaterExplore.length})` },
+                { id: 'water-wasac', label: `Water — WASAC (${wasacWaterExplore.length})` },
               ].map(t => (
                 <button
                   key={t.id}
@@ -542,7 +622,7 @@ export default function DashboardExplorer() {
               ))}
             </div>
 
-            <div className="glass-card data-table-wrap">
+            <div className="glass-card data-table-wrap" role="region" aria-label="Explore data records">
               {exploreTab === 'schools' && (
                 <table className="data-table">
                   <thead>
@@ -638,6 +718,82 @@ export default function DashboardExplorer() {
                         </tr>
                       );
                     })}
+                  </tbody>
+                </table>
+              )}
+              {exploreTab === 'water-bio' && (
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Parameter</th>
+                      <th>Sampling point</th>
+                      <th>Value</th>
+                      <th>Unit</th>
+                      <th>Limit</th>
+                      <th>Result</th>
+                      <th>Method</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredBioWaterExplore.length === 0 ? (
+                      <tr>
+                        <td colSpan={7} style={{ textAlign: 'center', padding: '1.5rem' }}>
+                          {bioWaterExplore.length === 0
+                            ? 'No biodiversity survey water data loaded.'
+                            : 'No rows match your search.'}
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredBioWaterExplore.map((row, i) => (
+                        <tr key={`${row.parameter}-${row.site}-${i}`}>
+                          <td>{row.parameter}</td>
+                          <td>{row.site}</td>
+                          <td>{row.value}</td>
+                          <td>{row.unit}</td>
+                          <td>{row.limit}</td>
+                          <ExploreResultCell result={row.result} />
+                          <td>{row.methodOrRemarks}</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              )}
+              {exploreTab === 'water-wasac' && (
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Parameter</th>
+                      <th>Sampling point</th>
+                      <th>Value</th>
+                      <th>Unit</th>
+                      <th>Limit</th>
+                      <th>Result</th>
+                      <th>Remarks</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredWasacWaterExplore.length === 0 ? (
+                      <tr>
+                        <td colSpan={7} style={{ textAlign: 'center', padding: '1.5rem' }}>
+                          {wasacWaterExplore.length === 0
+                            ? 'No WASAC water data loaded.'
+                            : 'No rows match your search.'}
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredWasacWaterExplore.map((row, i) => (
+                        <tr key={`${row.parameter}-${row.site}-${i}`}>
+                          <td>{row.parameter}</td>
+                          <td>{row.site}</td>
+                          <td>{row.value}</td>
+                          <td>{row.unit}</td>
+                          <td>{row.limit}</td>
+                          <ExploreResultCell result={row.result} />
+                          <td>{row.methodOrRemarks}</td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               )}

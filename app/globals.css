@@ -388,7 +388,7 @@ h1, h2, h3, h4, h5, h6,
 .taxa-row-scroll {
   overflow-x: auto;
   overflow-y: visible;
-  padding: 28px 12px 52px;
+  padding: 36px 16px 52px;
   margin: 0 -12px 8px;
   -webkit-overflow-scrolling: touch;
   /* Room for ::after ground shadows under each tile */
@@ -405,9 +405,34 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .taxa-card--compact {
-  padding: 28px 6px 12px !important;
+  position: relative;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 28px 8px 12px !important;
   min-width: 0;
   margin-bottom: 4px;
+}
+
+.taxa-card-icon-float {
+  position: absolute;
+  top: -18px;
+  left: -14px;
+  z-index: 2;
+  pointer-events: none;
+  line-height: 0;
+}
+
+.taxa-card--compact .taxa-card-badge {
+  align-self: flex-end;
+  border-radius: 9999px;
+  padding: 2px 6px !important;
+  font-size: 9px !important;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+  max-width: calc(100% - 28px);
 }
 
 .taxa-card--compact .taxa-card-count {
@@ -418,11 +443,6 @@ h1, h2, h3, h4, h5, h6,
   font-size: 10px !important;
   line-height: 1.2;
   text-align: center;
-}
-
-.taxa-card--compact .taxa-card-badge {
-  font-size: 9px !important;
-  padding: 2px 6px !important;
 }
 
 @media (max-width: 900px) {
@@ -751,27 +771,105 @@ select.chart-select {
 
 .data-table-wrap {
   max-height: 360px;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: auto;
   border-radius: 12px;
   border: 1px solid var(--border);
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Explore Data: flush table to top, scrollable glass shell */
+.glass-card.data-table-wrap {
+  padding: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: min(70vh, 520px);
+  border: 1px solid var(--nav-glass-border);
+  border-radius: 16px;
+  background: var(--nav-glass-bg);
+  backdrop-filter: blur(20px) saturate(1.35);
+  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+}
+
+.glass-card.data-table-wrap:hover {
+  transform: none;
+}
+
+.glass-card.data-table-wrap .data-table {
+  margin: 0;
 }
 
 .data-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 13px;
+}
+
+/* One continuous header band (Month → Notes), not per-column gradients */
+.data-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  background: linear-gradient(
+    90deg,
+    rgba(186, 228, 205, 0.72) 0%,
+    rgba(210, 240, 220, 0.58) 35%,
+    rgba(198, 235, 212, 0.65) 70%,
+    rgba(186, 228, 205, 0.72) 100%
+  );
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.45) inset,
+    0 4px 14px rgba(12, 96, 56, 0.1);
+}
+
+.data-table thead tr {
+  background: transparent;
 }
 
 .data-table th {
   position: sticky;
   top: 0;
-  background: var(--surface-glass);
-  backdrop-filter: blur(8px);
+  z-index: 2;
   text-align: left;
-  padding: 10px 12px;
+  padding: 12px 14px;
   font-weight: 700;
-  color: var(--text-primary);
-  border-bottom: 1px solid var(--border);
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: #0c5034;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(12, 96, 56, 0.14);
+  white-space: nowrap;
+}
+
+.glass-card.data-table-wrap .data-table thead tr:first-child th:first-child {
+  border-top-left-radius: 16px;
+}
+
+.glass-card.data-table-wrap .data-table thead tr:first-child th:last-child {
+  border-top-right-radius: 16px;
+}
+
+[data-theme='dark'] .data-table thead {
+  background: linear-gradient(
+    90deg,
+    rgba(12, 96, 56, 0.42) 0%,
+    rgba(110, 207, 150, 0.22) 40%,
+    rgba(45, 120, 80, 0.32) 70%,
+    rgba(12, 96, 56, 0.4) 100%
+  );
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 4px 18px rgba(0, 0, 0, 0.28);
+}
+
+[data-theme='dark'] .data-table th {
+  color: #e8f2eb;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
 .data-table td {
@@ -787,6 +885,74 @@ select.chart-select {
 
 [data-theme='dark'] .data-table tr:hover td {
   background: rgba(255, 255, 255, 0.04);
+}
+
+.data-table td.data-table-result {
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.03em;
+}
+
+.data-table-result-label {
+  display: inline-block;
+}
+
+.data-table td.data-table-result--pass,
+.data-table-result-label--pass {
+  color: #1a7d2e;
+}
+
+.data-table td.data-table-result--fail,
+.data-table-result-label--fail {
+  color: #d4251c;
+  font-weight: 700;
+}
+
+.data-table td.data-table-result--neutral,
+.data-table-result-label--neutral {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+[data-theme='dark'] .data-table td.data-table-result--pass,
+[data-theme='dark'] .data-table-result-label--pass {
+  color: #6ecf96;
+}
+
+[data-theme='dark'] .data-table td.data-table-result--fail,
+[data-theme='dark'] .data-table-result-label--fail {
+  color: #ff5252;
+  font-weight: 700;
+}
+
+.taxa-line-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  background-color: var(--meadow-green);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+.taxa-card--compact .taxa-line-icon {
+  width: 52px !important;
+  height: 52px !important;
+  filter: drop-shadow(0 2px 6px rgba(12, 96, 56, 0.15));
+}
+
+@media (max-width: 900px) {
+  .taxa-card-icon-float {
+    top: -14px;
+    left: -10px;
+  }
+
+  .taxa-card--compact .taxa-line-icon {
+    width: 44px !important;
+    height: 44px !important;
+  }
 }
 
 /* Document library */
