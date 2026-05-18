@@ -39,3 +39,7 @@ next-env.d.ts
 public/data/geojson/Topo_polylines.geojson
 public/data/geojson/Topo_polygon.geojson
 public/data/geojson/Topo_dots.geojson
+
+# Map GeoJSON served from Supabase — do not commit (upload after npm run build-map-data)
+public/data/geojson/map/
+public/data/geojson/*.geojson

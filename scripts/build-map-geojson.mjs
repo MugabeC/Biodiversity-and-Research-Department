@@ -4,7 +4,7 @@
  *
  * Source (keep outside repo): Topo_polylines.geojson, Topo_polygon.geojson
  *   Place them in public/data/geojson/ only when rebuilding map layers.
- * Output (committed): public/data/geojson/map/*.geojson
+ * Output: public/data/geojson/map/*.geojson — upload to Supabase Storage (see app/lib/mapGeojson.ts)
  */
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';

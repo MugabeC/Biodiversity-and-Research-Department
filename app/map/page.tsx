@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type { LayerSpecification, Map as MapLibreMap, StyleSpecification } from 'maplibre-gl';
+import { fetchMapGeoJson, MAP_GEOJSON } from '../lib/mapGeojson';
 
 // ── Map style options ─────────────────────────────────────────────────────────
 
@@ -138,7 +139,7 @@ export default function MapPage() {
           } as unknown as LayerSpecification);
 
           // ── Park boundary ───────────────────────────────────────────────
-          const boundary = await fetch('/data/geojson/Surveyed_boundary.geojson').then(r => r.json());
+          const boundary = await fetchMapGeoJson(MAP_GEOJSON.boundary);
           mapInstance.addSource('park-boundary-src', { type: 'geojson', data: boundary });
           mapInstance.addLayer({
             id: 'park-boundary', type: 'line', source: 'park-boundary-src',
@@ -151,7 +152,7 @@ export default function MapPage() {
           });
 
           // ── Restored area ───────────────────────────────────────────────
-          const restored = await fetch('/data/geojson/Nyandungu.geojson').then(r => r.json());
+          const restored = await fetchMapGeoJson(MAP_GEOJSON.restored);
           mapInstance.addSource('restored-src', { type: 'geojson', data: restored });
           mapInstance.addLayer({
             id: 'restored-area-fill', type: 'fill', source: 'restored-src',
@@ -164,12 +165,12 @@ export default function MapPage() {
             paint: { 'line-color': '#F5A623', 'line-width': 1.5 },
           });
 
-          // ── Optimized map layers (~10 MB total, built via npm run build-map-data) ──
+          // ── Map layers (hosted on Supabase Storage) ──
           const [trails, drainage, roads, openGrounds] = await Promise.all([
-            fetch('/data/geojson/map/trails.geojson').then(r => r.json()),
-            fetch('/data/geojson/map/drainage.geojson').then(r => r.json()),
-            fetch('/data/geojson/map/roads.geojson').then(r => r.json()),
-            fetch('/data/geojson/map/open-grounds.geojson').then(r => r.json()),
+            fetchMapGeoJson(MAP_GEOJSON.trails),
+            fetchMapGeoJson(MAP_GEOJSON.drainage),
+            fetchMapGeoJson(MAP_GEOJSON.roads),
+            fetchMapGeoJson(MAP_GEOJSON.openGrounds),
           ]);
 
           mapInstance.addSource('trails-src', { type: 'geojson', data: trails });
