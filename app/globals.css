@@ -20,6 +20,19 @@
   --surface-glass-border: rgba(255, 255, 255, 0.75);
   --text-primary: #1A2E1F;
   --text-secondary: #4A5E4F;
+  --text-muted: #8a9a8e;
+  --species-pill-green-bg: rgba(12, 96, 56, 0.08);
+  --species-pill-green-text: #0C6038;
+  --species-pill-gray-bg: rgba(74, 94, 79, 0.07);
+  --species-pill-gray-text: #4A5E4F;
+  --species-chip-active-bg: #0C6038;
+  --species-chip-inactive-bg: rgba(255, 255, 255, 0.7);
+  --species-chip-border: #E0E8E2;
+  --species-chip-inactive-text: #4A5E4F;
+  --species-tag-bg: rgba(12, 96, 56, 0.08);
+  --species-tag-text: #0C6038;
+  --species-tag-muted-bg: rgba(74, 94, 79, 0.08);
+  --species-tag-muted-text: #4A5E4F;
   --border: rgba(224, 232, 226, 0.9);
   --nav-glass-bg: rgba(255, 255, 255, 0.72);
   --nav-glass-border: rgba(255, 255, 255, 0.85);
@@ -63,7 +76,21 @@
   --surface-glass: rgba(255, 255, 255, 0.07);
   --surface-glass-border: rgba(255, 255, 255, 0.14);
   --text-primary: #e8f2eb;
-  --text-secondary: #a8bdb0;
+  --text-secondary: #c8dbd0;
+  --text-muted: #a8bdb0;
+  --mustard-green: #c4ce88;
+  --species-pill-green-bg: rgba(110, 207, 150, 0.15);
+  --species-pill-green-text: #9ee4b8;
+  --species-pill-gray-bg: rgba(255, 255, 255, 0.1);
+  --species-pill-gray-text: #c8dbd0;
+  --species-chip-active-bg: #2d8a55;
+  --species-chip-inactive-bg: rgba(255, 255, 255, 0.08);
+  --species-chip-border: rgba(255, 255, 255, 0.2);
+  --species-chip-inactive-text: #c8dbd0;
+  --species-tag-bg: rgba(110, 207, 150, 0.14);
+  --species-tag-text: #9ee4b8;
+  --species-tag-muted-bg: rgba(255, 255, 255, 0.08);
+  --species-tag-muted-text: #c8dbd0;
   --border: rgba(255, 255, 255, 0.1);
   --nav-glass-bg: rgba(12, 28, 22, 0.62);
   --nav-glass-border: rgba(255, 255, 255, 0.12);
@@ -694,10 +721,193 @@ select.chart-select {
   .species-detail-grid { grid-template-columns: 1fr; }
 }
 
+.species-detail-card {
+  background: var(--surface-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--surface-glass-border);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--card-shadow);
+}
+
+.species-card-label {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--accent-text);
+  margin: 0 0 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.species-section-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--text-primary);
+  margin: 0 0 12px;
+}
+
+.species-body-text {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.75;
+}
+
+.species-body-text--muted {
+  color: var(--text-muted);
+}
+
+.species-pill {
+  background: var(--species-pill-green-bg);
+  color: var(--species-pill-green-text);
+  border-radius: 9999px;
+  padding: 5px 14px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.species-pill--gray {
+  background: var(--species-pill-gray-bg);
+  color: var(--species-pill-gray-text);
+}
+
+.species-card-sci {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0 0 4px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.species-card-family {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--mustard-green);
+  margin: 0 0 12px;
+}
+
+.species-card-tag {
+  border-radius: 9999px;
+  padding: 3px 10px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 11px;
+}
+
+.species-card-tag--taxa {
+  background: var(--species-tag-bg);
+  color: var(--species-tag-text);
+}
+
+.species-card-tag--muted {
+  background: var(--species-tag-muted-bg);
+  color: var(--species-tag-muted-text);
+}
+
+.species-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  border: 1.5px solid var(--border);
+  background: var(--surface-glass);
+  backdrop-filter: blur(8px);
+  color: var(--text-secondary);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.species-back-link:hover {
+  border-color: var(--meadow-green);
+  color: var(--text-primary);
+}
+
+.species-filter-chip {
+  padding: 5px 14px;
+  border-radius: 9999px;
+  border: 1.5px solid var(--species-chip-border);
+  background: var(--species-chip-inactive-bg);
+  color: var(--species-chip-inactive-text);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.species-filter-chip--active {
+  border-color: var(--species-chip-active-bg);
+  background: var(--species-chip-active-bg);
+  color: #ffffff;
+}
+
+.species-hero-name {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: clamp(24px, 3.5vw, 36px);
+  color: var(--text-primary);
+  margin: 0 0 8px;
+  line-height: 1.2;
+}
+
+.species-hero-sci {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 20px;
+  color: var(--text-secondary);
+  margin: 0 0 12px;
+}
+
+.species-hero-kinyarwanda {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--mustard-green);
+  margin: 0 0 14px;
+}
+
+.species-info-row {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.species-endemism-headline {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: var(--accent-text);
+  margin: 0 0 6px;
+  line-height: 1.2;
+}
+
 /* Page utility text */
 .text-accent { color: var(--accent-text); }
 .text-secondary { color: var(--text-secondary); }
 .text-primary { color: var(--text-primary); }
+.text-muted { color: var(--text-muted); }
 
 /* Dashboard section navigation */
 .dashboard-nav {

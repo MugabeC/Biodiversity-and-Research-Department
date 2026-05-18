@@ -107,49 +107,11 @@ function getExtraPills(s: RawSpecies): { label: string; value: string }[] {
 
 // ── Shared styles ─────────────────────────────────────────────────────────────
 
-const CARD: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.5)',
-  backdropFilter: 'blur(16px)',
-  WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255,255,255,0.6)',
-  borderRadius: '16px',
-  padding: '24px',
-  boxShadow: '0 8px 32px rgba(12,96,56,0.10)',
-};
-
-const CARD_TITLE: React.CSSProperties = {
-  fontFamily: 'Poppins, sans-serif',
-  fontWeight: 600,
-  fontSize: '13px',
-  color: '#0C6038',
-  margin: '0 0 14px',
-  textTransform: 'uppercase',
-  letterSpacing: '0.07em',
-};
-
 // ── Small components (defined before use) ─────────────────────────────────────
 
 function BackButton() {
   return (
-    <Link
-      href="/species"
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '6px',
-        padding: '8px 18px',
-        borderRadius: '9999px',
-        border: '1.5px solid #E0E8E2',
-        background: 'rgba(255,255,255,0.7)',
-        backdropFilter: 'blur(8px)',
-        color: '#4A5E4F',
-        fontFamily: 'Poppins, sans-serif',
-        fontWeight: 500,
-        fontSize: '14px',
-        textDecoration: 'none',
-        transition: 'border-color 0.2s ease',
-      }}
-    >
+    <Link href="/species" className="species-back-link">
       ← Back to Species Explorer
     </Link>
   );
@@ -157,17 +119,7 @@ function BackButton() {
 
 function Pill({ children, variant = 'green' }: { children: React.ReactNode; variant?: 'green' | 'gray' }) {
   return (
-    <span style={{
-      background: variant === 'green' ? 'rgba(12,96,56,0.08)' : 'rgba(74,94,79,0.07)',
-      color: variant === 'green' ? '#0C6038' : '#4A5E4F',
-      borderRadius: '9999px',
-      padding: '5px 14px',
-      fontFamily: 'Poppins, sans-serif',
-      fontWeight: 500,
-      fontSize: '13px',
-      display: 'inline-block',
-      whiteSpace: 'nowrap',
-    }}>
+    <span className={variant === 'green' ? 'species-pill' : 'species-pill species-pill--gray'}>
       {children}
     </span>
   );
@@ -208,8 +160,6 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
   const [loading, setLoading]       = useState(true);
   const [description, setDescription] = useState('');
   const [descriptionLoading, setDescriptionLoading] = useState(false);
-  const [shareHint, setShareHint] = useState<string | null>(null);
-
   useEffect(() => {
     // uid format: "{taxa}-{numericId}" — taxa can contain hyphens (amphibians-reptiles)
     // so split on the LAST hyphen
@@ -271,7 +221,7 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
     return (
       <div style={{
         minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontFamily: 'Poppins, sans-serif', fontSize: '15px', color: '#4A5E4F',
+        fontFamily: 'Poppins, sans-serif', fontSize: '15px', color: 'var(--text-secondary)',
       }}>
         Loading…
       </div>
@@ -283,7 +233,7 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
     return (
       <div style={{ maxWidth: '640px', margin: '4rem auto', textAlign: 'center', padding: '0 1.5rem' }}>
         <BackButton />
-        <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: '20px', color: '#4A5E4F', marginTop: '2rem' }}>
+        <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: '20px', color: 'var(--text-secondary)', marginTop: '2rem' }}>
           Species not found.
         </p>
       </div>
@@ -324,29 +274,12 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
     description: description || 'No description available yet',
   });
 
-  async function handleWhatsAppShare() {
-    setShareHint(null);
-    const result = await shareViaWhatsApp(waMessage);
-    if (result === 'opened') {
-      setShareHint(
-        'WhatsApp should open in a new tab. Choose any contact or group, then send. If it asks to install an app, use “Continue to WhatsApp Web” or “Copy message” below.',
-      );
-    } else if (result === 'copied') {
-      setShareHint(
-        'Message copied. Open WhatsApp on your phone or at web.whatsapp.com in Chrome or Edge, pick any contact, and paste.',
-      );
-    } else if (result === 'cancelled') {
-      setShareHint('Could not open WhatsApp. Use “Copy message” below, then paste into any chat.');
-    }
+  function handleWhatsAppShare() {
+    void shareViaWhatsApp(waMessage);
   }
 
-  async function handleCopyMessage() {
-    const ok = await copySpeciesMessage(waMessage);
-    setShareHint(
-      ok
-        ? 'Message copied. Open WhatsApp, choose any contact, and paste.'
-        : 'Could not copy automatically. Select the text and copy manually.',
-    );
+  function handleCopyMessage() {
+    void copySpeciesMessage(waMessage);
   }
 
   return (
@@ -393,41 +326,17 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
             </span>
 
             {/* Common name */}
-            <h1 style={{
-              fontFamily: 'Poppins, sans-serif',
-              fontWeight: 700,
-              fontSize: 'clamp(24px, 3.5vw, 36px)',
-              color: '#1A2E1F',
-              margin: '0 0 8px',
-              lineHeight: 1.2,
-            }}>
-              {commonName}
-            </h1>
+            <h1 className="species-hero-name">{commonName}</h1>
 
             {/* Scientific name */}
             {scientificName && scientificName !== commonName && (
-              <p style={{
-                fontFamily: 'Poppins, sans-serif',
-                fontWeight: 400,
-                fontStyle: 'italic',
-                fontSize: '20px',
-                color: '#4A5E4F',
-                margin: '0 0 12px',
-              }}>
-                {scientificName}
-              </p>
+              <p className="species-hero-sci">{scientificName}</p>
             )}
 
             {/* Kinyarwanda */}
             {kinyarwanda && (
-              <p style={{
-                fontFamily: 'Poppins, sans-serif',
-                fontWeight: 500,
-                fontSize: '16px',
-                color: '#808847',
-                margin: '0 0 14px',
-              }}>
-                <span style={{ color: '#4A5E4F', fontWeight: 400 }}>Kinyarwanda: </span>
+              <p className="species-hero-kinyarwanda">
+                <span className="text-secondary" style={{ fontWeight: 400 }}>Kinyarwanda: </span>
                 {kinyarwanda}
               </p>
             )}
@@ -460,56 +369,45 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
         <div className="species-detail-grid" style={{ marginBottom: '1.5rem' }}>
 
           {/* Habitat */}
-          <div style={CARD}>
-            <p style={CARD_TITLE}>Habitat Types</p>
+          <div className="species-detail-card">
+            <p className="species-card-label">Habitat Types</p>
             {habitatTypes.length > 0 ? (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                 {habitatTypes.map((h: string) => <Pill key={h}>{h}</Pill>)}
               </div>
             ) : (
-              <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: '14px', color: '#9E9E9E', margin: 0, lineHeight: 1.6 }}>
+              <p className="species-body-text species-body-text--muted" style={{ fontSize: '14px', lineHeight: 1.6 }}>
                 Habitat data not yet available for this species.
               </p>
             )}
           </div>
 
           {/* Ecological Role */}
-          <div style={CARD}>
-            <p style={CARD_TITLE}>Ecological Role</p>
+          <div className="species-detail-card">
+            <p className="species-card-label">Ecological Role</p>
             {ecoPills.length > 0 ? (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                 {ecoPills.map((r: string) => <Pill key={r}>{r}</Pill>)}
               </div>
             ) : (
-              <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: '14px', color: '#9E9E9E', margin: 0, lineHeight: 1.6 }}>
+              <p className="species-body-text species-body-text--muted" style={{ fontSize: '14px', lineHeight: 1.6 }}>
                 Ecological role data not yet available.
               </p>
             )}
           </div>
 
           {/* Endemism */}
-          <div style={CARD}>
-            <p style={CARD_TITLE}>Endemism Status</p>
+          <div className="species-detail-card">
+            <p className="species-card-label">Endemism Status</p>
             {endemism.headline && endemism.headline !== '—' ? (
               <div>
-                <p style={{
-                  fontFamily: 'Poppins, sans-serif',
-                  fontWeight: 700,
-                  fontSize: '24px',
-                  color: '#0C6038',
-                  margin: '0 0 6px',
-                  lineHeight: 1.2,
-                }}>
-                  {endemism.headline}
-                </p>
+                <p className="species-endemism-headline">{endemism.headline}</p>
                 {endemism.sub && (
-                  <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: '13px', color: '#4A5E4F', margin: 0 }}>
-                    {endemism.sub}
-                  </p>
+                  <p className="species-body-text" style={{ fontSize: '13px' }}>{endemism.sub}</p>
                 )}
               </div>
             ) : (
-              <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: '14px', color: '#9E9E9E', margin: 0 }}>
+              <p className="species-body-text species-body-text--muted" style={{ fontSize: '14px' }}>
                 Endemism data not available.
               </p>
             )}
@@ -517,18 +415,9 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
         </div>
 
         {/* ── Description ── */}
-        <div style={{ ...CARD, marginBottom: '1.5rem' }}>
-          <p style={{
-            fontFamily: 'Poppins, sans-serif', fontWeight: 600,
-            fontSize: '18px', color: '#1A2E1F', margin: '0 0 12px',
-          }}>
-            About this Species
-          </p>
-          <p style={{
-            fontFamily: 'Poppins, sans-serif', fontWeight: 400, fontSize: '16px',
-            color: description ? '#4A5E4F' : '#9E9E9E',
-            margin: 0, lineHeight: 1.75,
-          }}>
+        <div className="species-detail-card" style={{ marginBottom: '1.5rem' }}>
+          <p className="species-section-title">About this Species</p>
+          <p className={`species-body-text${description ? '' : ' species-body-text--muted'}`}>
             {descriptionLoading
               ? 'Loading species information…'
               : description || 'No description available yet.'}
@@ -536,13 +425,8 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
         </div>
 
         {/* ── External links + WhatsApp ── */}
-        <div style={CARD}>
-          <p style={{
-            fontFamily: 'Poppins, sans-serif', fontWeight: 600,
-            fontSize: '18px', color: '#1A2E1F', margin: '0 0 16px',
-          }}>
-            Learn More
-          </p>
+        <div className="species-detail-card">
+          <p className="species-section-title" style={{ marginBottom: '16px' }}>Learn More</p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
 
             {/* All species */}
@@ -639,21 +523,6 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
               Copy message
             </button>
           </div>
-          {shareHint && (
-            <p
-              role="status"
-              style={{
-                fontFamily: 'Poppins, sans-serif',
-                fontSize: '13px',
-                color: 'var(--text-secondary)',
-                margin: '12px 0 0',
-                lineHeight: 1.5,
-                maxWidth: '520px',
-              }}
-            >
-              {shareHint}
-            </p>
-          )}
         </div>
 
       </div>
@@ -665,8 +534,8 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 400, fontSize: '14px', color: '#4A5E4F', margin: 0 }}>
-      <span style={{ fontWeight: 600 }}>{label}:</span> {value}
+    <p className="species-info-row">
+      <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{label}:</span> {value}
     </p>
   );
 }

@@ -6,9 +6,18 @@ export type LibraryDocument = {
   description: string;
   filename: string;
   type: DocumentType;
+  /** Public Supabase Storage URL */
+  url: string;
 };
 
-/** Files in public/data — policies, plans, and department reports (not JSON datasets). */
+const SUPABASE_DOCS =
+  'https://dakgnvnaqiosizouuciy.supabase.co/storage/v1/object/public/Biodiversity%20and%20Research%20Department';
+
+function docUrl(filename: string): string {
+  return `${SUPABASE_DOCS}/${filename.split('/').map(encodeURIComponent).join('/')}`;
+}
+
+/** Park policies, plans, and department reports — hosted on Supabase Storage. */
 export const DOCUMENT_LIBRARY: LibraryDocument[] = [
   {
     id: 'dos-donts-2023',
@@ -16,6 +25,7 @@ export const DOCUMENT_LIBRARY: LibraryDocument[] = [
     description: 'Visitor guidelines for Nyandungu Eco-Park.',
     filename: 'Dos And Donts- 2023.pdf',
     type: 'pdf',
+    url: docUrl('Dos And Donts- 2023.pdf'),
   },
   {
     id: 'eco-park-presentation',
@@ -23,6 +33,7 @@ export const DOCUMENT_LIBRARY: LibraryDocument[] = [
     description: 'Overview presentation of the park and programmes.',
     filename: 'Nyandungu Eco Park general Presentation..pdf',
     type: 'pdf',
+    url: docUrl('Nyandungu Eco Park general Presentation..pdf'),
   },
   {
     id: 'feasibility-study-2023',
@@ -30,6 +41,7 @@ export const DOCUMENT_LIBRARY: LibraryDocument[] = [
     description: 'NEP feasibility assessment and background.',
     filename: 'NEP Feasibility study 2023.pdf',
     type: 'pdf',
+    url: docUrl('NEP Feasibility study 2023.pdf'),
   },
   {
     id: 'business-management-plan',
@@ -37,6 +49,7 @@ export const DOCUMENT_LIBRARY: LibraryDocument[] = [
     description: 'Business case and long-term park management planning.',
     filename: 'NEP Business and longterm management plan.pdf',
     type: 'pdf',
+    url: docUrl('NEP Business and longterm management plan.pdf'),
   },
   {
     id: 'watercourse-hydrological',
@@ -44,6 +57,7 @@ export const DOCUMENT_LIBRARY: LibraryDocument[] = [
     description: 'Hydrological watercourse assessment for the park.',
     filename: 'NEP_Watercourse_Assessment_Hydrological.pdf',
     type: 'pdf',
+    url: docUrl('NEP_Watercourse_Assessment_Hydrological.pdf'),
   },
   {
     id: 'research-policy',
@@ -51,6 +65,7 @@ export const DOCUMENT_LIBRARY: LibraryDocument[] = [
     description: 'Department research policy and procedures.',
     filename: 'RESEARCH POLICY.docx',
     type: 'word',
+    url: docUrl('RESEARCH POLICY.docx'),
   },
   {
     id: 'emergency-response-plan',
@@ -58,13 +73,15 @@ export const DOCUMENT_LIBRARY: LibraryDocument[] = [
     description: 'Emergency preparedness and response procedures.',
     filename: 'EMERGENCY RESPONSE PLAN.docx',
     type: 'word',
+    url: docUrl('EMERGENCY RESPONSE PLAN.docx'),
   },
   {
-    id: 'volunteering-policy',
-    title: 'Volunteering Policy',
-    description: 'Volunteer programme policy and expectations.',
-    filename: 'VOLUNTEERING POLICY.docx',
-    type: 'word',
+    id: 'biodiversity-index-corrected',
+    title: 'Biodiversity Index (Corrected)',
+    description: 'Corrected NEP biodiversity index workbook.',
+    filename: 'NEP_Biodiversity_Index_Corrected.xlsx',
+    type: 'excel',
+    url: docUrl('NEP_Biodiversity_Index_Corrected.xlsx'),
   },
   {
     id: 'water-quality-comprehensive',
@@ -72,6 +89,7 @@ export const DOCUMENT_LIBRARY: LibraryDocument[] = [
     description: 'Comprehensive water quality monitoring workbook.',
     filename: 'NEP_Water_Quality_Comprehensive (2) (1).xlsx',
     type: 'excel',
+    url: docUrl('NEP_Water_Quality_Comprehensive (2) (1).xlsx'),
   },
   {
     id: 'community-data-2025-2026',
@@ -79,6 +97,7 @@ export const DOCUMENT_LIBRARY: LibraryDocument[] = [
     description: 'Community engagement and outreach data export.',
     filename: 'NEP Community Data 2025 2026 (1).xlsx',
     type: 'excel',
+    url: docUrl('NEP Community Data 2025 2026 (1).xlsx'),
   },
 ];
 
@@ -88,7 +107,7 @@ export function getDocumentById(id: string | undefined): LibraryDocument | undef
 }
 
 export function documentHref(doc: LibraryDocument): string {
-  return `/data/${doc.filename.split('/').map(encodeURIComponent).join('/')}`;
+  return doc.url;
 }
 
 export function documentTypeLabel(type: DocumentType): string {

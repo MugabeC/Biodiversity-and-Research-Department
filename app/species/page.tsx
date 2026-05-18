@@ -142,21 +142,9 @@ function isActive(arr: string[], chip: string): boolean {
 function Chip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
   return (
     <button
+      type="button"
       onClick={onClick}
-      style={{
-        padding: '5px 14px',
-        borderRadius: '9999px',
-        border: `1.5px solid ${active ? '#0C6038' : '#E0E8E2'}`,
-        background: active ? '#0C6038' : 'rgba(255,255,255,0.7)',
-        color: active ? '#ffffff' : '#4A5E4F',
-        fontFamily: 'Poppins, sans-serif',
-        fontWeight: 500,
-        fontSize: '13px',
-        cursor: 'pointer',
-        transition: 'all 0.15s ease',
-        whiteSpace: 'nowrap',
-        lineHeight: 1.4,
-      }}
+      className={`species-filter-chip${active ? ' species-filter-chip--active' : ''}`}
     >
       {label}
     </button>
@@ -219,31 +207,14 @@ function SpeciesCard({ species }: { species: Species }) {
         }}>
           {displayName || '—'}
         </p>
-        <p style={{
-          fontFamily: 'Poppins, sans-serif', fontWeight: 400, fontStyle: 'italic',
-          fontSize: '13px', color: '#4A5E4F', margin: '0 0 4px',
-          overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis',
-        }}>
-          {species.scientificName || '—'}
-        </p>
-        <p style={{
-          fontFamily: 'Poppins, sans-serif', fontWeight: 400, fontSize: '12px',
-          color: '#808847', margin: '0 0 12px',
-        }}>
-          {species.family || '—'}
-        </p>
+        <p className="species-card-sci">{species.scientificName || '—'}</p>
+        <p className="species-card-family">{species.family || '—'}</p>
         <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-          <span style={{
-            background: 'rgba(12,96,56,0.08)', color: '#0C6038', borderRadius: '9999px',
-            padding: '3px 10px', fontFamily: 'Poppins, sans-serif', fontWeight: 500, fontSize: '11px',
-          }}>
+          <span className="species-card-tag species-card-tag--taxa">
             {TAXA_LABELS[species.taxa] ?? species.taxa}
           </span>
           {species.endemism && (
-            <span style={{
-              background: 'rgba(74,94,79,0.08)', color: '#4A5E4F', borderRadius: '9999px',
-              padding: '3px 10px', fontFamily: 'Poppins, sans-serif', fontWeight: 500, fontSize: '11px',
-            }}>
+            <span className="species-card-tag species-card-tag--muted">
               {species.endemism}
             </span>
           )}
@@ -320,7 +291,7 @@ export default function SpeciesExplorerPage() {
             style={{
               position: 'absolute', left: 14, top: '50%',
               transform: 'translateY(-50%)', width: 18, height: 18,
-              color: '#9E9E9E', pointerEvents: 'none',
+              color: 'var(--text-muted)', pointerEvents: 'none',
             }}
             fill="none" stroke="currentColor" viewBox="0 0 24 24"
           >
@@ -378,7 +349,7 @@ export default function SpeciesExplorerPage() {
         {/* ── Live count ── */}
         <p style={{
           fontFamily: 'Poppins, sans-serif', fontWeight: 500,
-          fontSize: '14px', color: '#0C6038', margin: '0 0 1.25rem',
+          fontSize: '14px', color: 'var(--accent-text)', margin: '0 0 1.25rem',
         }}>
           {loading ? 'Loading species…' : `Showing ${filtered.length} of 870 species`}
         </p>
@@ -387,14 +358,14 @@ export default function SpeciesExplorerPage() {
         {loading ? (
           <div style={{
             textAlign: 'center', padding: '6rem 0',
-            fontFamily: 'Poppins, sans-serif', fontSize: '15px', color: '#4A5E4F',
+            fontFamily: 'Poppins, sans-serif', fontSize: '15px', color: 'var(--text-secondary)',
           }}>
             Loading 870 species…
           </div>
         ) : filtered.length === 0 ? (
           <div style={{
             textAlign: 'center', padding: '6rem 0',
-            fontFamily: 'Poppins, sans-serif', fontSize: '15px', color: '#4A5E4F',
+            fontFamily: 'Poppins, sans-serif', fontSize: '15px', color: 'var(--text-secondary)',
           }}>
             No species match your filters.
           </div>

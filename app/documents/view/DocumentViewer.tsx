@@ -10,7 +10,11 @@ export default function DocumentViewer({ doc }: { doc: LibraryDocument }) {
   const [absoluteUrl, setAbsoluteUrl] = useState('');
 
   useEffect(() => {
-    setAbsoluteUrl(`${window.location.origin}${href}`);
+    if (/^https?:\/\//i.test(href)) {
+      setAbsoluteUrl(href);
+    } else {
+      setAbsoluteUrl(`${window.location.origin}${href}`);
+    }
   }, [href]);
 
   const officeEmbed =
