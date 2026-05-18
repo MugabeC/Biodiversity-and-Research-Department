@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import SpeciesPhoto from '../../components/SpeciesPhoto';
-import { shareViaWhatsApp } from '../../lib/shareWhatsApp';
+import { buildSpeciesWhatsAppMessage, copySpeciesMessage, shareViaWhatsApp } from '../../lib/shareWhatsApp';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -208,6 +208,7 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
   const [loading, setLoading]       = useState(true);
   const [description, setDescription] = useState('');
   const [descriptionLoading, setDescriptionLoading] = useState(false);
+  const [shareHint, setShareHint] = useState<string | null>(null);
 
   useEffect(() => {
     // uid format: "{taxa}-{numericId}" — taxa can contain hyphens (amphibians-reptiles)
@@ -308,22 +309,46 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
   const sciNamePlus  = scientificName.replace(/ /g, '+');
   const sciNameUnderscore = scientificName.replace(/ /g, '_');
 
-  const waMessage = [
-    '*🌿 Species Spotted at Nyandungu Eco-Park*',
-    `*Common Name:* ${commonName}`,
-    `*Scientific Name:* _${scientificName || '—'}_`,
-    `*Local Name (Kinyarwanda):* ${kinyarwanda || 'Not yet recorded'}`,
-    `*Taxa Group:* ${TAXA_LABELS[species.taxa] ?? species.taxa}`,
-    `*Order:* ${species.order || '—'}`,
-    `*Family:* ${species.family || '—'}`,
-    `*IUCN Status:* ${iucn}`,
-    `*Endemism:* ${endemism.headline}${endemism.sub ? ` — ${endemism.sub}` : ''}`,
-    `*Habitat:* ${habitatTypes.length > 0 ? habitatTypes.join(', ') : 'Data not yet available'}`,
-    `*Ecological Role:* ${ecoPills.length > 0 ? ecoPills.join(', ') : 'Data not yet available'}`,
-    `*About:* ${description || 'No description available yet'}`,
-    '',
-    '_📍 Recorded during the 2025 Biodiversity Survey — Nyandungu Eco-Park, Kigali, Rwanda_',
-  ].join('\n');
+  const waMessage = buildSpeciesWhatsAppMessage({
+    commonName,
+    scientificName,
+    kinyarwanda,
+    taxaLabel: TAXA_LABELS[species.taxa] ?? species.taxa,
+    order: species.order || '—',
+    family: species.family || '—',
+    iucn,
+    endemismHeadline: endemism.headline,
+    endemismSub: endemism.sub,
+    habitat: habitatTypes.length > 0 ? habitatTypes.join(', ') : 'Data not yet available',
+    ecologicalRole: ecoPills.length > 0 ? ecoPills.join(', ') : 'Data not yet available',
+    description: description || 'No description available yet',
+  });
+
+  async function handleWhatsAppShare() {
+    setShareHint(null);
+    const result = await shareViaWhatsApp(waMessage);
+    if (result === 'opened') {
+      setShareHint(
+        'WhatsApp should open in a new tab. Choose any contact or group, then send. If it asks to install an app, use “Continue to WhatsApp Web” or “Copy message” below.',
+      );
+    } else if (result === 'copied') {
+      setShareHint(
+        'Message copied. Open WhatsApp on your phone or at web.whatsapp.com in Chrome or Edge, pick any contact, and paste.',
+      );
+    } else if (result === 'cancelled') {
+      setShareHint('Could not open WhatsApp. Use “Copy message” below, then paste into any chat.');
+    }
+  }
+
+  async function handleCopyMessage() {
+    const ok = await copySpeciesMessage(waMessage);
+    setShareHint(
+      ok
+        ? 'Message copied. Open WhatsApp, choose any contact, and paste.'
+        : 'Could not copy automatically. Select the text and copy manually.',
+    );
+  }
+
   return (
     <div style={{ paddingBottom: '5rem' }}>
       <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '2rem 1.5rem 0' }}>
@@ -568,10 +593,10 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
               />
             )}
 
-            {/* WhatsApp — no preset number; user picks any contact */}
+            {/* WhatsApp — wa.me opens contact picker; no preset phone number */}
             <button
               type="button"
-              onClick={() => shareViaWhatsApp(waMessage)}
+              onClick={() => void handleWhatsAppShare()}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -594,7 +619,41 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
               </svg>
               Share on WhatsApp
             </button>
+            <button
+              type="button"
+              onClick={() => void handleCopyMessage()}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                padding: '9px 16px',
+                borderRadius: '9999px',
+                border: '1px solid var(--surface-glass-border)',
+                background: 'var(--surface-glass)',
+                color: 'var(--accent-text)',
+                fontFamily: 'Poppins, sans-serif',
+                fontWeight: 500,
+                fontSize: '14px',
+                cursor: 'pointer',
+              }}
+            >
+              Copy message
+            </button>
           </div>
+          {shareHint && (
+            <p
+              role="status"
+              style={{
+                fontFamily: 'Poppins, sans-serif',
+                fontSize: '13px',
+                color: 'var(--text-secondary)',
+                margin: '12px 0 0',
+                lineHeight: 1.5,
+                maxWidth: '520px',
+              }}
+            >
+              {shareHint}
+            </p>
+          )}
         </div>
 
       </div>
