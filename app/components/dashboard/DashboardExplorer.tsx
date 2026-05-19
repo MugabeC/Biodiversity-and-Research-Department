@@ -8,44 +8,37 @@ import {
   ComposedChart, ReferenceLine,
 } from 'recharts';
 import TaxaIcon from '../TaxaIcon';
-import { parseBiodiversitySurvey, type BioComplianceSummary } from '@/app/lib/parseBiodiversityWater';
 import {
   flattenBiodiversityExplore,
   flattenWasacExplore,
   filterWaterExploreRows,
-  type WasacRawParam,
 } from '@/app/lib/exploreWaterQuality';
-import { TAXA_META, sortByMonth, parseParticipantCount, withShortMonths } from '@/app/lib/dashboardUtils';
+import {
+  loadDashboardFromBundle,
+  type CommunityRow,
+  type DashboardSummary,
+  type PassesData,
+  type SchoolVisitsData,
+  type WasteFile,
+} from '@/app/lib/dashboardData';
+import {
+  TAXA_META,
+  sortByMonth,
+  parseParticipantCount,
+  withShortMonths,
+  aggregateStudentsByQuarter,
+} from '@/app/lib/dashboardUtils';
 import { useChartColors, chartTooltipProps } from './chartTheme';
 import TaxaShareBarChart from './TaxaShareBarChart';
+import { normalizeWasteData } from './WasteDashboardCharts';
 
 const BiodiversityWaterCompliance = dynamic(() => import('./BiodiversityWaterCompliance'), { ssr: false });
 const BiodiversityWaterExplorer = dynamic(() => import('./BiodiversityWaterExplorer'), { ssr: false });
 const WasacWaterPanel = dynamic(() => import('./WasacWaterPanel'), { ssr: false });
 const WasteDashboardCharts = dynamic(() => import('./WasteDashboardCharts'), { ssr: false });
 
-type Summary = {
-  parkName: string;
-  parkSize: string;
-  location: string;
-  surveyYear: string;
-  totalSpecies: number;
-  taxa: Record<string, { count2025: number; count2023: number; [k: string]: unknown }>;
-};
-
-type SchoolVisits = {
-  monthlyTotals: { month: string; totalStudents: number | null; label?: string }[];
-  individualVisits: { month: string; school: string; students: number | null; teachers?: string | null; notes?: string | null }[];
-};
-
-type PassesData = {
-  monthlyTotals: { month: string; totalPasses: number }[];
-  detail: { month: string; group: string; passes: number; notes?: string | null }[];
-};
-
-type CommunityRow = { month: string; activity: string; participants: string; notes?: string | null };
-import type { WasteFile } from './WasteDashboardCharts';
-import { normalizeWasteData } from './WasteDashboardCharts';
+type Summary = DashboardSummary;
+type SchoolVisits = SchoolVisitsData;
 
 const SECTIONS = [
   { id: 'overview', label: 'Overview' },
@@ -115,8 +108,8 @@ export default function DashboardExplorer() {
   const [passes, setPasses] = useState<PassesData | null>(null);
   const [wasteData, setWasteData] = useState<WasteFile>([]);
   const waste = useMemo(() => normalizeWasteData(wasteData), [wasteData]);
-  const [bioWater, setBioWater] = useState<BioComplianceSummary | null>(null);
-  const [wasacParams, setWasacParams] = useState<WasacRawParam[]>([]);
+  const [bioWater, setBioWater] = useState<ReturnType<typeof loadDashboardFromBundle>['bioWater']>(null);
+  const [wasacParams, setWasacParams] = useState<ReturnType<typeof loadDashboardFromBundle>['wasacParams']>([]);
   const [wasacSiteLabels, setWasacSiteLabels] = useState<string[]>([]);
   const [exploreTab, setExploreTab] = useState('schools');
   const [search, setSearch] = useState('');
@@ -127,63 +120,24 @@ export default function DashboardExplorer() {
   const STUDENT_TARGET = 500;
 
   useEffect(() => {
-    let cancelled = false;
-
-    async function loadDashboard() {
-      const urls = [
-        '/data/summary.json',
-        '/data/school_visits.json',
-        '/data/community_activities.json',
-        '/data/complementary_passes.json',
-        '/data/waste.json',
-        '/data/water_quality.json',
-      ] as const;
-
-      try {
-        const responses = await Promise.all(urls.map(url => fetch(url)));
-        const failed = responses.find(r => !r.ok);
-        if (failed) {
-          throw new Error(`Failed to load ${failed.url} (${failed.status})`);
-        }
-
-        const [sum, sch, comm, pass, wast, wq] = await Promise.all(
-          responses.map(r => r.json()),
-        );
-
-        if (cancelled) return;
-
-        setSummary(sum);
-        setSchools(sch);
-        setCommunity(comm ?? []);
-        setPasses(pass);
-        setWasteData(wast);
-
-        try {
-          if (wq?.biodiversitySurvey) {
-            setBioWater(parseBiodiversitySurvey(wq.biodiversitySurvey));
-          }
-        } catch {
-          setBioWater(null);
-        }
-
-        setWasacParams(wq?.wasac?.parameters ?? []);
-        setWasacSiteLabels(wq?.wasac?.samplingPoints ?? []);
-        setLoadError(null);
-      } catch {
-        if (!cancelled) {
-          setLoadError(
-            'Could not load dashboard data. Check that JSON files exist under public/data, then refresh the page.',
-          );
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
+    try {
+      const data = loadDashboardFromBundle();
+      setSummary(data.summary);
+      setSchools(data.schools);
+      setCommunity(data.community);
+      setPasses(data.passes);
+      setWasteData(data.waste);
+      setBioWater(data.bioWater);
+      setWasacParams(data.wasacParams);
+      setWasacSiteLabels(data.wasacSiteLabels);
+      setLoadError(null);
+    } catch {
+      setLoadError(
+        'Could not load dashboard data. Run npm run dev:clean to reset the dev server, then refresh.',
+      );
+    } finally {
+      setLoading(false);
     }
-
-    loadDashboard();
-    return () => {
-      cancelled = true;
-    };
   }, []);
 
   const taxaCards = useMemo(() => {
@@ -220,16 +174,19 @@ export default function DashboardExplorer() {
     }));
   }, [summary]);
 
-  const schoolMonthly = useMemo(() => {
+  const schoolMonthlyRows = useMemo(() => {
     if (!schools) return [];
-    return withShortMonths(
-      sortByMonth(
-        schools.monthlyTotals
-          .filter(m => m.totalStudents != null)
-          .map(m => ({ month: m.month, students: m.totalStudents as number }))
-      )
+    return sortByMonth(
+      schools.monthlyTotals
+        .filter(m => m.totalStudents != null)
+        .map(m => ({ month: m.month, students: m.totalStudents as number }))
     );
   }, [schools]);
+
+  const schoolQuarterly = useMemo(
+    () => aggregateStudentsByQuarter(schoolMonthlyRows),
+    [schoolMonthlyRows]
+  );
 
   const communityByMonth = useMemo(() => {
     const map = new Map<string, { month: string; activities: number; participants: number }>();
@@ -267,7 +224,7 @@ export default function DashboardExplorer() {
   }, [waste]);
 
   const kpis = useMemo(() => {
-    const totalStudents = schoolMonthly.reduce((s, m) => s + m.students, 0);
+    const totalStudents = schoolMonthlyRows.reduce((s, m) => s + m.students, 0);
     const totalPasses = passesMonthly.reduce((s, m) => s + m.totalPasses, 0);
     const totalWaste = wasteMonthly.reduce((s, m) => s + m.kg, 0);
     return {
@@ -278,7 +235,7 @@ export default function DashboardExplorer() {
       wasteKg: Math.round(totalWaste),
       visits: schools?.individualVisits?.length ?? 0,
     };
-  }, [summary, schoolMonthly, passesMonthly, wasteMonthly, community, schools]);
+  }, [summary, schoolMonthlyRows, passesMonthly, wasteMonthly, community, schools]);
 
   const filteredSchoolVisits = useMemo(() => {
     if (!schools) return [];
@@ -447,19 +404,19 @@ export default function DashboardExplorer() {
           </>
         )}
 
-        {(section === 'overview' || section === 'education') && schoolMonthly.length > 0 && (
+        {(section === 'overview' || section === 'education') && schoolQuarterly.length > 0 && (
           <>
             <SectionTitle>Education & school visits</SectionTitle>
             <div className="dashboard-charts-grid dashboard-charts-grid--single">
               <ChartCard
-                title="Monthly student visits"
-                description="Students reached each month compared with the 500-student monthly target."
+                title="Quarterly student visits"
+                description="Students reached per quarter (Q2 Apr–Jun, Q3 Jul–Sep, Q4 Oct–Dec, Q1 Jan–Mar) compared with the 500-student quarterly target."
                 tall
               >
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={schoolMonthly} margin={{ top: 12, right: 8, left: -8, bottom: 8 }}>
+                  <BarChart data={schoolQuarterly} margin={{ top: 12, right: 8, left: -8, bottom: 8 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke={c.grid} vertical={false} />
-                    <XAxis dataKey="monthShort" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 9 }} axisLine={false} tickLine={false} interval="preserveStartEnd" angle={-35} textAnchor="end" height={56} />
+                    <XAxis dataKey="quarter" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} tickLine={false} />
                     <Tooltip {...tt} />
                     <ReferenceLine
@@ -561,26 +518,22 @@ export default function DashboardExplorer() {
         {(section === 'overview' || section === 'water') && (
           <>
             <SectionTitle>Water quality</SectionTitle>
-            <div className="dashboard-charts-grid">
+            <div className="dashboard-charts-grid dashboard-charts-grid--single">
               {bioWater && (
                 <ChartCard title="Park water quality — biodiversity survey compliance" content>
                   <BiodiversityWaterCompliance summary={bioWater} />
                 </ChartCard>
               )}
             </div>
-            <div className="dashboard-charts-grid" style={{ marginTop: '1.25rem' }}>
+            <div className="dashboard-charts-grid dashboard-charts-grid--single" style={{ marginTop: '1.25rem' }}>
               {bioWater && (
-                <div style={{ gridColumn: '1 / -1' }}>
-                  <ChartCard title="Explore park water parameters (biodiversity survey)" content>
-                    <BiodiversityWaterExplorer summary={bioWater} />
-                  </ChartCard>
-                </div>
-              )}
-              <div style={{ gridColumn: '1 / -1' }}>
-                <ChartCard title="WASAC effluent & industrial wastewater (separate programme)" content>
-                  <WasacWaterPanel />
+                <ChartCard title="Explore park water parameters (biodiversity survey)" content>
+                  <BiodiversityWaterExplorer summary={bioWater} />
                 </ChartCard>
-              </div>
+              )}
+              <ChartCard title="WASAC effluent & industrial wastewater (separate programme)" content>
+                <WasacWaterPanel />
+              </ChartCard>
             </div>
           </>
         )}

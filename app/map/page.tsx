@@ -221,34 +221,15 @@ export default function MapPage() {
     };
   }, []);
 
-  // ── Glass style ───────────────────────────────────────────────────────────
-  const GLASS: React.CSSProperties = {
-    background: 'rgba(255,255,255,0.92)',
-    backdropFilter: 'blur(16px)',
-    WebkitBackdropFilter: 'blur(16px)',
-    borderRadius: '16px',
-    boxShadow: '0 4px 24px rgba(12,96,56,0.13)',
-    border: '1px solid rgba(255,255,255,0.7)',
-  };
-
-  // ── Render ────────────────────────────────────────────────────────────────
-  // position:fixed anchors the map to the viewport so the NavBar (68px) never
-  // overlaps and there is no white band at the bottom.
   return (
-    <div style={{ position: 'fixed', top: '68px', left: 0, right: 0, bottom: 0 }}>
+    <div className="map-page-root">
 
       {/* Map canvas */}
       <div ref={mapContainer} style={{ width: '100%', height: '100%' }} />
 
       {/* ── Layer toggle panel — top-left ── */}
-      <div style={{
-        ...GLASS,
-        position: 'absolute', top: '16px', left: '16px', zIndex: 10,
-        padding: '16px', minWidth: '210px',
-      }}>
-        <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px', color: '#0C6038', margin: '0 0 12px' }}>
-          Map Layers
-        </p>
+      <div className="map-glass-panel map-layer-panel">
+        <p className="map-layer-panel-title">Map Layers</p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {LAYERS.map(({ id, label, color, mapIds }) => (
             <div key={id}
@@ -267,57 +248,35 @@ export default function MapPage() {
         </div>
       </div>
 
-      {/* ── 2D/3D button — left side, above style switcher ── */}
-      <button
-        onClick={toggle3D}
-        style={{
-          position: 'absolute', bottom: '82px', left: '16px', zIndex: 10,
-          padding: '7px 20px', borderRadius: '9999px', border: 'none',
-          background: is3D ? '#0C6038' : '#ffffff',
-          color: is3D ? '#ffffff' : '#0C6038',
-          fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px',
-          cursor: 'pointer', boxShadow: '0 2px 10px rgba(0,0,0,0.18)',
-          transition: 'background 0.2s ease, color 0.2s ease',
-        }}
-      >
-        {is3D ? '3D ▲' : '2D ▬'}
-      </button>
-
-      {/* ── Map style switcher — bottom-left ── */}
-      <div style={{ position: 'absolute', bottom: '32px', left: '16px', zIndex: 10, display: 'flex', gap: '6px' }}>
-        {MAP_STYLES.map(({ id, label, url }) => (
+      <div className="map-bottom-dock">
+        <div className="map-bottom-dock-row">
+          <div className="map-style-bar">
+            {MAP_STYLES.map(({ id, label, url }) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => switchMapStyle(id, url)}
+                className={`map-style-btn${mapStyle === id ? ' map-style-btn--active' : ' map-style-btn--idle'}`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
           <button
-            key={id}
-            onClick={() => switchMapStyle(id, url)}
-            style={{
-              padding: '7px 14px', borderRadius: '9999px', border: 'none',
-              background: mapStyle === id ? '#0C6038' : '#ffffff',
-              color: mapStyle === id ? '#ffffff' : '#4A5E4F',
-              fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px',
-              cursor: 'pointer', boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-              transition: 'background 0.2s ease, color 0.2s ease',
-            }}
+            type="button"
+            onClick={toggle3D}
+            className={`map-btn-3d${is3D ? ' map-btn-3d--on' : ' map-btn-3d--off'}`}
           >
-            {label}
+            {is3D ? '3D ▲' : '2D ▬'}
           </button>
-        ))}
+        </div>
+        <p className="map-attribution">Tiles © Esri</p>
       </div>
 
-      {/* ── Info card — bottom-right ── */}
-      <div style={{
-        ...GLASS,
-        position: 'absolute', bottom: '32px', right: '16px', zIndex: 10,
-        padding: '12px 16px',
-      }}>
-        <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px', color: '#1A2E1F', margin: '0 0 2px' }}>
-          Nyandungu Eco-Park
-        </p>
-        <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 400, fontSize: '12px', color: '#4A5E4F', margin: '0 0 2px' }}>
-          219 Ha · Kigali, Rwanda
-        </p>
-        <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 400, fontSize: '11px', color: '#808847', margin: 0 }}>
-          2025 Biodiversity Survey
-        </p>
+      <div className="map-glass-panel map-info-card">
+        <p className="map-info-title">Nyandungu Eco-Park</p>
+        <p className="map-info-line">219 Ha · Kigali, Rwanda</p>
+        <p className="map-info-meta">2025 Biodiversity Survey</p>
       </div>
 
     </div>

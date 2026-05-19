@@ -16,16 +16,23 @@ export function loadSpeciesImageCache(): Promise<SpeciesImageCacheFile | null> {
   if (cached) return Promise.resolve(cached);
   if (loadPromise) return loadPromise;
 
-  loadPromise = fetch('/data/species/image-urls.json', { cache: 'force-cache' })
-    .then(res => {
+  loadPromise = (async () => {
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 12_000);
+      const res = await fetch('/data/species/image-urls.json', {
+        cache: 'force-cache',
+        signal: controller.signal,
+      });
+      clearTimeout(timeout);
       if (!res.ok) return null;
-      return res.json() as Promise<SpeciesImageCacheFile>;
-    })
-    .then(data => {
+      const data = (await res.json()) as SpeciesImageCacheFile;
       cached = data;
       return data;
-    })
-    .catch(() => null);
+    } catch {
+      return null;
+    }
+  })();
 
   return loadPromise;
 }

@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import SpeciesPhoto from '../components/SpeciesPhoto';
+import { loadSpeciesFromBundle, type SpeciesJsonRow } from '../lib/speciesData';
 import { loadSpeciesImageCache, getCachedSpeciesImage } from '../lib/speciesImageCache';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -16,22 +17,6 @@ type Species = {
   iucn: string;
   endemism: string;
   imageUrl: string | null;
-};
-
-/** Loose species row shape from merged species.json (all taxa). */
-type SpeciesJsonRow = {
-  taxa: string;
-  id: number;
-  commonName?: string;
-  genusSpecies?: string;
-  scientificName?: string;
-  family?: string;
-  status?: string;
-  iucn?: string;
-  iucnGlobal?: string;
-  endemism?: string;
-  albertineRiftEndemic?: string;
-  origin?: string;
 };
 
 // ── Endemism normalization ────────────────────────────────────────────────────
@@ -171,7 +156,7 @@ function SpeciesCard({ species }: { species: Species }) {
 
   return (
     <Link href={`/species/${species.uid}`} className="species-card">
-      <div style={{ position: 'relative', flexShrink: 0 }}>
+      <div className="species-card-photo">
         <SpeciesPhoto
           uid={species.uid}
           scientificName={species.scientificName}
@@ -181,35 +166,19 @@ function SpeciesCard({ species }: { species: Species }) {
           imageUrl={species.imageUrl}
           height={160}
         />
-        <span style={{
-          position: 'absolute',
-          top: 10,
-          right: 10,
-          background: iucnStyle.bg,
-          color: iucnStyle.color,
-          borderRadius: '9999px',
-          padding: '3px 9px',
-          fontSize: '11px',
-          lineHeight: 1.6,
-          boxShadow: '0 1px 4px rgba(0,0,0,0.10)',
-          zIndex: 1,
-        }}>
+        <span
+          className="species-card-iucn"
+          style={{ background: iucnStyle.bg, color: iucnStyle.color }}
+        >
           {species.iucn}
         </span>
       </div>
 
-      {/* Content */}
-      <div style={{ padding: '14px 16px 16px' }}>
-        <p className="heading" style={{
-          fontSize: '15px',
-          color: 'var(--text-primary)', margin: '0 0 2px',
-          overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis',
-        }}>
-          {displayName || '—'}
-        </p>
+      <div className="species-card-body">
+        <p className="heading species-card-name">{displayName || '—'}</p>
         <p className="species-card-sci">{species.scientificName || '—'}</p>
         <p className="species-card-family">{species.family || '—'}</p>
-        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+        <div className="species-card-tags">
           <span className="species-card-tag species-card-tag--taxa">
             {TAXA_LABELS[species.taxa] ?? species.taxa}
           </span>
@@ -235,18 +204,24 @@ export default function SpeciesExplorerPage() {
   const [endemFilters, setEndemFilters] = useState<string[]>([]);
 
   useEffect(() => {
-    Promise.all([
-      fetch('/data/species/species.json').then(r => r.json()),
-      loadSpeciesImageCache(),
-    ])
-      .then(([data, imageCache]) => {
-        const normalized = (data.species as SpeciesJsonRow[])
-          .map(normalize)
-          .map(s => withImageUrl(s, imageCache));
+    let cancelled = false;
+    try {
+      const { species } = loadSpeciesFromBundle();
+      const normalized = species.map(normalize);
+      if (!cancelled) {
         setAllSpecies(normalized);
         setLoading(false);
-      })
-      .catch(() => setLoading(false));
+      }
+      loadSpeciesImageCache().then((imageCache) => {
+        if (cancelled || !imageCache) return;
+        setAllSpecies((prev) => prev.map((s) => withImageUrl(s, imageCache)));
+      });
+    } catch {
+      if (!cancelled) setLoading(false);
+    }
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const filtered = useMemo(() => {
@@ -267,90 +242,71 @@ export default function SpeciesExplorerPage() {
     });
   }, [allSpecies, search, taxaFilters, iucnFilters, endemFilters]);
 
+  const activeFilterCount =
+    taxaFilters.length + iucnFilters.length + endemFilters.length;
+
   return (
     <div style={{ paddingBottom: '5rem' }}>
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '2.5rem 1.5rem 0' }}>
+      <div className="page-shell page-shell--spacious species-explorer-page">
 
-        {/* ── Title ── */}
-        <div style={{ marginBottom: '1.75rem' }}>
-          <h1 className="heading" style={{
-            fontSize: '32px', color: 'var(--accent-text)', margin: 0, lineHeight: 1.2,
-          }}>
-            Species Explorer
-          </h1>
-          <p style={{
-            fontSize: '15px', color: 'var(--text-secondary)', margin: '6px 0 0',
-          }}>
-            Nyandungu Eco-Park · 870 Species Recorded
-          </p>
+        <div className="species-page-header">
+          <h1 className="heading species-page-title">Species Explorer</h1>
+          <p className="species-page-subtitle">Nyandungu Eco-Park · 870 Species Recorded</p>
         </div>
 
-        {/* ── Search ── */}
-        <div style={{ position: 'relative', marginBottom: '1rem' }}>
-          <svg
-            style={{
-              position: 'absolute', left: 14, top: '50%',
-              transform: 'translateY(-50%)', width: 18, height: 18,
-              color: 'var(--text-muted)', pointerEvents: 'none',
-            }}
-            fill="none" stroke="currentColor" viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <input
-            type="text"
-            className="species-search"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Search by common name, scientific name or family..."
-          />
-        </div>
-
-        {/* ── Taxa chips ── */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '10px', alignItems: 'center' }}>
-          <FilterLabel>Taxa</FilterLabel>
-          {TAXA_CHIPS.map(chip => (
-            <Chip
-              key={chip}
-              label={chip}
-              active={isActive(taxaFilters, chip)}
-              onClick={() => setTaxaFilters(prev => toggleFilter(prev, chip))}
+        <div className="species-toolbar">
+          <div className="species-search-wrap">
+            <svg className="species-search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="search"
+              className="species-search"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search name or family…"
             />
-          ))}
+          </div>
+          <details className="species-filters-details">
+            <summary className="species-filters-summary">
+              <span>Filters</span>
+              {activeFilterCount > 0 && (
+                <span className="species-filters-badge">{activeFilterCount}</span>
+              )}
+            </summary>
+            <div className="species-filters-body">
+              <div className="species-filter-row">
+                <FilterLabel>Taxa</FilterLabel>
+                <div className="species-filter-chips">
+                  {TAXA_CHIPS.map(chip => (
+                    <Chip key={chip} label={chip} active={isActive(taxaFilters, chip)}
+                      onClick={() => setTaxaFilters(prev => toggleFilter(prev, chip))} />
+                  ))}
+                </div>
+              </div>
+              <div className="species-filter-row">
+                <FilterLabel>IUCN</FilterLabel>
+                <div className="species-filter-chips">
+                  {IUCN_CHIPS.map(chip => (
+                    <Chip key={chip} label={chip} active={isActive(iucnFilters, chip)}
+                      onClick={() => setIucnFilters(prev => toggleFilter(prev, chip))} />
+                  ))}
+                </div>
+              </div>
+              <div className="species-filter-row species-filter-row--last">
+                <FilterLabel>Endemism</FilterLabel>
+                <div className="species-filter-chips">
+                  {ENDEM_CHIPS.map(chip => (
+                    <Chip key={chip} label={chip} active={isActive(endemFilters, chip)}
+                      onClick={() => setEndemFilters(prev => toggleFilter(prev, chip))} />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </details>
         </div>
-
-        {/* ── IUCN chips ── */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '10px', alignItems: 'center' }}>
-          <FilterLabel>IUCN</FilterLabel>
-          {IUCN_CHIPS.map(chip => (
-            <Chip
-              key={chip}
-              label={chip}
-              active={isActive(iucnFilters, chip)}
-              onClick={() => setIucnFilters(prev => toggleFilter(prev, chip))}
-            />
-          ))}
-        </div>
-
-        {/* ── Endemism chips ── */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '1rem', alignItems: 'center' }}>
-          <FilterLabel>Endemism</FilterLabel>
-          {ENDEM_CHIPS.map(chip => (
-            <Chip
-              key={chip}
-              label={chip}
-              active={isActive(endemFilters, chip)}
-              onClick={() => setEndemFilters(prev => toggleFilter(prev, chip))}
-            />
-          ))}
-        </div>
-
-        {/* ── Live count ── */}
-        <p style={{
-          fontFamily: 'Poppins, sans-serif', fontWeight: 500,
-          fontSize: '14px', color: 'var(--accent-text)', margin: '0 0 1.25rem',
-        }}>
+        <p className="species-results-count">
           {loading ? 'Loading species…' : `Showing ${filtered.length} of 870 species`}
         </p>
 

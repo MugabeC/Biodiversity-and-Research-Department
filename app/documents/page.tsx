@@ -8,7 +8,7 @@ import {
 export default function DocumentsPage() {
   return (
     <div style={{ paddingBottom: '5rem' }}>
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '2.5rem 1.5rem 0' }}>
+      <div className="page-shell page-shell--spacious">
         <div style={{ marginBottom: '2rem' }}>
           <h1 className="heading" style={{ fontSize: '32px', color: 'var(--meadow-green)', margin: 0, lineHeight: 1.2 }}>
             Documents

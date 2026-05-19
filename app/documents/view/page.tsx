@@ -12,7 +12,7 @@ export default function DocumentViewPage({
 
   return (
     <div style={{ paddingBottom: '2rem' }}>
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '1.5rem 1.5rem 0' }}>
+      <div className="page-shell">
         <DocumentViewer doc={doc} />
       </div>
     </div>

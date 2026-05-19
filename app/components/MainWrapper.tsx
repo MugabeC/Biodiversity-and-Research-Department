@@ -7,11 +7,7 @@ export default function MainWrapper({ children }: { children: React.ReactNode })
   const isMap = pathname === '/map';
 
   return (
-    <main style={{
-      paddingTop: isMap ? 0 : '68px',
-      minHeight: '100vh',
-      background: 'transparent',
-    }}>
+    <main className={isMap ? 'main-content main-content--flush' : 'main-content'}>
       {children}
     </main>
   );

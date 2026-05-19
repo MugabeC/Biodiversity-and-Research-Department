@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import SpeciesPhoto from '../../components/SpeciesPhoto';
 import { buildSpeciesWhatsAppMessage, copySpeciesMessage, shareViaWhatsApp } from '../../lib/shareWhatsApp';
+import { loadSpeciesFromBundle } from '../../lib/speciesData';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -167,17 +168,16 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
     const taxa     = uid.slice(0, lastDash);
     const numId    = parseInt(uid.slice(lastDash + 1), 10);
 
-    fetch('/data/species/species.json')
-      .then(r => r.json())
-      .then(data => {
-        const found = (data.species as RawSpecies[]).find(
-          s => s.taxa === taxa && s.id === numId
-        );
-        if (found) setSpecies(found);
-        else setNotFound(true);
-        setLoading(false);
-      })
-      .catch(() => { setNotFound(true); setLoading(false); });
+    try {
+      const { species: rows } = loadSpeciesFromBundle();
+      const found = rows.find((s) => s.taxa === taxa && s.id === numId) as RawSpecies | undefined;
+      if (found) setSpecies(found);
+      else setNotFound(true);
+    } catch {
+      setNotFound(true);
+    } finally {
+      setLoading(false);
+    }
   }, [uid]);
 
   useEffect(() => {
@@ -284,7 +284,7 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
 
   return (
     <div style={{ paddingBottom: '5rem' }}>
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '2rem 1.5rem 0' }}>
+      <div className="page-shell">
 
         {/* ── Back button ── */}
         <BackButton />
@@ -427,7 +427,7 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
         {/* ── External links + WhatsApp ── */}
         <div className="species-detail-card">
           <p className="species-section-title" style={{ marginBottom: '16px' }}>Learn More</p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
+          <div className="species-detail-actions">
 
             {/* All species */}
             {scientificName && (

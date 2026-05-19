@@ -33,6 +33,39 @@ export function withShortMonths<T extends { month: string }>(rows: T[]): (T & { 
   return rows.map(r => ({ ...r, monthShort: abbreviateMonth(r.month) }));
 }
 
+/** Calendar quarter label for "April 2025" → "Q2-2025" (Q1 Jan–Mar, Q2 Apr–Jun, Q3 Jul–Sep, Q4 Oct–Dec). */
+export function monthToQuarterLabel(monthLabel: string): string | null {
+  const parts = monthLabel.trim().split(' ');
+  if (parts.length < 2) return null;
+  const year = parseInt(parts[parts.length - 1], 10);
+  const monthName = parts.slice(0, -1).join(' ');
+  const mi = MONTHS.findIndex(m => monthName.startsWith(m));
+  if (mi < 0 || Number.isNaN(year)) return null;
+  const quarter = mi <= 2 ? 1 : mi <= 5 ? 2 : mi <= 8 ? 3 : 4;
+  return `Q${quarter}-${year}`;
+}
+
+function quarterSortKey(label: string): number {
+  const m = label.match(/^Q(\d)-(\d+)$/);
+  if (!m) return 0;
+  return parseInt(m[2], 10) * 10 + parseInt(m[1], 10);
+}
+
+/** Sum student counts by quarter from monthly rows. */
+export function aggregateStudentsByQuarter(
+  monthly: { month: string; students: number }[]
+): { quarter: string; students: number }[] {
+  const totals = new Map<string, number>();
+  for (const row of monthly) {
+    const label = monthToQuarterLabel(row.month);
+    if (!label) continue;
+    totals.set(label, (totals.get(label) ?? 0) + row.students);
+  }
+  return Array.from(totals.entries())
+    .map(([quarter, students]) => ({ quarter, students }))
+    .sort((a, b) => quarterSortKey(a.quarter) - quarterSortKey(b.quarter));
+}
+
 /** Pull a numeric participant count from free-text fields. */
 export function parseParticipantCount(text: string | undefined): number {
   if (!text) return 0;
