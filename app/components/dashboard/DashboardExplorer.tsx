@@ -225,17 +225,16 @@ export default function DashboardExplorer() {
 
   const kpis = useMemo(() => {
     const totalStudents = schoolMonthlyRows.reduce((s, m) => s + m.students, 0);
-    const totalPasses = passesMonthly.reduce((s, m) => s + m.totalPasses, 0);
     const totalWaste = wasteMonthly.reduce((s, m) => s + m.kg, 0);
     return {
       species: summary?.totalSpecies ?? 870,
       students: totalStudents,
       activities: community.length,
-      passes: totalPasses,
+      waterCompliance: bioWater != null ? `${bioWater.rate}%` : '—',
       wasteKg: Math.round(totalWaste),
       visits: schools?.individualVisits?.length ?? 0,
     };
-  }, [summary, schoolMonthlyRows, passesMonthly, wasteMonthly, community, schools]);
+  }, [summary, schoolMonthlyRows, wasteMonthly, community, schools, bioWater]);
 
   const filteredSchoolVisits = useMemo(() => {
     if (!schools) return [];
@@ -337,7 +336,7 @@ export default function DashboardExplorer() {
                     { label: 'Students reached', value: kpis.students.toLocaleString() },
                     { label: 'School visits logged', value: kpis.visits },
                     { label: 'Community activities', value: kpis.activities },
-                    { label: 'Complementary pass total', value: kpis.passes.toLocaleString() },
+                    { label: 'Water quality compliance', value: kpis.waterCompliance },
                     { label: 'Waste collected (kg)', value: kpis.wasteKg.toLocaleString() },
                   ].map(k => (
                     <div key={k.label} className="glass-card kpi-tile">
