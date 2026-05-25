@@ -15,8 +15,8 @@
       "source": "inaturalist"
     },
     "birds-3": {
-      "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/152976459/medium.jpeg",
-      "source": "inaturalist"
+      "url": "https://commons.wikimedia.org/wiki/Special:FilePath/African%20Marsh%20Harrier%2C%20Botswana%20%286127140777%29.jpg",
+      "source": "wikipedia"
     },
     "birds-4": {
       "url": "https://inaturalist-open-data.s3.amazonaws.com/photos/450903960/medium.jpg",

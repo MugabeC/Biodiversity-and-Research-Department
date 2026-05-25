@@ -17,12 +17,15 @@ import {
   loadDashboardFromBundle,
   type CommunityRow,
   type DashboardSummary,
+  type ConflictRow,
   type PassesData,
+  type ResearchRow,
   type SchoolVisitsData,
   type WasteFile,
 } from '@/app/lib/dashboardData';
 import {
   TAXA_META,
+  monthSortKey,
   sortByMonth,
   parseParticipantCount,
   withShortMonths,
@@ -45,12 +48,33 @@ const SECTIONS = [
   { id: 'biodiversity', label: 'Biodiversity' },
   { id: 'education', label: 'Education' },
   { id: 'community', label: 'Community' },
+  { id: 'research', label: 'Research' },
+  { id: 'conflicts', label: 'Conflicts' },
   { id: 'waste', label: 'Waste' },
   { id: 'water', label: 'Water quality' },
   { id: 'explore', label: 'Explore Data' },
 ] as const;
 
 type SectionId = (typeof SECTIONS)[number]['id'];
+
+function countBy<T>(rows: T[], getKey: (row: T) => string | null | undefined): { name: string; count: number }[] {
+  const counts = new Map<string, number>();
+  for (const row of rows) {
+    const key = getKey(row)?.trim() || 'Unspecified';
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+  return Array.from(counts.entries())
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+}
+
+function researchMonthLabel(label: string): string {
+  const trimmed = label.trim();
+  if (/\b20\d{2}\b/.test(trimmed)) return trimmed;
+  const twoDigitYear = trimmed.match(/^(.+?)\s+(\d{2})$/);
+  if (twoDigitYear) return `${twoDigitYear[1]} 20${twoDigitYear[2]}`;
+  return `${trimmed} 2025`;
+}
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
@@ -107,6 +131,8 @@ export default function DashboardExplorer() {
   const [community, setCommunity] = useState<CommunityRow[]>([]);
   const [passes, setPasses] = useState<PassesData | null>(null);
   const [wasteData, setWasteData] = useState<WasteFile>([]);
+  const [research, setResearch] = useState<ResearchRow[]>([]);
+  const [conflicts, setConflicts] = useState<ConflictRow[]>([]);
   const waste = useMemo(() => normalizeWasteData(wasteData), [wasteData]);
   const [bioWater, setBioWater] = useState<ReturnType<typeof loadDashboardFromBundle>['bioWater']>(null);
   const [wasacParams, setWasacParams] = useState<ReturnType<typeof loadDashboardFromBundle>['wasacParams']>([]);
@@ -127,6 +153,8 @@ export default function DashboardExplorer() {
       setCommunity(data.community);
       setPasses(data.passes);
       setWasteData(data.waste);
+      setResearch(data.research);
+      setConflicts(data.conflicts);
       setBioWater(data.bioWater);
       setWasacParams(data.wasacParams);
       setWasacSiteLabels(data.wasacSiteLabels);
@@ -223,6 +251,33 @@ export default function DashboardExplorer() {
     );
   }, [waste]);
 
+  const researchByMonth = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const row of research) {
+      const month = researchMonthLabel(row.month);
+      map.set(month, (map.get(month) ?? 0) + 1);
+    }
+    return withShortMonths(
+      Array.from(map.entries())
+        .map(([month, requests]) => ({ month, requests }))
+        .sort((a, b) => monthSortKey(a.month) - monthSortKey(b.month))
+    );
+  }, [research]);
+
+  const researchByAction = useMemo(() => (
+    countBy(research, row => {
+      const action = row.actionTaken?.toLowerCase() ?? '';
+      if (action.includes('approved') || action.includes('permission granted')) return 'Approved / permission granted';
+      if (action.includes('review') || row.internalRemarks?.toLowerCase().includes('review')) return 'Under review / revise';
+      if (action.includes('advised')) return 'Advised to revise';
+      if (!row.actionTaken) return 'No action recorded';
+      return row.actionTaken;
+    }).slice(0, 8)
+  ), [research]);
+
+  const conflictsByStatus = useMemo(() => countBy(conflicts, row => row.status), [conflicts]);
+  const conflictsByType = useMemo(() => countBy(conflicts, row => row.issueType).slice(0, 8), [conflicts]);
+
   const kpis = useMemo(() => {
     const totalStudents = schoolMonthlyRows.reduce((s, m) => s + m.students, 0);
     const totalWaste = wasteMonthly.reduce((s, m) => s + m.kg, 0);
@@ -230,11 +285,13 @@ export default function DashboardExplorer() {
       species: summary?.totalSpecies ?? 870,
       students: totalStudents,
       activities: community.length,
+      researchRequests: research.length,
+      openConflicts: conflicts.filter(row => row.status?.toLowerCase() === 'open').length,
       waterCompliance: bioWater != null ? `${bioWater.rate}%` : '—',
       wasteKg: Math.round(totalWaste),
       visits: schools?.individualVisits?.length ?? 0,
     };
-  }, [summary, schoolMonthlyRows, wasteMonthly, community, schools, bioWater]);
+  }, [summary, schoolMonthlyRows, wasteMonthly, community, schools, bioWater, research, conflicts]);
 
   const filteredSchoolVisits = useMemo(() => {
     if (!schools) return [];
@@ -258,6 +315,32 @@ export default function DashboardExplorer() {
         v.participants.toLowerCase().includes(q)
     );
   }, [community, search]);
+
+  const filteredResearch = useMemo(() => {
+    if (!search.trim()) return research;
+    const q = search.toLowerCase();
+    return research.filter(row =>
+      row.month.toLowerCase().includes(q) ||
+      row.names.toLowerCase().includes(q) ||
+      row.category.toLowerCase().includes(q) ||
+      row.institution?.toLowerCase().includes(q) ||
+      row.topic?.toLowerCase().includes(q) ||
+      row.actionTaken?.toLowerCase().includes(q)
+    );
+  }, [research, search]);
+
+  const filteredConflicts = useMemo(() => {
+    if (!search.trim()) return conflicts;
+    const q = search.toLowerCase();
+    return conflicts.filter(row =>
+      row.date?.toLowerCase().includes(q) ||
+      row.location?.toLowerCase().includes(q) ||
+      row.issueType?.toLowerCase().includes(q) ||
+      row.description?.toLowerCase().includes(q) ||
+      row.status?.toLowerCase().includes(q) ||
+      row.actionTaken?.toLowerCase().includes(q)
+    );
+  }, [conflicts, search]);
 
   const bioWaterExplore = useMemo(() => {
     if (!bioWater) return [];
@@ -319,10 +402,10 @@ export default function DashboardExplorer() {
 
         <p className="dashboard-subtitle">
           {summary?.parkName ?? 'Nyandungu Eco-Park'} · {summary?.location ?? 'Kigali, Rwanda'} ·{' '}
-          {summary?.parkSize ?? '219 Ha'}
+          {summary?.parkSize ?? '218.9 Ha'}
           <br />
           <span style={{ fontSize: 13, opacity: 0.85 }}>
-            Interactive dashboard · Survey {summary?.surveyYear ?? '2025/2026'}
+            Interactive dashboard
           </span>
         </p>
 
@@ -336,6 +419,8 @@ export default function DashboardExplorer() {
                     { label: 'Students reached', value: kpis.students.toLocaleString() },
                     { label: 'School visits logged', value: kpis.visits },
                     { label: 'Community activities', value: kpis.activities },
+                    { label: 'Research requests', value: kpis.researchRequests },
+                    { label: 'Open conflict cases', value: kpis.openConflicts },
                     { label: 'Water quality compliance', value: kpis.waterCompliance },
                     { label: 'Waste collected (kg)', value: kpis.wasteKg.toLocaleString() },
                   ].map(k => (
@@ -507,6 +592,87 @@ export default function DashboardExplorer() {
           </>
         )}
 
+        {(section === 'overview' || section === 'research') && research.length > 0 && (
+          <>
+            <SectionTitle>Research coordination</SectionTitle>
+            <div className="dashboard-charts-grid">
+              <ChartCard
+                title="Research requests by month"
+                description="Research requests and data-access requests logged by the department."
+              >
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={researchByMonth} margin={{ top: 8, right: 8, left: -8, bottom: 8 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke={c.grid} vertical={false} />
+                    <XAxis dataKey="monthShort" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 9 }} angle={-35} textAnchor="end" height={56} />
+                    <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} allowDecimals={false} />
+                    <Tooltip {...tt} />
+                    <Bar dataKey="requests" name="Requests" fill={c.primary} radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartCard>
+              <ChartCard title="Research request status" content>
+                <div className="data-table-wrap chart-table-in-card">
+                  <table className="data-table">
+                    <thead>
+                      <tr>
+                        <th>Status / action</th>
+                        <th>Requests</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {researchByAction.map(row => (
+                        <tr key={row.name}>
+                          <td>{row.name}</td>
+                          <td>{row.count}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </ChartCard>
+            </div>
+          </>
+        )}
+
+        {(section === 'overview' || section === 'conflicts') && conflicts.length > 0 && (
+          <>
+            <SectionTitle>Conflict management</SectionTitle>
+            <div className="dashboard-charts-grid">
+              <ChartCard title="Conflict cases by status">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={conflictsByStatus} margin={{ top: 8, right: 8, left: -8, bottom: 8 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke={c.grid} vertical={false} />
+                    <XAxis dataKey="name" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 10 }} />
+                    <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} allowDecimals={false} />
+                    <Tooltip {...tt} />
+                    <Bar dataKey="count" name="Cases" fill={c.accent} radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartCard>
+              <ChartCard title="Conflict cases by issue type" content>
+                <div className="data-table-wrap chart-table-in-card">
+                  <table className="data-table">
+                    <thead>
+                      <tr>
+                        <th>Issue type</th>
+                        <th>Cases</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {conflictsByType.map(row => (
+                        <tr key={row.name}>
+                          <td>{row.name}</td>
+                          <td>{row.count}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </ChartCard>
+            </div>
+          </>
+        )}
+
         {(section === 'overview' || section === 'waste') && (
           <>
             <SectionTitle>Waste management</SectionTitle>
@@ -549,7 +715,7 @@ export default function DashboardExplorer() {
             <input
               type="search"
               className="species-search"
-              placeholder="Search schools, activities, water parameters, sites…"
+              placeholder="Search schools, activities, research, conflicts, water parameters…"
               value={search}
               onChange={e => setSearch(e.target.value)}
               style={{ marginBottom: '1rem' }}
@@ -558,6 +724,8 @@ export default function DashboardExplorer() {
               {[
                 { id: 'schools', label: `School visits (${schools?.individualVisits.length ?? 0})` },
                 { id: 'community', label: `Activities (${community.length})` },
+                { id: 'research', label: `Research (${research.length})` },
+                { id: 'conflicts', label: `Conflicts (${conflicts.length})` },
                 { id: 'passes', label: `Complementary pass (${passes?.detail.length ?? 0})` },
                 { id: 'waste', label: `Waste (${waste.length})` },
                 { id: 'water-bio', label: `Water — Biodiversity (${bioWaterExplore.length})` },
@@ -616,6 +784,62 @@ export default function DashboardExplorer() {
                         <td>{row.activity}</td>
                         <td>{row.participants}</td>
                         <td>{row.notes ?? '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+              {exploreTab === 'research' && (
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Month</th>
+                      <th>Researcher(s)</th>
+                      <th>Institution</th>
+                      <th>Category</th>
+                      <th>Topic</th>
+                      <th>Action taken</th>
+                      <th>Contact</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredResearch.map((row, i) => (
+                      <tr key={`${row.names}-${i}`}>
+                        <td>{row.month}</td>
+                        <td>{row.names}</td>
+                        <td>{row.institution ?? '—'}</td>
+                        <td>{row.category}</td>
+                        <td>{row.topic ?? '—'}</td>
+                        <td>{row.actionTaken ?? '—'}</td>
+                        <td>{row.assignedContact ?? '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+              {exploreTab === 'conflicts' && (
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Issue type</th>
+                      <th>Location</th>
+                      <th>Description</th>
+                      <th>Status</th>
+                      <th>Action taken</th>
+                      <th>Follow-up</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredConflicts.map((row, i) => (
+                      <tr key={`${row.id ?? i}-${row.date ?? i}`}>
+                        <td>{row.date ?? '—'}</td>
+                        <td>{row.issueType ?? '—'}</td>
+                        <td>{row.location ?? '—'}</td>
+                        <td>{row.description ?? '—'}</td>
+                        <td>{row.status ?? '—'}</td>
+                        <td>{row.actionTaken ?? '—'}</td>
+                        <td>{row.followUpStatus ?? '—'}</td>
                       </tr>
                     ))}
                   </tbody>

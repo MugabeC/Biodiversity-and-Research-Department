@@ -1145,16 +1145,16 @@ select.chart-select {
   z-index: 4;
   background: linear-gradient(
     90deg,
-    rgba(186, 228, 205, 0.72) 0%,
-    rgba(210, 240, 220, 0.58) 35%,
-    rgba(198, 235, 212, 0.65) 70%,
-    rgba(186, 228, 205, 0.72) 100%
+    rgba(213, 240, 224, 0.9) 0%,
+    rgba(232, 247, 238, 0.84) 35%,
+    rgba(220, 243, 230, 0.88) 70%,
+    rgba(213, 240, 224, 0.9) 100%
   );
-  backdrop-filter: blur(20px) saturate(1.4);
-  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  backdrop-filter: blur(22px) saturate(1.45);
+  -webkit-backdrop-filter: blur(22px) saturate(1.45);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.45) inset,
-    0 4px 14px rgba(12, 96, 56, 0.1);
+    0 1px 0 rgba(255, 255, 255, 0.68) inset,
+    0 8px 22px rgba(12, 96, 56, 0.16);
 }
 
 .data-table thead tr {
@@ -1189,19 +1189,22 @@ select.chart-select {
 [data-theme='dark'] .data-table thead {
   background: linear-gradient(
     90deg,
-    rgba(12, 96, 56, 0.42) 0%,
-    rgba(110, 207, 150, 0.22) 40%,
-    rgba(45, 120, 80, 0.32) 70%,
-    rgba(12, 96, 56, 0.4) 100%
+    rgba(16, 68, 45, 0.92) 0%,
+    rgba(28, 92, 61, 0.86) 40%,
+    rgba(24, 78, 54, 0.9) 70%,
+    rgba(16, 68, 45, 0.92) 100%
   );
+  backdrop-filter: blur(24px) saturate(1.55);
+  -webkit-backdrop-filter: blur(24px) saturate(1.55);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.08) inset,
-    0 4px 18px rgba(0, 0, 0, 0.28);
+    0 1px 0 rgba(255, 255, 255, 0.14) inset,
+    0 8px 24px rgba(0, 0, 0, 0.42);
 }
 
 [data-theme='dark'] .data-table th {
   color: #e8f2eb;
   border-bottom-color: rgba(255, 255, 255, 0.1);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
 }
 
 .data-table td {
@@ -1498,6 +1501,11 @@ select.chart-select {
   padding: 16px;
   min-width: 210px;
   max-width: 240px;
+}
+
+[data-theme='dark'] .map-layer-panel {
+  background: rgba(12, 28, 22, 0.88);
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .map-layer-panel-title {

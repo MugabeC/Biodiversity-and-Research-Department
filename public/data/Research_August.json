@@ -1,0 +1,35 @@
+{
+  "source": "Nyandungu Eco-Park Research Database",
+  "sheet": "August",
+  "total_records": 2,
+  "data": [
+    {
+      "month": "August",
+      "Date Received": "2025-08-05",
+      "Names": "Ada NDONG Franya Trecha Nef",
+      "Category": "Academic",
+      "Institution": "UNILAK",
+      "Program/Degree level": "Environmenta and conservation",
+      "Research Title / Topic": "Assessment of indigenous Tree Species Diversity and Their Role in wetlands Ecosystem Restoration: A case study of Nyandungu Urban Wetlands Eco Park.",
+      "Requested Activities": "Internship, Data Collection",
+      "Internal Remarks": null,
+      "Action taken": "Internship started, Research topic approved, letter to be signed",
+      "Follow-Up Date": null,
+      "Assigned contact": "Theogene"
+    },
+    {
+      "month": "August",
+      "Date Received": "2025-08-05",
+      "Names": "Briel BOUNDA",
+      "Category": "Academic",
+      "Institution": "UNILAK",
+      "Program/Degree level": "Environmenta and conservation",
+      "Research Title / Topic": "Impact of ecotourism on national park conservation: Case of Nyandungu ecopark",
+      "Requested Activities": "Internship, Data Collection",
+      "Internal Remarks": "The subject doesn't fit Nyandungu. Advised to revisit and make an other one",
+      "Action taken": "Internship started, Research topic approved, letter to be signed",
+      "Follow-Up Date": null,
+      "Assigned contact": "Theogene"
+    }
+  ]
+}

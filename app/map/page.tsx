@@ -238,7 +238,7 @@ export default function MapPage() {
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: color, flexShrink: 0, display: 'inline-block' }} />
-                <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 400, fontSize: '13px', color: '#1A2E1F' }}>
+                <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px', color: 'var(--text-primary)' }}>
                   {label}
                 </span>
               </div>
@@ -275,7 +275,7 @@ export default function MapPage() {
 
       <div className="map-glass-panel map-info-card">
         <p className="map-info-title">Nyandungu Eco-Park</p>
-        <p className="map-info-line">219 Ha · Kigali, Rwanda</p>
+        <p className="map-info-line">218.9 Ha · Kigali, Rwanda</p>
         <p className="map-info-meta">2025 Biodiversity Survey</p>
       </div>
 

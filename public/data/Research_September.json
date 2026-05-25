@@ -1,0 +1,35 @@
+{
+  "source": "Nyandungu Eco-Park Research Database",
+  "sheet": "September",
+  "total_records": 2,
+  "data": [
+    {
+      "month": "September",
+      "Date Received": "2025-09-01",
+      "Names": "Gloriose IRADUKUNDA",
+      "Category": "Academic",
+      "Institution": "UR",
+      "Program/Degree level": "Master of Science in Biodiversity Conservation and Natural Resources Management",
+      "Research Title / Topic": "‘’Exploring the role of indigenous tree species on birds’ conservation in Rwanda. A case study of Nyandungu Eco-Park (2021-2024)”.",
+      "Requested Activities": "Data Collection",
+      "Internal Remarks": "Share the full research proposal",
+      "Action taken": "Research topic approved, letter to be signed",
+      "Follow-Up Date": null,
+      "Assigned contact": "Theogene"
+    },
+    {
+      "month": "September",
+      "Date Received": null,
+      "Names": "Briel BOUNDA",
+      "Category": "=C4:I4Academic",
+      "Institution": "UNILAK",
+      "Program/Degree level": "Environmenta and conservation",
+      "Research Title / Topic": null,
+      "Requested Activities": null,
+      "Internal Remarks": null,
+      "Action taken": null,
+      "Follow-Up Date": null,
+      "Assigned contact": "Theogene"
+    }
+  ]
+}
