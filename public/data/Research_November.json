@@ -1,0 +1,35 @@
+{
+  "source": "Nyandungu Eco-Park Research Database",
+  "sheet": "November",
+  "total_records": 2,
+  "data": [
+    {
+      "month": "November",
+      "Date Received": null,
+      "Names": "Jan Schultheis",
+      "Category": "Academic",
+      "Institution": "Curt University Dannemark",
+      "Program/Degree level": null,
+      "Research Title / Topic": "Analysing socioeconomic impact and justice of Nyandungu ecoppark",
+      "Requested Activities": null,
+      "Internal Remarks": null,
+      "Action taken": null,
+      "Follow-Up Date": null,
+      "Assigned contact": null
+    },
+    {
+      "month": "November",
+      "Date Received": null,
+      "Names": "Gisele Onyango",
+      "Category": "Academic",
+      "Institution": "ALU",
+      "Program/Degree level": null,
+      "Research Title / Topic": "Intergrating Traditional Knowledge in Conservation of NEP",
+      "Requested Activities": null,
+      "Internal Remarks": null,
+      "Action taken": null,
+      "Follow-Up Date": null,
+      "Assigned contact": null
+    }
+  ]
+}

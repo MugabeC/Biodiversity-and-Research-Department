@@ -1,0 +1,63 @@
+{
+  "source": "Nyandungu Eco-Park Community Data",
+  "sheet": "Waste Management",
+  "total_records": 14,
+  "data": [
+    {
+      "Month": "March 2025",
+      "Waste Collected (kg)": "N/A"
+    },
+    {
+      "Month": "April 2025",
+      "Waste Collected (kg)": "N/A"
+    },
+    {
+      "Month": "May 2025",
+      "Waste Collected (kg)": "N/A"
+    },
+    {
+      "Month": "June 2025",
+      "Waste Collected (kg)": ">1,000"
+    },
+    {
+      "Month": "July 2025",
+      "Waste Collected (kg)": "N/A"
+    },
+    {
+      "Month": "August 2025",
+      "Waste Collected (kg)": "N/A"
+    },
+    {
+      "Month": "September 2025",
+      "Waste Collected (kg)": "N/A"
+    },
+    {
+      "Month": "October 2025",
+      "Waste Collected (kg)": 225
+    },
+    {
+      "Month": "November 2025",
+      "Waste Collected (kg)": 204
+    },
+    {
+      "Month": "December 2025",
+      "Waste Collected (kg)": 52
+    },
+    {
+      "Month": "January 2026",
+      "Waste Collected (kg)": 56
+    },
+    {
+      "Month": "February 2026",
+      "Waste Collected (kg)": 108
+    },
+    {
+      "Month": "March 2026",
+      "Waste Collected (kg)": 320
+    },
+    {
+      "Month": "April 2026",
+      "Waste Collected (kg)": 324
+    }
+  ]
+}
