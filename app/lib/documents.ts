@@ -92,12 +92,20 @@ export const DOCUMENT_LIBRARY: LibraryDocument[] = [
     url: docUrl('NEP_Water_Quality_Comprehensive (2) (1).xlsx'),
   },
   {
-    id: 'community-data-2025-2026',
-    title: 'Community Data 2025–2026',
-    description: 'Community engagement and outreach data export.',
-    filename: 'NEP Community Data 2025 2026 (1).xlsx',
+    id: 'research-database',
+    title: 'Research Database',
+    description: 'Research requests and coordination database workbook.',
+    filename: 'Research Database.xlsx',
     type: 'excel',
-    url: docUrl('NEP Community Data 2025 2026 (1).xlsx'),
+    url: docUrl('Research Database.xlsx'),
+  },
+  {
+    id: 'community-data-edited',
+    title: 'Community Data — Edited',
+    description: 'Updated community engagement, school visits, passes, and waste workbook.',
+    filename: 'Community Data-edited.xlsx',
+    type: 'excel',
+    url: docUrl('Community Data-edited.xlsx'),
   },
 ];
 
