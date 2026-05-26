@@ -1101,6 +1101,27 @@ select.chart-select {
   margin-top: 6px;
 }
 
+@media (min-width: 900px) {
+  .kpi-row {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .kpi-tile {
+    min-width: 0;
+    padding: 1.05rem 0.65rem;
+  }
+
+  .kpi-tile .kpi-value {
+    font-size: clamp(1.45rem, 2.15vw, 2rem);
+  }
+
+  .kpi-tile .kpi-label {
+    font-size: 11px;
+    line-height: 1.25;
+  }
+}
+
 .data-table-wrap {
   max-height: 360px;
   overflow-y: auto;
