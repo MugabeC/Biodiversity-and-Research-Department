@@ -2053,8 +2053,72 @@ select.chart-select {
   }
 
   .taxa-row-scroll {
-    padding: 28px 8px 40px;
-    margin: 0 -4px 8px;
+    overflow-x: visible;
+    padding: 8px 0 12px;
+    margin: 0 0 8px;
+  }
+
+  .taxa-grid--row {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+    min-width: 0;
+  }
+
+  .taxa-card--compact {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    column-gap: 0.6rem;
+    padding: 10px 12px !important;
+    min-height: 72px;
+    border-radius: 14px;
+    margin-bottom: 0;
+    transform: none;
+  }
+
+  .taxa-card--compact::after {
+    display: none;
+  }
+
+  .taxa-card-icon-float {
+    position: static;
+    top: auto;
+    left: auto;
+    line-height: 0;
+  }
+
+  .taxa-card--compact .taxa-line-icon {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .taxa-card--compact .taxa-card-label {
+    grid-column: 2;
+    justify-self: start;
+    text-align: left;
+    font-size: 13px !important;
+    line-height: 1.2;
+    color: var(--text-primary);
+  }
+
+  .taxa-card--compact .taxa-card-badge {
+    position: static;
+    grid-column: 3;
+    justify-self: end;
+    align-self: start;
+    margin: 0;
+    font-size: 10px !important;
+    max-width: none;
+    white-space: nowrap;
+  }
+
+  .taxa-card--compact .taxa-card-count {
+    grid-column: 2 / 4;
+    justify-self: start;
+    margin-top: 2px !important;
+    font-size: 24px !important;
+    line-height: 1;
+    font-weight: 700;
   }
 
   .species-page-header {
