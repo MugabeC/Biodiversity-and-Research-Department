@@ -58,7 +58,7 @@ export default function BiodiversityWaterExplorer({ summary }: { summary: BioCom
       <p className="chart-card-desc" style={{ marginTop: 0 }}>
         Search a parameter, then view measured values at each park sampling point (biodiversity survey only).
       </p>
-      <div className="chart-controls-row">
+      <div className="chart-controls-row chart-controls-row--emphasis">
         <input
           type="search"
           className="species-search"

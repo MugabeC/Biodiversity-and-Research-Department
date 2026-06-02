@@ -66,7 +66,6 @@ export default function WasteDashboardCharts({ data }: { data: WasteFile }) {
         <h3 className="heading" style={{ fontSize: 16, margin: '0 0 0.5rem' }}>
           Waste collected (kg per month)
         </h3>
-        <p className="chart-card-desc">Monthly waste totals from the Waste Management JSON dataset.</p>
         <div className="chart-card-body" style={{ height: 280 }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={monthly} margin={{ top: 8, right: 8, left: -8, bottom: 8 }}>

@@ -70,7 +70,7 @@ export default function WasacWaterPanel() {
         )}
       </p>
 
-      <div className="chart-controls-row">
+      <div className="chart-controls-row chart-controls-row--emphasis">
         <input
           type="search"
           className="species-search"
