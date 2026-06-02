@@ -538,7 +538,7 @@ h1, h2, h3, h4, h5, h6,
 /* Taxa row — scroll wrapper keeps bottom shadow visible (overflow-x alone clips shadows) */
 .taxa-section-float {
   overflow: visible;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.35rem;
 }
 
 .taxa-row-scroll {
@@ -582,7 +582,9 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .taxa-card--compact .taxa-card-badge {
-  align-self: flex-end;
+  position: absolute;
+  top: 12px;
+  right: 8px;
   border-radius: 9999px;
   padding: 2px 6px !important;
   font-size: 9px !important;
@@ -593,6 +595,8 @@ h1, h2, h3, h4, h5, h6,
 
 .taxa-card--compact .taxa-card-count {
   font-size: clamp(18px, 2.2vw, 28px) !important;
+  margin-top: 0 !important;
+  min-height: 1em;
 }
 
 .taxa-card--compact .taxa-card-label {

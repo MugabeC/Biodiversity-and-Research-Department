@@ -1,0 +1,234 @@
+{
+  "dataset": "Nyandungu Eco-Park – Complementary / Free Entry Passes Issued",
+  "source_sheet": "Complementary Passes",
+  "months": [
+    {
+      "month": "Early 2025 (pre-March)",
+      "subtotal": null,
+      "notes": "Exact months unclear from source data",
+      "passes": [
+        {
+          "group": "Rwinyana Village",
+          "count": 53,
+          "notes": null
+        },
+        {
+          "group": "Rwibutso Village",
+          "count": 53,
+          "notes": null
+        },
+        {
+          "group": "Rwiza Village residents (complimentary visit)",
+          "count": 42,
+          "notes": null
+        },
+        {
+          "group": "IMENA Sports Club members",
+          "count": 36,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "month": "March 2025",
+      "subtotal": 0,
+      "notes": "No complementary pass data reported",
+      "passes": []
+    },
+    {
+      "month": "April 2025",
+      "subtotal": 4,
+      "passes": [
+        {
+          "group": "4 French tour operators from RDB (fam trip)",
+          "count": 4,
+          "notes": "21 Apr – not complimentary per se; VIP visit"
+        }
+      ]
+    },
+    {
+      "month": "May 2025",
+      "subtotal": 0,
+      "notes": "No complementary pass data reported",
+      "passes": []
+    },
+    {
+      "month": "June 2025",
+      "subtotal": 0,
+      "notes": "No complementary pass data reported",
+      "passes": []
+    },
+    {
+      "month": "July 2025",
+      "subtotal": 0,
+      "notes": "No complementary pass data reported",
+      "passes": []
+    },
+    {
+      "month": "August 2025",
+      "subtotal": 52,
+      "passes": [
+        {
+          "group": "Prime Minister Dr. Justin Nsengiyumva",
+          "count": 1,
+          "notes": "Right Honourable Prime Minister of Rwanda"
+        },
+        {
+          "group": "Igihe.com (UCI content development)",
+          "count": 4,
+          "notes": null
+        },
+        {
+          "group": "Surrounding community members (6 children + 19 adults)",
+          "count": 25,
+          "notes": "Community outreach / goodwill"
+        },
+        {
+          "group": "Imena Club (surrounding community)",
+          "count": 22,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "month": "September 2025",
+      "subtotal": 0,
+      "notes": "No complementary pass data reported",
+      "passes": []
+    },
+    {
+      "month": "October 2025",
+      "subtotal": 129,
+      "passes": [
+        {
+          "group": "Rwiza Village residents (complimentary visit)",
+          "count": 39,
+          "notes": "Fostering community engagement in conservation"
+        },
+        {
+          "group": "Global Birding Event participants",
+          "count": 45,
+          "notes": "Hosted at NEP; 91 bird species recorded on eBird"
+        },
+        {
+          "group": "Urwibutso village community members (Umuganda)",
+          "count": 45,
+          "notes": "Rwimbogo cell – Nyarugunga sector"
+        }
+      ]
+    },
+    {
+      "month": "November 2025",
+      "subtotal": 86,
+      "passes": [
+        {
+          "group": "Residents from surrounding sectors (complementary visits)",
+          "count": 86,
+          "notes": "Community engagement / conservation awareness"
+        }
+      ]
+    },
+    {
+      "month": "December 2025",
+      "subtotal": 71,
+      "passes": [
+        {
+          "group": "Rwibutso Village residents",
+          "count": 51,
+          "notes": "Complementary park access for stewardship"
+        },
+        {
+          "group": "Retirees from Rwimbogo & Nonko Cells, Rwimbogo Sector",
+          "count": 20,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "month": "January 2026",
+      "subtotal": 45,
+      "passes": [
+        {
+          "group": "IMENA Sports Club members",
+          "count": 23,
+          "notes": "Monthly"
+        },
+        {
+          "group": "Retirees – Rwimbogo & Nonko cells, Nyarugunga sector",
+          "count": 22,
+          "notes": "Monthly"
+        }
+      ]
+    },
+    {
+      "month": "February 2026",
+      "subtotal": 39,
+      "passes": [
+        {
+          "group": "IMENA Sports Club members",
+          "count": 20,
+          "notes": "Complementary park entry for sport activities"
+        },
+        {
+          "group": "Retirees – Rwimbogo & Nonko cells, Nyarugunga sector",
+          "count": 19,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "month": "March 2026",
+      "subtotal": 407,
+      "notes": "407 total complimentary per monthly report; includes 232 Kids U5",
+      "passes": [
+        {
+          "group": "Complimentary visitors (Kids U5 + other comp categories)",
+          "count": 407,
+          "notes": "Includes 232 Kids U5"
+        }
+      ]
+    },
+    {
+      "month": "April 2026",
+      "subtotal": 617,
+      "notes": "Total comp per monthly report",
+      "passes": [
+        {
+          "group": "Kids U5",
+          "count": 287,
+          "notes": null
+        },
+        {
+          "group": "Students – Conservation Awareness Program",
+          "count": 201,
+          "notes": null
+        },
+        {
+          "group": "Safari guides",
+          "count": 60,
+          "notes": null
+        },
+        {
+          "group": "Best Cities Global Alliance representatives",
+          "count": 3,
+          "notes": null
+        },
+        {
+          "group": "Rwanda Green Fund staff (filming session)",
+          "count": 18,
+          "notes": null
+        },
+        {
+          "group": "Rwanda Safari Guide Association guides",
+          "count": 13,
+          "notes": null
+        },
+        {
+          "group": "Malcolm X College students (USA)",
+          "count": 32,
+          "notes": null
+        }
+      ]
+    }
+  ]
+}

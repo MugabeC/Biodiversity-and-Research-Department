@@ -1,0 +1,422 @@
+{
+  "dataset": "Nyandungu Eco-Park – School Visits by Month (Student Numbers)",
+  "source_sheet": "School Visits – Students",
+  "months": [
+    {
+      "month": "April 2025",
+      "subtotal_students": 82,
+      "visits": [
+        {
+          "school": "École Secondaire Saint Joseph",
+          "students": 28,
+          "teachers_other": null,
+          "notes": "22 Apr"
+        },
+        {
+          "school": "École Francophone Kigali (Outreach)",
+          "students": 54,
+          "teachers_other": "5 teachers",
+          "notes": "29 Apr"
+        }
+      ]
+    },
+    {
+      "month": "May 2025",
+      "subtotal_students": 453,
+      "visits": [
+        {
+          "school": "Nu-Vision School",
+          "students": 30,
+          "teachers_other": null,
+          "notes": "3 May"
+        },
+        {
+          "school": "IPRC Kitabi",
+          "students": 19,
+          "teachers_other": null,
+          "notes": "6 May"
+        },
+        {
+          "school": "African Leadership University",
+          "students": 28,
+          "teachers_other": null,
+          "notes": "8 May"
+        },
+        {
+          "school": "Friends of the Children Int'l",
+          "students": 76,
+          "teachers_other": null,
+          "notes": "16 May"
+        },
+        {
+          "school": "GS Rambura Fille",
+          "students": 97,
+          "teachers_other": null,
+          "notes": "21 May"
+        },
+        {
+          "school": "Muhororo School",
+          "students": 83,
+          "teachers_other": null,
+          "notes": "22 May"
+        },
+        {
+          "school": "Faith Brilliant School",
+          "students": 120,
+          "teachers_other": null,
+          "notes": "30 May"
+        }
+      ]
+    },
+    {
+      "month": "June 2025",
+      "subtotal_students": 1562,
+      "notes": "Includes TTC Rubengera staff, REMA World Environment Day, and 6th Global Conference on Biodiversity Finance delegates",
+      "visits": [
+        {
+          "school": "Green Hills Academy",
+          "students": 20,
+          "teachers_other": null,
+          "notes": "1–7 Jun"
+        },
+        {
+          "school": "St. Emmanuel Complex – Masaka",
+          "students": 150,
+          "teachers_other": null,
+          "notes": "1–7 Jun"
+        },
+        {
+          "school": "Ecole Internationale de la Racine",
+          "students": 58,
+          "teachers_other": null,
+          "notes": "1–7 Jun"
+        },
+        {
+          "school": "GS Karerembure",
+          "students": 60,
+          "teachers_other": null,
+          "notes": "1–7 Jun"
+        },
+        {
+          "school": "GS Remera Protestant",
+          "students": 61,
+          "teachers_other": null,
+          "notes": "1–7 Jun"
+        },
+        {
+          "school": "Ecole Primaire Stanislas",
+          "students": 247,
+          "teachers_other": null,
+          "notes": "7–13 Jun"
+        },
+        {
+          "school": "Le Bon Berger",
+          "students": 157,
+          "teachers_other": null,
+          "notes": "21–27 Jun"
+        },
+        {
+          "school": "New Light Academy",
+          "students": 28,
+          "teachers_other": null,
+          "notes": "21–27 Jun"
+        },
+        {
+          "school": "Amoriah Academy",
+          "students": 18,
+          "teachers_other": null,
+          "notes": "21–27 Jun"
+        },
+        {
+          "school": "Erion School",
+          "students": 193,
+          "teachers_other": null,
+          "notes": "21–27 Jun"
+        },
+        {
+          "school": "Lycée de Ruhango",
+          "students": 74,
+          "teachers_other": null,
+          "notes": "21–27 Jun"
+        },
+        {
+          "school": "INES Ruhengeri",
+          "students": 54,
+          "teachers_other": null,
+          "notes": "21–27 Jun"
+        },
+        {
+          "school": "Vassar College",
+          "students": 10,
+          "teachers_other": null,
+          "notes": "21–27 Jun"
+        },
+        {
+          "school": "African Leadership University",
+          "students": 5,
+          "teachers_other": null,
+          "notes": "21–27 Jun"
+        },
+        {
+          "school": "Claude Academy",
+          "students": 142,
+          "teachers_other": null,
+          "notes": "29 Jun"
+        },
+        {
+          "school": "TTC Rubengera (staff)",
+          "students": 35,
+          "teachers_other": "35 staff",
+          "notes": "1 Jul – included in June report"
+        },
+        {
+          "school": "REMA World Environment Day",
+          "students": 30,
+          "teachers_other": "30 teachers",
+          "notes": "Special delegation"
+        },
+        {
+          "school": "6th Global Conference on Biodiversity Finance",
+          "students": 160,
+          "teachers_other": null,
+          "notes": "Delegates – special delegation"
+        }
+      ]
+    },
+    {
+      "month": "July 2025",
+      "subtotal_students": 45,
+      "visits": [
+        {
+          "school": "Gikonko Secondary School",
+          "students": 25,
+          "teachers_other": null,
+          "notes": null
+        },
+        {
+          "school": "GS Bumbogo",
+          "students": 20,
+          "teachers_other": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "month": "August 2025",
+      "subtotal_students": 157,
+      "visits": [
+        {
+          "school": "Samuduha SDA Church (children)",
+          "students": 60,
+          "teachers_other": null,
+          "notes": "Community group"
+        },
+        {
+          "school": "Bright Light School",
+          "students": 70,
+          "teachers_other": null,
+          "notes": null
+        },
+        {
+          "school": "Oroshya Autism Center (children)",
+          "students": 10,
+          "teachers_other": null,
+          "notes": "Special needs"
+        },
+        {
+          "school": "University of Washington",
+          "students": 17,
+          "teachers_other": "2 teachers",
+          "notes": "International delegation"
+        }
+      ]
+    },
+    {
+      "month": "September 2025",
+      "subtotal_students": 257,
+      "visits": [
+        {
+          "school": "Mwanza Primary School",
+          "students": 51,
+          "teachers_other": "10 teachers",
+          "notes": "Explicitly mentioned"
+        },
+        {
+          "school": "East African Community group (educational visit)",
+          "students": 206,
+          "teachers_other": null,
+          "notes": "206 participants"
+        }
+      ]
+    },
+    {
+      "month": "October 2025",
+      "subtotal_students": 250,
+      "subtotal_teachers": 17,
+      "visits": [
+        {
+          "school": "Remera Academy",
+          "students": 149,
+          "teachers_other": 9,
+          "notes": null
+        },
+        {
+          "school": "Remera Academy",
+          "students": 101,
+          "teachers_other": 8,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "month": "November 2025",
+      "subtotal_students": 210,
+      "subtotal_teachers": 11,
+      "visits": [
+        {
+          "school": "APRED NDERA",
+          "students": 90,
+          "teachers_other": 4,
+          "notes": null
+        },
+        {
+          "school": "EP Munini",
+          "students": 60,
+          "teachers_other": 3,
+          "notes": null
+        },
+        {
+          "school": "GS Ndera Catholic",
+          "students": 60,
+          "teachers_other": 4,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "month": "December 2025",
+      "subtotal_students": 389,
+      "visits": [
+        {
+          "school": "School students (names not listed)",
+          "students": 209,
+          "teachers_other": "12 teachers",
+          "notes": null
+        },
+        {
+          "school": "University of Rwanda CAVM",
+          "students": 120,
+          "teachers_other": null,
+          "notes": "Learning visits"
+        },
+        {
+          "school": "Catch Them Young programme",
+          "students": 60,
+          "teachers_other": null,
+          "notes": "Edutainment launch – pupils"
+        }
+      ]
+    },
+    {
+      "month": "January 2026",
+      "subtotal_students": 33,
+      "visits": [
+        {
+          "school": "Schools (names not listed – training workshop cohort)",
+          "students": 33,
+          "teachers_other": "3 teachers",
+          "notes": "Study visits; 41 teachers/school leaders separately trained at workshop"
+        }
+      ]
+    },
+    {
+      "month": "February 2026",
+      "subtotal_students": 102,
+      "subtotal_teachers": 9,
+      "visits": [
+        {
+          "school": "Petit Seminaire St Vincent de Ndera",
+          "students": 25,
+          "teachers_other": 1,
+          "notes": "World Wetlands Day – 02 Feb 2026"
+        },
+        {
+          "school": "GS Ndera Catholic",
+          "students": 26,
+          "teachers_other": 2,
+          "notes": "World Wetlands Day – 02 Feb 2026"
+        },
+        {
+          "school": "APRED Ndera",
+          "students": 26,
+          "teachers_other": 3,
+          "notes": "World Wetlands Day – 02 Feb 2026"
+        },
+        {
+          "school": "GS Kimironko II TSS",
+          "students": 25,
+          "teachers_other": 3,
+          "notes": "World Wetlands Day – 02 Feb 2026"
+        }
+      ]
+    },
+    {
+      "month": "March 2026",
+      "subtotal_students": null,
+      "notes": "Monthly report notes high school visits but no count in community section",
+      "visits": [
+        {
+          "school": "Schools (names not individually listed – high volume school calendar period)",
+          "students": null,
+          "teachers_other": null,
+          "notes": "No student count in March monthly report community section"
+        }
+      ]
+    },
+    {
+      "month": "April 2026",
+      "subtotal_students": 221,
+      "subtotal_teachers": "9 teachers",
+      "notes": "32 Malcolm X students counted under comp passes",
+      "visits": [
+        {
+          "school": "Kimironko II TSS",
+          "students": 117,
+          "teachers_other": "5 teachers",
+          "notes": null
+        },
+        {
+          "school": "EP Rwimbogo",
+          "students": 104,
+          "teachers_other": "4 teachers",
+          "notes": null
+        },
+        {
+          "school": "Malcolm X College (USA) – complimentary",
+          "students": 32,
+          "teachers_other": null,
+          "notes": "Included in comp passes; conservation awareness program"
+        }
+      ]
+    },
+    {
+      "month": "May 2026",
+      "subtotal_students": 149,
+      "subtotal_teachers": 7,
+      "visits": [
+        {
+          "school": "Kimironko II TSS",
+          "students": 136,
+          "teachers_other": 5,
+          "notes": null
+        },
+        {
+          "school": "King David Academy",
+          "students": 13,
+          "teachers_other": 2,
+          "notes": null
+        }
+      ]
+    }
+  ]
+}

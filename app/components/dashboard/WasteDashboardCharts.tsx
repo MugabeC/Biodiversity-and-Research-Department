@@ -36,7 +36,7 @@ export default function WasteDashboardCharts({ data }: { data: WasteFile }) {
           const bio = r.biodegradableKg ?? (r.kg != null ? Math.round((r.kg as number) * 0.7) : 0);
           const nonBio = r.nonBiodegradableKg ?? (r.kg != null ? (r.kg as number) - bio : 0);
           const total = r.kg ?? bio + nonBio;
-          return { month: r.month, biodegradable: bio, nonBiodegradable: nonBio, total };
+          return { month: r.month, total };
         })
     );
     return withShortMonths(mapped);
@@ -64,12 +64,9 @@ export default function WasteDashboardCharts({ data }: { data: WasteFile }) {
     <div className="dashboard-charts-grid">
       <div className="glass-card chart-card">
         <h3 className="heading" style={{ fontSize: 16, margin: '0 0 0.5rem' }}>
-          Waste collected by type (kg per month)
+          Waste collected (kg per month)
         </h3>
-        <p className="chart-card-desc">
-          Biodegradable vs non-biodegradable totals each month. Update{' '}
-          <code style={{ fontSize: 12 }}>public/data/waste.json</code> with weighed values when available.
-        </p>
+        <p className="chart-card-desc">Monthly waste totals from the Waste Management JSON dataset.</p>
         <div className="chart-card-body" style={{ height: 280 }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={monthly} margin={{ top: 8, right: 8, left: -8, bottom: 8 }}>
@@ -78,15 +75,7 @@ export default function WasteDashboardCharts({ data }: { data: WasteFile }) {
               <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} />
               <Tooltip {...tt} />
               <Legend wrapperStyle={{ fontFamily: 'Poppins', fontSize: 12, color: c.tick }} />
-              <Bar dataKey="biodegradable" name="Biodegradable" stackId="waste" fill="#1A7D2E" barSize={28} />
-              <Bar
-                dataKey="nonBiodegradable"
-                name="Non-biodegradable"
-                stackId="waste"
-                fill="#C4A574"
-                radius={[4, 4, 0, 0]}
-                barSize={28}
-              />
+              <Bar dataKey="total" name="Waste collected (kg)" fill={c.primary} radius={[4, 4, 0, 0]} barSize={28} />
             </BarChart>
           </ResponsiveContainer>
         </div>
