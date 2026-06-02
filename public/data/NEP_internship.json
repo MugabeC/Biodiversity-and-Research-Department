@@ -1,0 +1,60 @@
+{
+  "dataset": "Nyandungu Eco-Park – Academic & Professional Internship by Month",
+  "source_sheet": "Internship",
+  "academic_internship": [
+    {
+      "month": "June 2025",
+      "count": 0
+    },
+    {
+      "month": "July 2025",
+      "count": 3
+    },
+    {
+      "month": "August 2025",
+      "count": 5
+    },
+    {
+      "month": "September 2025",
+      "count": 1
+    },
+    {
+      "month": "October 2025",
+      "count": 1
+    },
+    {
+      "month": "November 2025",
+      "count": 2
+    },
+    {
+      "month": "December 2025",
+      "count": 0
+    },
+    {
+      "month": "January 2026",
+      "count": 0
+    },
+    {
+      "month": "February 2026",
+      "count": 6
+    },
+    {
+      "month": "March 2026",
+      "count": 0
+    },
+    {
+      "month": "April 2026",
+      "count": 0
+    },
+    {
+      "month": "May 2026",
+      "count": 3
+    }
+  ],
+  "professional_internship": [
+    {
+      "month": "January 2026",
+      "count": 4
+    }
+  ]
+}

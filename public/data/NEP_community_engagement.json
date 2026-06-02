@@ -1,0 +1,456 @@
+{
+  "dataset": "Nyandungu Eco-Park – Community Engagement Activities by Month",
+  "source_sheet": "Community Engagement Activities",
+  "months": [
+    {
+      "month": "March 2025",
+      "activities": [
+        {
+          "activity": "Departmental visioning and stakeholder mapping (internal)",
+          "participants_scale": "Internal team",
+          "notes": "Biodiversity dept identity / direction"
+        },
+        {
+          "activity": "Youth engagement and environmental literacy strategy development",
+          "participants_scale": "Internal",
+          "notes": "Long-term school partnership planning"
+        }
+      ]
+    },
+    {
+      "month": "April 2025",
+      "activities": [
+        {
+          "activity": "School visit – École Secondaire Saint Joseph",
+          "participants_scale": "28 students",
+          "notes": "22 Apr"
+        },
+        {
+          "activity": "School visit – École Francophone Kigali",
+          "participants_scale": "54 students + 5 teachers",
+          "notes": "29 Apr – outreach format"
+        },
+        {
+          "activity": "VIP fam trip – 4 French tour operators (RDB)",
+          "participants_scale": "4 operators",
+          "notes": "21 Apr"
+        }
+      ]
+    },
+    {
+      "month": "May 2025",
+      "activities": [
+        {
+          "activity": "School visits (7 schools)",
+          "participants_scale": "453 students total",
+          "notes": "See School Visits sheet"
+        },
+        {
+          "activity": "World Biodiversity Day – invasive species removal with community",
+          "participants_scale": "22 community members",
+          "notes": "3-day initiative in partnership with ARCOS Rwanda; 43 ha Sector 5"
+        },
+        {
+          "activity": "Ethiopian Delegation visit",
+          "participants_scale": "Not specified",
+          "notes": "15 May – special delegation"
+        },
+        {
+          "activity": "Nile Basin Initiative visit",
+          "participants_scale": "Not specified",
+          "notes": "23 May – special delegation"
+        }
+      ]
+    },
+    {
+      "month": "June 2025",
+      "activities": [
+        {
+          "activity": "School visits (15 schools/groups)",
+          "participants_scale": "1,312 students",
+          "notes": "See School Visits sheet"
+        },
+        {
+          "activity": "REMA World Environment Day delegation",
+          "participants_scale": "30 students + 30 teachers",
+          "notes": "Special delegation"
+        },
+        {
+          "activity": "6th Global Conference on Biodiversity Finance",
+          "participants_scale": "160 delegates",
+          "notes": "International/national delegates"
+        },
+        {
+          "activity": "Outreach meetings with local farmers (sustainable land-use)",
+          "participants_scale": "Not specified",
+          "notes": "Eco-enterprise intro: beekeeping, composting, nurseries"
+        }
+      ]
+    },
+    {
+      "month": "July 2025",
+      "activities": [
+        {
+          "activity": "School visits – Gikonko Secondary & GS Bumbogo",
+          "participants_scale": "45 students",
+          "notes": "Biodiversity education & conservation awareness"
+        },
+        {
+          "activity": "Meeting with farmers re: sustainable grass harvesting",
+          "participants_scale": "Not specified",
+          "notes": "Discussion on sustainable cattle feed harvesting"
+        },
+        {
+          "activity": "Workshop preparation for local authorities (resource management)",
+          "participants_scale": "Planning stage",
+          "notes": "To strengthen collaborative stewardship"
+        }
+      ]
+    },
+    {
+      "month": "August 2025",
+      "activities": [
+        {
+          "activity": "School/community groups – Samuduha SDA, Bright Light, Oroshya",
+          "participants_scale": "140 participants",
+          "notes": "Includes children with special needs"
+        },
+        {
+          "activity": "University of Washington delegation",
+          "participants_scale": "17 students + 2 teachers",
+          "notes": "International research delegation"
+        },
+        {
+          "activity": "Outreach meeting with Nyandungu Honey Cooperative",
+          "participants_scale": "Cooperative members",
+          "notes": "Assessed operational needs; identified support areas"
+        },
+        {
+          "activity": "District/sector authority preparatory sessions",
+          "participants_scale": "Local authorities",
+          "notes": "Workshop preparation for conservation-community alignment"
+        },
+        {
+          "activity": "Free entry – PM Justin Nsengiyumva + others (52 passes total)",
+          "participants_scale": "52 people",
+          "notes": "Community goodwill + VIP passes"
+        }
+      ]
+    },
+    {
+      "month": "September 2025",
+      "activities": [
+        {
+          "activity": "Engagement with 39 local residents – Rwiza Village",
+          "participants_scale": "39 residents",
+          "notes": "Community engagement in conservation"
+        },
+        {
+          "activity": "Visit to 4 schools (education outreach preparation)",
+          "participants_scale": "Schools visited",
+          "notes": "Preparatory visits for upcoming education program"
+        },
+        {
+          "activity": "Local authority workshop",
+          "participants_scale": "90+ participants",
+          "notes": "Local authorities, key partners, media"
+        },
+        {
+          "activity": "EAC educational visit",
+          "participants_scale": "206 participants",
+          "notes": "East African Community group"
+        },
+        {
+          "activity": "Mwanza Primary School educational visit",
+          "participants_scale": "51 students + 10 teachers",
+          "notes": null
+        },
+        {
+          "activity": "UNILAK intern admission + 4 IPRC Kitabi interns completion",
+          "participants_scale": "5 interns",
+          "notes": "Academic internship program"
+        }
+      ]
+    },
+    {
+      "month": "October 2025",
+      "activities": [
+        {
+          "activity": "Complimentary visit – Rwiza Village residents",
+          "participants_scale": "39 residents",
+          "notes": "Conservation and pollution prevention awareness"
+        },
+        {
+          "activity": "Global Birding Day event",
+          "participants_scale": "45 participants + 35 birding guides",
+          "notes": "91 bird species recorded on eBird"
+        },
+        {
+          "activity": "Umuganda engagement – Urwibutso village (Rwimbogo cell)",
+          "participants_scale": "45 community members",
+          "notes": "Addressing park-related pollution; joint cleaning initiative agreed"
+        },
+        {
+          "activity": "Pre-visit assessment of 9 schools",
+          "participants_scale": "9 schools assessed",
+          "notes": "Conservation education needs + logistical prep"
+        },
+        {
+          "activity": "Educational tours – 3 schools + 1 university",
+          "participants_scale": "190 students + 13 teachers",
+          "notes": "NEP as living classroom"
+        },
+        {
+          "activity": "Intern programme – 3 completed, 2 new commenced",
+          "participants_scale": "5 interns",
+          "notes": "6-week placements from various universities"
+        },
+        {
+          "activity": "Beekeeping project progress – Nyandungu Honey Star Cooperative",
+          "participants_scale": "45 members (15 women)",
+          "notes": "Proposal approved; equipment procurement initiated"
+        }
+      ]
+    },
+    {
+      "month": "November 2025",
+      "activities": [
+        {
+          "activity": "Community complementary visits (surrounding sectors)",
+          "participants_scale": "86 residents",
+          "notes": "Conservation awareness; complementary entry"
+        },
+        {
+          "activity": "Joint invasive species removal with ALU",
+          "participants_scale": "9 ALU students + 1 lecturer + 8 NEP staff",
+          "notes": "~2 ha Sector 4; Lantana camara removal"
+        },
+        {
+          "activity": "Focus group discussions with community (biodiversity survey)",
+          "participants_scale": "1 session",
+          "notes": "Understanding community attitudes toward park"
+        },
+        {
+          "activity": "Educational tours – surrounding schools",
+          "participants_scale": "485 students + 17 teachers",
+          "notes": "Guided conservation visits"
+        },
+        {
+          "activity": "Educational materials distributed",
+          "participants_scale": "485 T-shirts, 420 bottles, 500 notebooks, 30 game boards, 100 booklets, 100 flashcards",
+          "notes": "Distributed during school visits"
+        },
+        {
+          "activity": "Internship placements",
+          "participants_scale": "4 interns",
+          "notes": "Tourism and biodiversity placements"
+        },
+        {
+          "activity": "Beekeeping cooperative site cleared and fenced",
+          "participants_scale": "38 members",
+          "notes": "Nyandungu Honey Cooperative"
+        },
+        {
+          "activity": "Baho Neza handcraft cooperative needs assessment",
+          "participants_scale": "28 artisans",
+          "notes": "Project brief developed"
+        },
+        {
+          "activity": "Disc golf installation – contractor engagement",
+          "participants_scale": "10 contractors × 5 days",
+          "notes": "50,000 RWF paid"
+        },
+        {
+          "activity": "Extended area restoration – community labor",
+          "participants_scale": "25 contractors × 14 days",
+          "notes": "125,000 RWF paid"
+        }
+      ]
+    },
+    {
+      "month": "December 2025",
+      "activities": [
+        {
+          "activity": "Community complementary visits – Rwibutso Village + retirees",
+          "participants_scale": "71 residents",
+          "notes": "51 from Rwibutso; 20 retirees from Rwimbogo/Nonko Cells"
+        },
+        {
+          "activity": "School educational tours",
+          "participants_scale": "209 students + 12 teachers",
+          "notes": "Guided conservation tours"
+        },
+        {
+          "activity": "University of Rwanda CAVM learning visits",
+          "participants_scale": "120 university students",
+          "notes": null
+        },
+        {
+          "activity": "Catch Them Young programme (edutainment launch)",
+          "participants_scale": "60 pupils",
+          "notes": "Nature walks + art competition"
+        },
+        {
+          "activity": "Teacher engagement – conservation education workshops",
+          "participants_scale": "Planned",
+          "notes": "Surrounding schools – planning stage"
+        },
+        {
+          "activity": "Beekeeping MoU finalized; registration pending",
+          "participants_scale": "Nyandungu Honey Star Cooperative",
+          "notes": "Site preparation ongoing"
+        },
+        {
+          "activity": "Community employment – restoration & playground works",
+          "participants_scale": "Community members",
+          "notes": "1,740 workdays; 4,284,900 RWF paid"
+        }
+      ]
+    },
+    {
+      "month": "January 2026",
+      "activities": [
+        {
+          "activity": "Conservation education workshop – 41 teachers & school leaders from 16 schools",
+          "participants_scale": "41 participants (13 head teachers/deputies, 19 science teachers, 3 sector education officers, 6 park officials)",
+          "notes": "Outputs: eco-club commitments, joint content planning for 3 learner levels"
+        },
+        {
+          "activity": "School study visits",
+          "participants_scale": "33 students + 3 teachers",
+          "notes": "Names of schools not specified in report"
+        },
+        {
+          "activity": "Complementary park access – IMENA Sports Club + retirees",
+          "participants_scale": "45 community members (23 IMENA + 22 retirees)",
+          "notes": "Rwimbogo & Nonko cells, Nyarugunga sector"
+        },
+        {
+          "activity": "Research facilitation – 2 research permits issued",
+          "participants_scale": "2 researchers (1 undergraduate + 1 masters, both international)",
+          "notes": "Fees: 40,000 RWF collected"
+        },
+        {
+          "activity": "Beekeeping apiary site preparation",
+          "participants_scale": "15 beekeepers",
+          "notes": "Launching of beekeeping project – site preparation activity"
+        },
+        {
+          "activity": "Community enterprise – restoration labor",
+          "participants_scale": "468 workdays generated",
+          "notes": "964,900 RWF equivalent paid to community"
+        }
+      ]
+    },
+    {
+      "month": "February 2026",
+      "activities": [
+        {
+          "activity": "World Wetlands Day event – 4 secondary schools",
+          "participants_scale": "93 students + 9 teachers",
+          "notes": "Inter-school competitions: 3 songs, 3 poems, 2 drawings, 2 student conservation projects; tree planting (200+ trees)"
+        },
+        {
+          "activity": "School study visits – 7 schools",
+          "participants_scale": "417 students + 16 teachers",
+          "notes": "Educative presentations and guided tours"
+        },
+        {
+          "activity": "Complementary park access – IMENA + retirees",
+          "participants_scale": "39 community members (20 IMENA + 19 retirees)",
+          "notes": "Rwimbogo & Nonko cells, Nyarugunga sector"
+        },
+        {
+          "activity": "ALU partnership meeting – School of Wildlife Conservation & B-Tech",
+          "participants_scale": "ALU students + staff",
+          "notes": "Proposed biodiversity monitoring tool and e-mobility tracking app"
+        },
+        {
+          "activity": "Public lecture to ALU students – Urban Wetlands Restoration & Biodiversity",
+          "participants_scale": "ALU students",
+          "notes": "Delivered by NEP Biodiversity Manager"
+        },
+        {
+          "activity": "Agaseke handcraft center visit – trainer identification for Baho Neza cooperative",
+          "participants_scale": "Cooperative members",
+          "notes": "Planning capacity building for 28-member Baho Neza cooperative"
+        },
+        {
+          "activity": "Academic internship – 6 interns from UR Forestry commenced",
+          "participants_scale": "6 interns",
+          "notes": null
+        },
+        {
+          "activity": "Community enterprise – restoration labor",
+          "participants_scale": "980 workdays (Week 2+3 combined)",
+          "notes": "1,321,000 RWF (Week 2) + 1,225,000 RWF (Week 3)"
+        }
+      ]
+    },
+    {
+      "month": "March 2026",
+      "activities": [
+        {
+          "activity": "Umuganda – blocked water channel clearance with community + beekeeping cooperative",
+          "participants_scale": "32 participants (25 community + 7 NEP staff)",
+          "notes": "Identified blockage causing flooding of Ihema Pond trail; channel to Sector 5"
+        },
+        {
+          "activity": "UNILAK partnership meeting – Environment Conservation Department",
+          "participants_scale": "UNILAK staff + NEP team",
+          "notes": "Priority areas: internships, collaborative research, co-publications, lab access for water quality testing"
+        },
+        {
+          "activity": "Coordination meeting – Baho Neza Handcraft Cooperative + Agaseke Handcraft Center",
+          "participants_scale": "35 cooperative members targeted",
+          "notes": "Capacity building planning; project proposal submitted to management"
+        },
+        {
+          "activity": "School visits (high volume month – school calendar period)",
+          "participants_scale": "Not specified in community section",
+          "notes": "Monthly report notes strong school engagement driving visitor numbers"
+        }
+      ]
+    },
+    {
+      "month": "April 2026",
+      "activities": [
+        {
+          "activity": "Kabagenda stream channel rehabilitation – community members",
+          "participants_scale": "12 community members",
+          "notes": "Rehabilitated stream channel outside NEP fence to prevent Ihema Pond flooding"
+        },
+        {
+          "activity": "School study visits – Kimironko II TSS + EP Rwimbogo",
+          "participants_scale": "221 students + 9 teachers",
+          "notes": "Structured presentations, documentary screenings, guided tours on wetland ecosystem services"
+        },
+        {
+          "activity": "Educational materials production – studio recording of Song + Poem",
+          "participants_scale": "Production team + winning students",
+          "notes": "Two artworks from February WWD interschool competition recorded for education/awareness use"
+        },
+        {
+          "activity": "Academic research facilitation – 2 master's research projects",
+          "participants_scale": "2 researchers",
+          "notes": "Topics: carbon stock in restored wetland trees; impact of restoration on flood regulation and habitat"
+        },
+        {
+          "activity": "Handicraft project procurement initiation – Baho Neza Women's Cooperative",
+          "participants_scale": "Baho Neza Women's Cooperative members",
+          "notes": "Equipment, raw materials, and training on high-quality handicraft production"
+        },
+        {
+          "activity": "Complimentary conservation awareness program visits",
+          "participants_scale": "201 students",
+          "notes": "Included in comp pass total of 617"
+        },
+        {
+          "activity": "Community key informant interviews – Nyarugunga sector level (biodiversity survey)",
+          "participants_scale": "Sector-level community leaders",
+          "notes": "Part of biodiversity survey community perception documentation"
+        }
+      ]
+    }
+  ]
+}

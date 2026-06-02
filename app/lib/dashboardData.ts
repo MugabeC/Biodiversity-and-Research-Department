@@ -2,12 +2,13 @@
  * Dashboard datasets bundled at build time — avoids dev-server fetch hangs on /data/*.json.
  */
 import summaryJson from '@/public/data/summary.json';
-import schoolVisitsJson from '@/public/data/School_Visits_-_Students.json';
-import communityActivitiesJson from '@/public/data/Community_Engagement_Activities.json';
-import complementaryPassesJson from '@/public/data/complementary_passes.json';
-import wasteJson from '@/public/data/Waste_Management.json';
+import schoolVisitsJson from '@/public/data/NEP_school_visits.json';
+import communityActivitiesJson from '@/public/data/NEP_community_engagement.json';
+import complementaryPassesJson from '@/public/data/NEP_complementary_passes.json';
+import wasteJson from '@/public/data/NEP_waste_management.json';
 import researchJson from '@/public/data/Research_ALL.json';
 import conflictJson from '@/public/data/Conflict_Management.json';
+import internshipJson from '@/public/data/NEP_internship.json';
 import waterQualityJson from '@/public/data/water_quality.json';
 import { parseBiodiversitySurvey, type BioComplianceSummary } from '@/app/lib/parseBiodiversityWater';
 import type { WasacRawParam } from '@/app/lib/exploreWaterQuality';
@@ -93,12 +94,14 @@ export type LoadedDashboard = {
   waste: WasteFile;
   research: ResearchRow[];
   conflicts: ConflictRow[];
+  internships: { month: string; academic: number; professional: number; total: number }[];
   bioWater: BioComplianceSummary | null;
   wasacParams: WasacRawParam[];
   wasacSiteLabels: string[];
 };
 
 type WrappedRows<T> = { data?: T[] };
+type WrappedMonths<T> = { months?: T[] };
 
 function cleanString(value: unknown): string | null {
   if (value == null) return null;
@@ -119,53 +122,63 @@ function isSubtotal(label: string | null): boolean {
 }
 
 function normalizeSchoolVisits(): SchoolVisitsData {
-  type Raw = {
-    Month?: string;
-    'School / Group'?: string;
-    Students?: number | null;
-    'Teachers / Other'?: string | null;
-    Notes?: string | null;
-  };
-
-  const rows = ((schoolVisitsJson as WrappedRows<Raw>).data ?? []);
-  const individualVisits = rows
-    .filter(row => !isSubtotal(cleanString(row['School / Group'])))
-    .map(row => ({
-      month: cleanString(row.Month) ?? 'Unknown',
-      school: cleanString(row['School / Group']) ?? 'Unknown',
-      students: parseNumber(row.Students),
-      teachers: cleanString(row['Teachers / Other']),
-      notes: cleanString(row.Notes),
+  type NewVisit = { school?: string; students?: number | null; teachers_other?: string | null; notes?: string | null };
+  type NewMonth = { month?: string; subtotal_students?: number | null; visits?: NewVisit[] };
+  const newMonths = ((schoolVisitsJson as WrappedMonths<NewMonth>).months ?? []);
+  if (newMonths.length > 0) {
+    const monthlyTotals = newMonths.map(m => ({
+      month: cleanString(m.month) ?? 'Unknown',
+      totalStudents: parseNumber(m.subtotal_students),
     }));
+    const individualVisits = newMonths.flatMap(m =>
+      (m.visits ?? []).map(v => ({
+        month: cleanString(m.month) ?? 'Unknown',
+        school: cleanString(v.school) ?? 'Unknown',
+        students: parseNumber(v.students),
+        teachers: cleanString(v.teachers_other),
+        notes: cleanString(v.notes),
+      }))
+    );
+    return { monthlyTotals, individualVisits };
+  }
 
+  type Old = { Month?: string; 'School / Group'?: string; Students?: number | null; 'Teachers / Other'?: string | null; Notes?: string | null };
+  const rows = ((schoolVisitsJson as WrappedRows<Old>).data ?? []);
+  const individualVisits = rows.filter(row => !isSubtotal(cleanString(row['School / Group']))).map(row => ({
+    month: cleanString(row.Month) ?? 'Unknown',
+    school: cleanString(row['School / Group']) ?? 'Unknown',
+    students: parseNumber(row.Students),
+    teachers: cleanString(row['Teachers / Other']),
+    notes: cleanString(row.Notes),
+  }));
   const totals = new Map<string, number>();
   for (const row of rows) {
     const month = cleanString(row.Month);
-    if (!month) continue;
     const students = parseNumber(row.Students);
-    if (students == null) continue;
-    if (isSubtotal(cleanString(row['School / Group']))) {
-      totals.set(month, students);
-    } else if (!totals.has(month)) {
-      totals.set(month, (totals.get(month) ?? 0) + students);
-    }
+    if (!month || students == null) continue;
+    if (isSubtotal(cleanString(row['School / Group']))) totals.set(month, students);
+    else if (!totals.has(month)) totals.set(month, (totals.get(month) ?? 0) + students);
   }
-
-  return {
-    monthlyTotals: Array.from(totals.entries()).map(([month, totalStudents]) => ({ month, totalStudents })),
-    individualVisits,
-  };
+  return { monthlyTotals: Array.from(totals.entries()).map(([month, totalStudents]) => ({ month, totalStudents })), individualVisits };
 }
 
 function normalizeCommunityActivities(): CommunityRow[] {
-  type Raw = {
-    Month?: string;
-    Activity?: string;
-    'Participants / Scale'?: string | null;
-    Notes?: string | null;
-  };
+  type NewActivity = { activity?: string; participants_scale?: string | null; notes?: string | null };
+  type NewMonth = { month?: string; activities?: NewActivity[] };
+  const newMonths = ((communityActivitiesJson as WrappedMonths<NewMonth>).months ?? []);
+  if (newMonths.length > 0) {
+    return newMonths.flatMap(m =>
+      (m.activities ?? []).map(a => ({
+        month: cleanString(m.month) ?? 'Unknown',
+        activity: cleanString(a.activity) ?? 'Untitled activity',
+        participants: cleanString(a.participants_scale) ?? 'Not specified',
+        notes: cleanString(a.notes),
+      }))
+    );
+  }
 
-  return ((communityActivitiesJson as WrappedRows<Raw>).data ?? []).map(row => ({
+  type Old = { Month?: string; Activity?: string; 'Participants / Scale'?: string | null; Notes?: string | null };
+  return ((communityActivitiesJson as WrappedRows<Old>).data ?? []).map(row => ({
     month: cleanString(row.Month) ?? 'Unknown',
     activity: cleanString(row.Activity) ?? 'Untitled activity',
     participants: cleanString(row['Participants / Scale']) ?? 'Not specified',
@@ -174,67 +187,59 @@ function normalizeCommunityActivities(): CommunityRow[] {
 }
 
 function normalizeComplementaryPasses(): PassesData {
-  type Raw = {
-    Month?: string;
-    'Group / Recipient Name'?: string;
-    'Number of Passes'?: number | null;
-    Notes?: string | null;
-  };
-
-  const rows = ((complementaryPassesJson as WrappedRows<Raw>).data ?? []);
-  const detail = rows
-    .filter(row => parseNumber(row['Number of Passes']) != null)
-    .filter(row => !isSubtotal(cleanString(row['Group / Recipient Name'])))
-    .map(row => ({
-      month: cleanString(row.Month) ?? 'Unknown',
-      group: cleanString(row['Group / Recipient Name']) ?? 'Unknown',
-      passes: parseNumber(row['Number of Passes']) ?? 0,
-      notes: cleanString(row.Notes),
+  type NewPass = { group?: string; count?: number | null; notes?: string | null };
+  type NewMonth = { month?: string; subtotal?: number | null; passes?: NewPass[] };
+  const newMonths = ((complementaryPassesJson as WrappedMonths<NewMonth>).months ?? []);
+  if (newMonths.length > 0) {
+    const detail = newMonths.flatMap(m =>
+      (m.passes ?? []).map(p => ({
+        month: cleanString(m.month) ?? 'Unknown',
+        group: cleanString(p.group) ?? 'Unknown',
+        passes: parseNumber(p.count) ?? 0,
+        notes: cleanString(p.notes),
+      }))
+    );
+    const monthlyTotals = newMonths.map(m => ({
+      month: cleanString(m.month) ?? 'Unknown',
+      totalPasses: parseNumber(m.subtotal) ?? (m.passes ?? []).reduce((s, p) => s + (parseNumber(p.count) ?? 0), 0),
     }));
+    return { monthlyTotals, detail };
+  }
 
+  type Old = { Month?: string; 'Group / Recipient Name'?: string; 'Number of Passes'?: number | null; Notes?: string | null };
+  const rows = ((complementaryPassesJson as WrappedRows<Old>).data ?? []);
+  const detail = rows.filter(row => parseNumber(row['Number of Passes']) != null).filter(row => !isSubtotal(cleanString(row['Group / Recipient Name']))).map(row => ({
+    month: cleanString(row.Month) ?? 'Unknown',
+    group: cleanString(row['Group / Recipient Name']) ?? 'Unknown',
+    passes: parseNumber(row['Number of Passes']) ?? 0,
+    notes: cleanString(row.Notes),
+  }));
   const subtotals = new Map<string, number>();
   for (const row of rows) {
     const month = cleanString(row.Month);
     const passes = parseNumber(row['Number of Passes']);
     if (!month || passes == null) continue;
-    if (isSubtotal(cleanString(row['Group / Recipient Name']))) {
-      subtotals.set(month, passes);
-    }
+    if (isSubtotal(cleanString(row['Group / Recipient Name']))) subtotals.set(month, passes);
   }
-
   const monthlyMap = new Map<string, number>();
-  for (const row of detail) {
-    monthlyMap.set(row.month, (monthlyMap.get(row.month) ?? 0) + row.passes);
-  }
-
-  return {
-    monthlyTotals: Array.from(new Set([...Array.from(monthlyMap.keys()), ...Array.from(subtotals.keys())])).map(month => ({
-      month,
-      totalPasses: subtotals.get(month) ?? monthlyMap.get(month) ?? 0,
-    })),
-    detail,
-  };
+  for (const row of detail) monthlyMap.set(row.month, (monthlyMap.get(row.month) ?? 0) + row.passes);
+  return { monthlyTotals: Array.from(new Set([...Array.from(monthlyMap.keys()), ...Array.from(subtotals.keys())])).map(month => ({ month, totalPasses: subtotals.get(month) ?? monthlyMap.get(month) ?? 0 })), detail };
 }
 
 function normalizeWaste(): WasteFile {
-  type Raw = {
-    Month?: string;
-    'Waste Collected (kg)'?: number | string | null;
-  };
+  type NewRow = { month?: string; waste_collected_kg?: number | string | null };
+  const newRows = (wasteJson as { records?: NewRow[] }).records ?? [];
+  const source = newRows.length > 0
+    ? newRows.map(r => ({ month: r.month, rawKg: r.waste_collected_kg }))
+    : ((wasteJson as WrappedRows<{ Month?: string; 'Waste Collected (kg)'?: number | string | null }>).data ?? [])
+        .map(r => ({ month: r.Month, rawKg: r['Waste Collected (kg)'] }));
 
-  const records = ((wasteJson as WrappedRows<Raw>).data ?? []).map(row => {
-    const rawKg = row['Waste Collected (kg)'];
-    const kg = parseNumber(rawKg);
-    const note = typeof rawKg === 'string' && rawKg.trim().startsWith('>') ? `${rawKg} total` : null;
+  const records = source.map(row => {
+    const kg = parseNumber(row.rawKg);
+    const note = typeof row.rawKg === 'string' && row.rawKg.trim().startsWith('>') ? `${row.rawKg} total` : null;
     const biodegradableKg = kg == null ? null : Math.round(kg * 0.7);
     const nonBiodegradableKg = kg == null || biodegradableKg == null ? null : kg - biodegradableKg;
-    return {
-      month: cleanString(row.Month) ?? 'Unknown',
-      kg,
-      biodegradableKg,
-      nonBiodegradableKg,
-      note,
-    };
+    return { month: cleanString(row.month) ?? 'Unknown', kg, biodegradableKg, nonBiodegradableKg, note };
   });
 
   return {
@@ -306,6 +311,33 @@ function normalizeConflicts(): ConflictRow[] {
     }));
 }
 
+function normalizeInternships(): { month: string; academic: number; professional: number; total: number }[] {
+  type Row = { month?: string; count?: number | null };
+  type InternshipFile = { academic_internship?: Row[]; professional_internship?: Row[] };
+  const data = internshipJson as InternshipFile;
+
+  const map = new Map<string, { academic: number; professional: number }>();
+  for (const row of data.academic_internship ?? []) {
+    const month = cleanString(row.month) ?? 'Unknown';
+    const cur = map.get(month) ?? { academic: 0, professional: 0 };
+    cur.academic += parseNumber(row.count) ?? 0;
+    map.set(month, cur);
+  }
+  for (const row of data.professional_internship ?? []) {
+    const month = cleanString(row.month) ?? 'Unknown';
+    const cur = map.get(month) ?? { academic: 0, professional: 0 };
+    cur.professional += parseNumber(row.count) ?? 0;
+    map.set(month, cur);
+  }
+
+  return Array.from(map.entries()).map(([month, vals]) => ({
+    month,
+    academic: vals.academic,
+    professional: vals.professional,
+    total: vals.academic + vals.professional,
+  }));
+}
+
 export function loadDashboardFromBundle(): LoadedDashboard {
   type WaterQualityFile = {
     biodiversitySurvey?: Parameters<typeof parseBiodiversitySurvey>[0];
@@ -331,6 +363,7 @@ export function loadDashboardFromBundle(): LoadedDashboard {
     waste: normalizeWaste(),
     research: normalizeResearch(),
     conflicts: normalizeConflicts(),
+    internships: normalizeInternships(),
     bioWater,
     wasacParams: wq.wasac?.parameters ?? [],
     wasacSiteLabels: wq.wasac?.samplingPoints ?? [],
