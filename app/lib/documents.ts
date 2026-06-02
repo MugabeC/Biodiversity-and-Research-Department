@@ -60,6 +60,14 @@ export const DOCUMENT_LIBRARY: LibraryDocument[] = [
     url: docUrl('NEP_Watercourse_Assessment_Hydrological.pdf'),
   },
   {
+    id: 'biodiversity-survey-2025',
+    title: 'Biodiversity Survey 2025',
+    description: 'Final report for the biodiversity survey at Nyandungu Eco-Park.',
+    filename: 'RCID- Final Report for Biodiversity survey at NEP.pdf',
+    type: 'pdf',
+    url: docUrl('RCID- Final Report for Biodiversity survey at NEP.pdf'),
+  },
+  {
     id: 'research-policy',
     title: 'Research Policy',
     description: 'Department research policy and procedures.',
@@ -101,11 +109,11 @@ export const DOCUMENT_LIBRARY: LibraryDocument[] = [
   },
   {
     id: 'community-data-edited',
-    title: 'Community Data — Edited',
+    title: 'NEP Community Data 2025–2026',
     description: 'Updated community engagement, school visits, passes, and waste workbook.',
-    filename: 'Community Data-edited.xlsx',
+    filename: 'NEP Community Data 2025-2026.xlsx',
     type: 'excel',
-    url: docUrl('Community Data-edited.xlsx'),
+    url: docUrl('NEP Community Data 2025-2026.xlsx'),
   },
 ];
 
