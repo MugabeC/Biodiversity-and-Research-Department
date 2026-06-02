@@ -676,6 +676,10 @@ h1, h2, h3, h4, h5, h6,
   line-height: 1.5;
 }
 
+[data-theme='dark'] .chart-card .chart-card-desc {
+  color: #dbe9e0;
+}
+
 .chart-card-body-content {
   min-width: 0;
 }
@@ -709,6 +713,14 @@ h1, h2, h3, h4, h5, h6,
 .chart-limit-fail { color: #D4251C; }
 [data-theme='dark'] .chart-limit-pass { color: #6ecf96; }
 [data-theme='dark'] .chart-limit-fail { color: #f08078; }
+
+/* Keep dashboard chart text readable in dark mode. */
+[data-theme='dark'] .chart-card .recharts-cartesian-axis-tick-value,
+[data-theme='dark'] .chart-card .recharts-legend-item-text,
+[data-theme='dark'] .chart-card .recharts-label {
+  fill: #e8f2eb !important;
+  color: #e8f2eb !important;
+}
 
 .chart-table-in-card {
   max-height: 300px;
