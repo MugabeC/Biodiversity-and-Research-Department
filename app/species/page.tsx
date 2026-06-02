@@ -55,6 +55,8 @@ function normalize(s: SpeciesJsonRow): Species {
   } else if (s.iucnGlobal) {
     iucn = s.iucnGlobal;
   }
+  iucn = iucn.trim().toUpperCase();
+  if (iucn === '-' || iucn === '—') iucn = 'NE';
   return {
     uid: `${s.taxa}-${s.id}`,
     taxa: s.taxa as string,
@@ -106,7 +108,7 @@ const IUCN_STYLE: Record<string, { bg: string; color: string }> = {
 };
 
 const TAXA_CHIPS  = ['All', 'Birds', 'Plants', 'Butterflies', 'Aquatic Inverts', 'Amphibians & Reptiles', 'Mammals', 'Fish'];
-const IUCN_CHIPS  = ['All', 'LC', 'NT', 'VU', 'EN', 'CR', 'NE', 'DD'];
+const IUCN_CHIPS  = ['All', 'LC', 'NT', 'VU', 'EN', 'CR', 'EW', 'NE', 'DD'];
 const ENDEM_CHIPS = ['All', 'Endemic', 'Native', 'Introduced', 'Migratory'];
 
 // ── Multi-select helpers (array-based, no Set) ───────────────────────────────
@@ -232,10 +234,21 @@ export default function SpeciesExplorerPage() {
       if (endemFilters.length > 0 && !endemFilters.includes(s.endemism)) return false;
       if (search.trim()) {
         const q = search.toLowerCase();
+        const taxaLabel = (TAXA_LABELS[s.taxa] ?? s.taxa).toLowerCase();
+        const redListAliases = [
+          s.iucn.toLowerCase(),
+          `iucn ${s.iucn.toLowerCase()}`,
+          `redlist ${s.iucn.toLowerCase()}`,
+          `red list ${s.iucn.toLowerCase()}`,
+          `iucn redlist ${s.iucn.toLowerCase()}`,
+        ];
         return (
           s.commonName.toLowerCase().includes(q) ||
           s.scientificName.toLowerCase().includes(q) ||
-          s.family.toLowerCase().includes(q)
+          s.family.toLowerCase().includes(q) ||
+          taxaLabel.includes(q) ||
+          s.endemism.toLowerCase().includes(q) ||
+          redListAliases.some(alias => alias.includes(q))
         );
       }
       return true;
@@ -268,6 +281,34 @@ export default function SpeciesExplorerPage() {
               placeholder="Search name or family…"
             />
           </div>
+          <div className="species-quick-filters">
+            <div className="species-quick-filter-row">
+              <FilterLabel>Taxa</FilterLabel>
+              <div className="species-filter-chips species-filter-chips--quick">
+                {TAXA_CHIPS.map(chip => (
+                  <Chip
+                    key={chip}
+                    label={chip}
+                    active={isActive(taxaFilters, chip)}
+                    onClick={() => setTaxaFilters(prev => toggleFilter(prev, chip))}
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="species-quick-filter-row">
+              <FilterLabel>IUCN Red List</FilterLabel>
+              <div className="species-filter-chips species-filter-chips--quick">
+                {IUCN_CHIPS.map(chip => (
+                  <Chip
+                    key={chip}
+                    label={chip}
+                    active={isActive(iucnFilters, chip)}
+                    onClick={() => setIucnFilters(prev => toggleFilter(prev, chip))}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
           <details className="species-filters-details">
             <summary className="species-filters-summary">
               <span>Filters</span>
@@ -276,24 +317,6 @@ export default function SpeciesExplorerPage() {
               )}
             </summary>
             <div className="species-filters-body">
-              <div className="species-filter-row">
-                <FilterLabel>Taxa</FilterLabel>
-                <div className="species-filter-chips">
-                  {TAXA_CHIPS.map(chip => (
-                    <Chip key={chip} label={chip} active={isActive(taxaFilters, chip)}
-                      onClick={() => setTaxaFilters(prev => toggleFilter(prev, chip))} />
-                  ))}
-                </div>
-              </div>
-              <div className="species-filter-row">
-                <FilterLabel>IUCN</FilterLabel>
-                <div className="species-filter-chips">
-                  {IUCN_CHIPS.map(chip => (
-                    <Chip key={chip} label={chip} active={isActive(iucnFilters, chip)}
-                      onClick={() => setIucnFilters(prev => toggleFilter(prev, chip))} />
-                  ))}
-                </div>
-              </div>
               <div className="species-filter-row species-filter-row--last">
                 <FilterLabel>Endemism</FilterLabel>
                 <div className="species-filter-chips">

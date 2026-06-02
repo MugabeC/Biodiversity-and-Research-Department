@@ -1763,6 +1763,24 @@ select.chart-select {
   margin-bottom: 0.75rem;
 }
 
+.species-quick-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.species-quick-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.species-filter-chips--quick {
+  row-gap: 6px;
+}
+
 .species-search-wrap {
   position: relative;
   margin-bottom: 0.5rem;
@@ -2173,6 +2191,40 @@ select.chart-select {
     align-items: stretch;
     gap: 6px;
     margin-bottom: 8px;
+  }
+
+  .species-quick-filter-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .species-filter-chips--quick {
+    display: grid;
+    width: 100%;
+    gap: 4px;
+    overflow: hidden;
+    padding-bottom: 0;
+  }
+
+  .species-quick-filter-row:first-child .species-filter-chips--quick {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  .species-quick-filter-row:nth-child(2) .species-filter-chips--quick {
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+  }
+
+  .species-filter-chips--quick .species-filter-chip {
+    width: 100%;
+    min-width: 0;
+    padding: 4px 2px;
+    font-size: 10px;
+    line-height: 1.2;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .species-filter-row--last {
