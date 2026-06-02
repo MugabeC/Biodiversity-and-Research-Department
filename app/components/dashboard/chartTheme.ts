@@ -23,7 +23,7 @@ export function useChartColors() {
     const g = (name: string, fallback: string) =>
       getComputedStyle(root).getPropertyValue(name).trim() || fallback;
     setColors({
-      tick: g('--text-secondary', '#4A5E4F'),
+      tick: g('--chart-tick', '#4A5E4F'),
       grid: g('--border', '#E0E8E2'),
       primary: g('--meadow-green', '#0C6038'),
       secondary: g('--peach', '#F1D2A1'),

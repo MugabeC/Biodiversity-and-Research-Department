@@ -714,6 +714,14 @@ h1, h2, h3, h4, h5, h6,
 [data-theme='dark'] .chart-limit-pass { color: #6ecf96; }
 [data-theme='dark'] .chart-limit-fail { color: #f08078; }
 
+/* Keep dashboard chart text readable in light mode too. */
+.chart-card .recharts-cartesian-axis-tick-value,
+.chart-card .recharts-legend-item-text,
+.chart-card .recharts-label {
+  fill: var(--chart-tick) !important;
+  color: var(--chart-tick) !important;
+}
+
 /* Keep dashboard chart text readable in dark mode. */
 [data-theme='dark'] .chart-card .recharts-cartesian-axis-tick-value,
 [data-theme='dark'] .chart-card .recharts-legend-item-text,
