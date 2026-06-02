@@ -691,6 +691,25 @@ h1, h2, h3, h4, h5, h6,
   margin-bottom: 12px;
 }
 
+.chart-controls-row--emphasis .species-search,
+.chart-controls-row--emphasis .chart-select {
+  border: 1.5px solid rgba(12, 96, 56, 0.32);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+}
+
+.chart-controls-row--emphasis .species-search::placeholder {
+  color: #5a6f62;
+  opacity: 1;
+}
+
+[data-theme='dark'] .chart-controls-row--emphasis .species-search,
+[data-theme='dark'] .chart-controls-row--emphasis .chart-select {
+  border-color: rgba(255, 255, 255, 0.32);
+  background: rgba(20, 36, 28, 0.92);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) inset;
+}
+
 .chart-controls-row .species-search {
   flex: 1 1 180px;
   margin: 0;
@@ -2053,15 +2072,17 @@ select.chart-select {
   }
 
   .taxa-row-scroll {
-    overflow-x: visible;
-    padding: 8px 0 12px;
-    margin: 0 0 8px;
+    overflow-x: auto;
+    overflow-y: visible;
+    padding: 20px 8px 28px;
+    margin: 0 -4px 8px;
+    -webkit-overflow-scrolling: touch;
   }
 
   .taxa-grid--row {
-    grid-template-columns: 1fr;
-    gap: 0.6rem;
-    min-width: 0;
+    grid-template-columns: repeat(7, minmax(145px, 1fr));
+    gap: 0.5rem;
+    min-width: 1040px;
   }
 
   .taxa-card--compact {

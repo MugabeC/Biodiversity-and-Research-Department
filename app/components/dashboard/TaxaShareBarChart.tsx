@@ -14,9 +14,6 @@ export default function TaxaShareBarChart({ data, total }: { data: Row[]; total:
 
   return (
     <div className="chart-card-body-content">
-      <p className="chart-card-desc" style={{ marginTop: 0 }}>
-        {total.toLocaleString()} species in 2025 — share by taxonomic group (horizontal bars, easiest to compare).
-      </p>
       <ChartPlotArea height={plotHeight}>
         <BarChart
           data={sorted}

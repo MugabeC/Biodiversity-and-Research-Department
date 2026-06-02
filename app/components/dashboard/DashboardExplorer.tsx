@@ -501,7 +501,6 @@ export default function DashboardExplorer() {
             <div className="dashboard-charts-grid dashboard-charts-grid--single">
               <ChartCard
                 title="Quarterly student visits"
-                description="Students reached per quarter (Q2 Apr–Jun, Q3 Jul–Sep, Q4 Oct–Dec, Q1 Jan–Mar) compared with the 500-student quarterly target."
                 tall
               >
                 <ResponsiveContainer width="100%" height="100%">
@@ -531,7 +530,6 @@ export default function DashboardExplorer() {
             <div className="dashboard-charts-grid dashboard-charts-grid--single">
               <ChartCard
                 title="Community outreach by month"
-                description="Dual scale: left axis = # activities (typically under 20); right axis = participants (from activity attendance fields)."
                 tall
               >
                 <ResponsiveContainer width="100%" height="100%">
@@ -585,7 +583,6 @@ export default function DashboardExplorer() {
             <div className="dashboard-charts-grid dashboard-charts-grid--single">
               <ChartCard
                 title="Research requests by month"
-                description="Research requests and data-access requests logged by the department."
               >
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={researchByMonth} margin={{ top: 8, right: 8, left: -8, bottom: 8 }}>
@@ -602,7 +599,6 @@ export default function DashboardExplorer() {
               <div className="dashboard-charts-grid dashboard-charts-grid--single" style={{ marginTop: '1rem' }}>
                 <ChartCard
                   title="Internship placements by month"
-                  description="Academic and professional internship counts from the NEP internship dataset."
                 >
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={internshipByMonth} margin={{ top: 8, right: 8, left: -8, bottom: 8 }}>
