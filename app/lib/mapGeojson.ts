@@ -10,6 +10,8 @@ export const MAP_GEOJSON = {
   drainage: `${SUPABASE_STORAGE}/drainage.geojson`,
   roads: `${SUPABASE_STORAGE}/roads.geojson`,
   openGrounds: `${SUPABASE_STORAGE}/open-grounds.geojson`,
+  // Converted from a Strava GPX recording; served from /public.
+  accessTrail: '/data/map/access-trail.geojson',
 } as const;
 
 export async function fetchMapGeoJson(url: string) {
