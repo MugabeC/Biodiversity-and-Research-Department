@@ -215,7 +215,7 @@ export default function MapPage() {
           mapInstance.addLayer({
             id: 'access-trail', type: 'line', source: 'access-trail-src',
             layout: { visibility: 'visible', 'line-cap': 'round', 'line-join': 'round' },
-            paint: { 'line-color': '#FFD60A', 'line-width': 3, 'line-opacity': 0.95 },
+            paint: { 'line-color': '#FFD60A', 'line-width': 1.5, 'line-opacity': 0.7 },
           });
 
           console.log('All layers added successfully');
