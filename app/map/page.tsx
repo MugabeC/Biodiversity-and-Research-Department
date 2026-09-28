@@ -20,6 +20,7 @@ const LAYERS = [
   { id: 'park-boundary', label: 'Park Boundary',     color: '#E53935', mapIds: ['park-boundary'] },
   { id: 'restored-area', label: 'Restored Area',      color: '#F5A623', mapIds: ['restored-area-fill', 'restored-area-line'] },
   { id: 'trails',        label: 'Trails & Walkways',  color: '#c77dff', mapIds: ['trails'] },
+  { id: 'access-trail',  label: 'Access Trail',       color: '#FFD60A', mapIds: ['access-trail'] },
   { id: 'drainage',      label: 'Drainage & Streams', color: '#00B0FF', mapIds: ['drainage'] },
   { id: 'open-grounds',  label: 'Open Grounds',       color: '#8DA750', mapIds: ['open-grounds'] },
   { id: 'roads',         label: 'Roads',               color: '#adb5bd', mapIds: ['roads'] },
@@ -29,6 +30,7 @@ const INIT_VISIBILITY: Record<string, boolean> = {
   'park-boundary': true,
   'restored-area': true,
   'trails':        true,
+  'access-trail':  true,
   'drainage':      true,
   'open-grounds':  true,
   'roads':         true,
@@ -205,6 +207,15 @@ export default function MapPage() {
             id: 'open-grounds', type: 'fill', source: 'open-grounds-src',
             layout: { visibility: 'visible' },
             paint: { 'fill-color': '#8DA750', 'fill-opacity': 0.4 },
+          });
+
+          // ── Access trail (GPS track, drawn on top of the other layers) ──
+          const accessTrail = await fetchMapGeoJson(MAP_GEOJSON.accessTrail);
+          mapInstance.addSource('access-trail-src', { type: 'geojson', data: accessTrail });
+          mapInstance.addLayer({
+            id: 'access-trail', type: 'line', source: 'access-trail-src',
+            layout: { visibility: 'visible', 'line-cap': 'round', 'line-join': 'round' },
+            paint: { 'line-color': '#FFD60A', 'line-width': 3, 'line-opacity': 0.95 },
           });
 
           console.log('All layers added successfully');
