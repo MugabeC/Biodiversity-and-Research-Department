@@ -20,7 +20,7 @@ const LAYERS = [
   { id: 'park-boundary', label: 'Park Boundary',     color: '#E53935', mapIds: ['park-boundary'] },
   { id: 'restored-area', label: 'Restored Area',      color: '#F5A623', mapIds: ['restored-area-fill', 'restored-area-line'] },
   { id: 'trails',        label: 'Trails & Walkways',  color: '#c77dff', mapIds: ['trails'] },
-  { id: 'access-trail',  label: 'Access Trail',       color: '#FF4FA3', mapIds: ['access-trail'] },
+  { id: 'access-trail',  label: 'Access Trail',       color: '#FFD60A', mapIds: ['access-trail'] },
   { id: 'drainage',      label: 'Drainage & Streams', color: '#00B0FF', mapIds: ['drainage'] },
   { id: 'open-grounds',  label: 'Open Grounds',       color: '#8DA750', mapIds: ['open-grounds'] },
   { id: 'roads',         label: 'Roads',               color: '#adb5bd', mapIds: ['roads'] },
@@ -215,7 +215,7 @@ export default function MapPage() {
           mapInstance.addLayer({
             id: 'access-trail', type: 'line', source: 'access-trail-src',
             layout: { visibility: 'visible', 'line-cap': 'round', 'line-join': 'round' },
-            paint: { 'line-color': '#FF4FA3', 'line-width': 3, 'line-opacity': 0.95 },
+            paint: { 'line-color': '#FFD60A', 'line-width': 3, 'line-opacity': 0.95 },
           });
 
           console.log('All layers added successfully');
