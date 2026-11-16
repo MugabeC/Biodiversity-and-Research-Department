@@ -139,89 +139,101 @@ export default function MapPage() {
               'sky-atmosphere-sun-intensity': 15,
             },
           } as unknown as LayerSpecification);
-
-          // ── Park boundary ───────────────────────────────────────────────
-          const boundary = await fetchMapGeoJson(MAP_GEOJSON.boundary);
-          mapInstance.addSource('park-boundary-src', { type: 'geojson', data: boundary });
-          mapInstance.addLayer({
-            id: 'park-boundary', type: 'line', source: 'park-boundary-src',
-            layout: { visibility: 'visible' },
-            paint: {
-              'line-color': '#E53935',
-              'line-width': 1.5,
-              'line-opacity': 1,
-            },
-          });
-
-          // ── Restored area ───────────────────────────────────────────────
-          const restored = await fetchMapGeoJson(MAP_GEOJSON.restored);
-          mapInstance.addSource('restored-src', { type: 'geojson', data: restored });
-          mapInstance.addLayer({
-            id: 'restored-area-fill', type: 'fill', source: 'restored-src',
-            layout: { visibility: 'visible' },
-            paint: { 'fill-color': '#F5A623', 'fill-opacity': 0.2 },
-          });
-          mapInstance.addLayer({
-            id: 'restored-area-line', type: 'line', source: 'restored-src',
-            layout: { visibility: 'visible' },
-            paint: { 'line-color': '#F5A623', 'line-width': 1.5 },
-          });
-
-          // ── Map layers (hosted on Supabase Storage) ──
-          const [trails, drainage, roads, openGrounds] = await Promise.all([
-            fetchMapGeoJson(MAP_GEOJSON.trails),
-            fetchMapGeoJson(MAP_GEOJSON.drainage),
-            fetchMapGeoJson(MAP_GEOJSON.roads),
-            fetchMapGeoJson(MAP_GEOJSON.openGrounds),
-          ]);
-
-          mapInstance.addSource('trails-src', { type: 'geojson', data: trails });
-          mapInstance.addLayer({
-            id: 'trails', type: 'line', source: 'trails-src',
-            layout: { visibility: 'visible' },
-            paint: { 'line-color': '#c77dff', 'line-width': 1.5, 'line-opacity': 0.7, 'line-dasharray': [2, 2] },
-          });
-
-          mapInstance.addSource('drainage-src', { type: 'geojson', data: drainage });
-          mapInstance.addLayer({
-            id: 'drainage',
-            type: 'line',
-            source: 'drainage-src',
-            layout: { visibility: 'visible', 'line-cap': 'round', 'line-join': 'round' },
-            paint: {
-              'line-color': '#00B0FF',
-              'line-width': 1.5,
-              'line-opacity': 1,
-            },
-          });
-
-          mapInstance.addSource('roads-src', { type: 'geojson', data: roads });
-          mapInstance.addLayer({
-            id: 'roads', type: 'line', source: 'roads-src',
-            layout: { visibility: 'visible' },
-            paint: { 'line-color': '#adb5bd', 'line-width': 1.5, 'line-opacity': 0.6 },
-          });
-
-          mapInstance.addSource('open-grounds-src', { type: 'geojson', data: openGrounds });
-          mapInstance.addLayer({
-            id: 'open-grounds', type: 'fill', source: 'open-grounds-src',
-            layout: { visibility: 'visible' },
-            paint: { 'fill-color': '#8DA750', 'fill-opacity': 0.4 },
-          });
-
-          // ── Access trail (GPS track, drawn on top of the other layers) ──
-          const accessTrail = await fetchMapGeoJson(MAP_GEOJSON.accessTrail);
-          mapInstance.addSource('access-trail-src', { type: 'geojson', data: accessTrail });
-          mapInstance.addLayer({
-            id: 'access-trail', type: 'line', source: 'access-trail-src',
-            layout: { visibility: 'visible', 'line-cap': 'round', 'line-join': 'round' },
-            paint: { 'line-color': '#FFD60A', 'line-width': 1.5, 'line-opacity': 0.7 },
-          });
-
-          console.log('All layers added successfully');
         } catch (e) {
-          console.error('Error adding layers:', e);
+          console.error('Error adding terrain:', e);
         }
+
+        // ── Data layers ─────────────────────────────────────────────────
+        // Fetched in parallel; each layer is added on its own so one missing
+        // file never hides the others. Added in this order (= drawing order).
+        const dataLayers: { url: string; src: string; layers: LayerSpecification[] }[] = [
+          {
+            url: MAP_GEOJSON.boundary, src: 'park-boundary-src',
+            layers: [{
+              id: 'park-boundary', type: 'line', source: 'park-boundary-src',
+              layout: { visibility: 'visible' },
+              paint: { 'line-color': '#E53935', 'line-width': 1.5, 'line-opacity': 1 },
+            }],
+          },
+          {
+            url: MAP_GEOJSON.restored, src: 'restored-src',
+            layers: [
+              {
+                id: 'restored-area-fill', type: 'fill', source: 'restored-src',
+                layout: { visibility: 'visible' },
+                paint: { 'fill-color': '#F5A623', 'fill-opacity': 0.2 },
+              },
+              {
+                id: 'restored-area-line', type: 'line', source: 'restored-src',
+                layout: { visibility: 'visible' },
+                paint: { 'line-color': '#F5A623', 'line-width': 1.5 },
+              },
+            ],
+          },
+          {
+            url: MAP_GEOJSON.trails, src: 'trails-src',
+            layers: [{
+              id: 'trails', type: 'line', source: 'trails-src',
+              layout: { visibility: 'visible' },
+              paint: { 'line-color': '#c77dff', 'line-width': 1.5, 'line-opacity': 0.7, 'line-dasharray': [2, 2] },
+            }],
+          },
+          {
+            url: MAP_GEOJSON.drainage, src: 'drainage-src',
+            layers: [{
+              id: 'drainage', type: 'line', source: 'drainage-src',
+              layout: { visibility: 'visible', 'line-cap': 'round', 'line-join': 'round' },
+              paint: { 'line-color': '#00B0FF', 'line-width': 1.5, 'line-opacity': 1 },
+            }],
+          },
+          {
+            url: MAP_GEOJSON.roads, src: 'roads-src',
+            layers: [{
+              id: 'roads', type: 'line', source: 'roads-src',
+              layout: { visibility: 'visible' },
+              paint: { 'line-color': '#adb5bd', 'line-width': 1.5, 'line-opacity': 0.6 },
+            }],
+          },
+          {
+            url: MAP_GEOJSON.openGrounds, src: 'open-grounds-src',
+            layers: [{
+              id: 'open-grounds', type: 'fill', source: 'open-grounds-src',
+              layout: { visibility: 'visible' },
+              paint: { 'fill-color': '#8DA750', 'fill-opacity': 0.4 },
+            }],
+          },
+          {
+            // GPS track, drawn on top of the other layers
+            url: MAP_GEOJSON.accessTrail, src: 'access-trail-src',
+            layers: [{
+              id: 'access-trail', type: 'line', source: 'access-trail-src',
+              layout: { visibility: 'visible', 'line-cap': 'round', 'line-join': 'round' },
+              paint: { 'line-color': '#FFD60A', 'line-width': 1.5, 'line-opacity': 0.7 },
+            }],
+          },
+        ];
+
+        const results = await Promise.allSettled(dataLayers.map(l => fetchMapGeoJson(l.url)));
+        results.forEach((result, i) => {
+          const { url, src, layers } = dataLayers[i];
+          if (result.status === 'rejected') {
+            console.error(`Error loading ${url}:`, result.reason);
+            return;
+          }
+          try {
+            mapInstance.addSource(src, { type: 'geojson', data: result.value });
+            layers.forEach(layer => {
+              // Respect toggles flipped while the data was loading.
+              const key = LAYERS.find(l => l.mapIds.includes(layer.id))?.id;
+              if (key && !visibilityRef.current[key]) {
+                layer = { ...layer, layout: { ...layer.layout, visibility: 'none' } } as LayerSpecification;
+              }
+              mapInstance.addLayer(layer);
+            });
+          } catch (e) {
+            console.error(`Error adding ${src}:`, e);
+          }
+        });
       });
     };
 
