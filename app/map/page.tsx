@@ -401,7 +401,7 @@ export default function MapPage() {
 
         <div className="map-glass-panel map-info-card">
           <p className="map-info-title">Nyandungu Eco-Park</p>
-          <p className="map-info-line">218.9 Ha · Kigali, Rwanda</p>
+          <p className="map-info-line">183.94 Ha · Kigali, Rwanda</p>
           <p className="map-info-meta">2025 Biodiversity Survey</p>
         </div>
       </div>
