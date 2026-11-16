@@ -86,7 +86,8 @@ export default function MapPage() {
     if (m.getLayer('esri-satellite-layer')) m.removeLayer('esri-satellite-layer');
     if (m.getSource('esri-satellite'))      m.removeSource('esri-satellite');
     m.addSource('esri-satellite', { type: 'raster', tiles: [url], tileSize: 256, attribution: 'Tiles © Esri' });
-    const before = m.getLayer('park-boundary') ? 'park-boundary' : undefined;
+    // Keep the basemap under the lowest data layer that actually loaded.
+    const before = m.getStyle().layers.find(l => l.type !== 'raster' && l.type !== ('sky' as string))?.id;
     m.addLayer({ id: 'esri-satellite-layer', type: 'raster', source: 'esri-satellite' }, before);
   };
 
