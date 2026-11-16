@@ -12,6 +12,8 @@ export const MAP_GEOJSON = {
   openGrounds: `${SUPABASE_STORAGE}/open-grounds.geojson`,
   // Converted from a Strava GPX recording; served from /public.
   accessTrail: '/data/map/access-trail.geojson',
+  // GPS tracks DIST 02–07 recorded 16 Nov 2026; served from /public.
+  surveyTracks: '/data/map/survey-tracks.geojson',
 } as const;
 
 export async function fetchMapGeoJson(url: string) {

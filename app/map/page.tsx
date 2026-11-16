@@ -21,6 +21,7 @@ const LAYERS = [
   { id: 'restored-area', label: 'Restored Area',      color: '#F5A623', mapIds: ['restored-area-fill', 'restored-area-line'] },
   { id: 'trails',        label: 'Trails & Walkways',  color: '#c77dff', mapIds: ['trails'] },
   { id: 'access-trail',  label: 'Access Trail',       color: '#FFD60A', mapIds: ['access-trail'] },
+  { id: 'survey-tracks', label: 'Survey Tracks',      color: '#1DE9B6', mapIds: ['survey-tracks'] },
   { id: 'drainage',      label: 'Drainage & Streams', color: '#00B0FF', mapIds: ['drainage'] },
   { id: 'open-grounds',  label: 'Open Grounds',       color: '#8DA750', mapIds: ['open-grounds'] },
   { id: 'roads',         label: 'Roads',               color: '#adb5bd', mapIds: ['roads'] },
@@ -31,6 +32,7 @@ const INIT_VISIBILITY: Record<string, boolean> = {
   'restored-area': true,
   'trails':        true,
   'access-trail':  true,
+  'survey-tracks': true,
   'drainage':      true,
   'open-grounds':  true,
   'roads':         true,
@@ -210,6 +212,15 @@ export default function MapPage() {
               id: 'access-trail', type: 'line', source: 'access-trail-src',
               layout: { visibility: 'visible', 'line-cap': 'round', 'line-join': 'round' },
               paint: { 'line-color': '#FFD60A', 'line-width': 1.5, 'line-opacity': 0.7 },
+            }],
+          },
+          {
+            // GPS tracks DIST 02–07, drawn on top
+            url: MAP_GEOJSON.surveyTracks, src: 'survey-tracks-src',
+            layers: [{
+              id: 'survey-tracks', type: 'line', source: 'survey-tracks-src',
+              layout: { visibility: 'visible', 'line-cap': 'round', 'line-join': 'round' },
+              paint: { 'line-color': '#1DE9B6', 'line-width': 1.5, 'line-opacity': 0.7 },
             }],
           },
         ];
