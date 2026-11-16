@@ -409,7 +409,7 @@ export default function DashboardExplorer() {
 
         <p className="dashboard-subtitle">
           {summary?.parkName ?? 'Nyandungu Eco-Park'} · {summary?.location ?? 'Kigali, Rwanda'} ·{' '}
-          {summary?.parkSize ?? '218.9 Ha'}
+          {summary?.parkSize ?? '183.94 Ha'}
           <br />
           <span style={{ fontSize: 13, opacity: 0.85 }}>
             Interactive dashboard
