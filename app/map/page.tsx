@@ -21,7 +21,9 @@ const LAYERS = [
   { id: 'restored-area', label: 'Restored Area',      color: '#F5A623', mapIds: ['restored-area-fill', 'restored-area-line'] },
   { id: 'trails',        label: 'Trails & Walkways',  color: '#c77dff', mapIds: ['trails'] },
   { id: 'access-trail',  label: 'Access Trail',       color: '#FFD60A', mapIds: ['access-trail'] },
-  { id: 'survey-tracks', label: 'Survey Tracks',      color: '#1DE9B6', mapIds: ['survey-tracks'] },
+  { id: 'invasive-removal', label: 'Invasive Species Removal', color: '#1DE9B6', mapIds: ['invasive-removal-fill', 'invasive-removal-line'] },
+  { id: 'pond',          label: 'Pond',               color: '#2962FF', mapIds: ['pond-fill', 'pond-line'] },
+  { id: 'macadamia',     label: 'Macadamia',          color: '#C8A97E', mapIds: ['macadamia-fill', 'macadamia-line'] },
   { id: 'drainage',      label: 'Drainage & Streams', color: '#00B0FF', mapIds: ['drainage'] },
   { id: 'open-grounds',  label: 'Open Grounds',       color: '#8DA750', mapIds: ['open-grounds'] },
   { id: 'roads',         label: 'Roads',               color: '#adb5bd', mapIds: ['roads'] },
@@ -32,11 +34,21 @@ const INIT_VISIBILITY: Record<string, boolean> = {
   'restored-area': true,
   'trails':        true,
   'access-trail':  true,
-  'survey-tracks': true,
+  'invasive-removal': true,
+  'pond':          true,
+  'macadamia':     true,
   'drainage':      true,
   'open-grounds':  true,
   'roads':         true,
 };
+
+// Survey areas: layer-id prefix, `group` value in the GeoJSON, colour.
+// Order = drawing order (later groups draw on top).
+const SURVEY_AREA_GROUPS = [
+  { key: 'invasive-removal', group: 'Invasive species removal', color: '#1DE9B6' },
+  { key: 'macadamia',        group: 'Macadamia',                color: '#C8A97E' },
+  { key: 'pond',             group: 'Pond',                     color: '#2962FF' },
+];
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
@@ -215,13 +227,23 @@ export default function MapPage() {
             }],
           },
           {
-            // GPS tracks DIST 02–07, drawn on top
-            url: MAP_GEOJSON.surveyTracks, src: 'survey-tracks-src',
-            layers: [{
-              id: 'survey-tracks', type: 'line', source: 'survey-tracks-src',
-              layout: { visibility: 'visible', 'line-cap': 'round', 'line-join': 'round' },
-              paint: { 'line-color': '#1DE9B6', 'line-width': 1.5, 'line-opacity': 0.7 },
-            }],
+            // Survey areas from the 16 Nov GPS tracks (closed polygons). One source,
+            // one fill + outline per switch; the pond is drawn last so it sits on top.
+            url: MAP_GEOJSON.surveyAreas, src: 'survey-areas-src',
+            layers: SURVEY_AREA_GROUPS.flatMap(({ key, group, color }) => [
+              {
+                id: `${key}-fill`, type: 'fill', source: 'survey-areas-src',
+                filter: ['==', ['get', 'group'], group],
+                layout: { visibility: 'visible' },
+                paint: { 'fill-color': color, 'fill-opacity': 0.35 },
+              },
+              {
+                id: `${key}-line`, type: 'line', source: 'survey-areas-src',
+                filter: ['==', ['get', 'group'], group],
+                layout: { visibility: 'visible', 'line-join': 'round' },
+                paint: { 'line-color': color, 'line-width': 1.5, 'line-opacity': 0.8 },
+              },
+            ] as LayerSpecification[]),
           },
         ];
 
@@ -245,6 +267,35 @@ export default function MapPage() {
           } catch (e) {
             console.error(`Error adding ${src}:`, e);
           }
+        });
+
+        // ── Hover / click info for the survey areas ─────────────────────
+        const infoLayers = SURVEY_AREA_GROUPS.map(g => `${g.key}-fill`);
+        const infoHtml = (p: Record<string, unknown>) => {
+          const ha = Number(p.area_ha), m2 = Number(p.area_m2);
+          const groupHa = Number(p.group_ha), many = Number(p.group_count) > 1;
+          return `<p class="map-info-title">${p.name}</p>`
+            + `<p class="map-info-line">${ha} ha · ${m2.toLocaleString('en')} m²</p>`
+            + (many ? `<p class="map-info-meta">All ${String(p.name).toLowerCase()} areas: ${groupHa} ha</p>` : '');
+        };
+        const hoverPopup = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 14, className: 'map-area-popup' });
+        const clickPopup = new maplibregl.Popup({ closeButton: true, closeOnClick: true, offset: 14, className: 'map-area-popup' });
+        const topFeature = (point: { x: number; y: number }) => {
+          const layers = infoLayers.filter(id => mapInstance.getLayer(id));
+          return layers.length ? mapInstance.queryRenderedFeatures([point.x, point.y] as [number, number], { layers })[0] : undefined;
+        };
+        mapInstance.on('mousemove', e => {
+          const f = topFeature(e.point);
+          mapInstance.getCanvas().style.cursor = f ? 'pointer' : '';
+          if (f && !clickPopup.isOpen()) hoverPopup.setLngLat(e.lngLat).setHTML(infoHtml(f.properties)).addTo(mapInstance);
+          else hoverPopup.remove();
+        });
+        mapInstance.on('mouseout', () => hoverPopup.remove());
+        mapInstance.on('click', e => {
+          const f = topFeature(e.point);
+          if (!f) return;
+          hoverPopup.remove();
+          clickPopup.setLngLat(e.lngLat).setHTML(infoHtml(f.properties)).addTo(mapInstance);
         });
       });
     };
