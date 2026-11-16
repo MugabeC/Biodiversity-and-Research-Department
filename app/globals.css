@@ -1734,6 +1734,28 @@ select.chart-select {
   margin: 0;
 }
 
+/* Hover / click info for map areas: same look as .map-info-card */
+.map-area-popup .maplibregl-popup-content {
+  background: var(--nav-glass-bg);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  border-radius: 12px;
+  border: 1px solid var(--nav-glass-border);
+  box-shadow: var(--card-shadow);
+  padding: 10px 14px;
+  pointer-events: none;
+}
+
+.map-area-popup .maplibregl-popup-close-button {
+  pointer-events: auto;
+  color: var(--text-secondary);
+  font-size: 16px;
+}
+
+.map-area-popup .maplibregl-popup-tip {
+  display: none;
+}
+
 .species-filter-row {
   display: flex;
   flex-wrap: wrap;
