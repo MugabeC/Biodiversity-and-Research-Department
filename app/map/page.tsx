@@ -21,7 +21,7 @@ const LAYERS = [
   { id: 'restored-area', label: 'Restored Area',      color: '#F5A623', mapIds: ['restored-area-fill', 'restored-area-line'] },
   { id: 'trails',        label: 'Trails & Walkways',  color: '#c77dff', mapIds: ['trails'] },
   { id: 'access-trail',  label: 'Access Trail',       color: '#FFD60A', mapIds: ['access-trail'] },
-  { id: 'invasive-removal', label: 'Invasive Species Removal', color: '#1DE9B6', mapIds: ['invasive-removal-fill', 'invasive-removal-line'] },
+  { id: 'invasive-removal', label: 'Invasive Species Removal', color: '#FF6B6B', mapIds: ['invasive-removal-fill', 'invasive-removal-line'] },
   { id: 'pond',          label: 'Pond',               color: '#2962FF', mapIds: ['pond-fill', 'pond-line'] },
   { id: 'macadamia',     label: 'Macadamia',          color: '#C8A97E', mapIds: ['macadamia-fill', 'macadamia-line'] },
   { id: 'drainage',      label: 'Drainage & Streams', color: '#00B0FF', mapIds: ['drainage'] },
@@ -45,10 +45,12 @@ const INIT_VISIBILITY: Record<string, boolean> = {
 // Survey areas: layer-id prefix, `group` value in the GeoJSON, colour.
 // Order = drawing order (later groups draw on top).
 const SURVEY_AREA_GROUPS = [
-  { key: 'invasive-removal', group: 'Invasive species removal', color: '#1DE9B6' },
+  { key: 'invasive-removal', group: 'Invasive species removal', color: '#FF6B6B' },
   { key: 'macadamia',        group: 'Macadamia',                color: '#C8A97E' },
   { key: 'pond',             group: 'Pond',                     color: '#2962FF' },
 ];
+
+type AreaInfo = { name: string; areaHa: number; areaM2: number; groupHa: number; groupCount: number };
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
@@ -60,6 +62,9 @@ export default function MapPage() {
   const [is3D,        setIs3D]        = useState(true);
   const [layerStates, setLayerStates] = useState<Record<string, boolean>>({ ...INIT_VISIBILITY });
   const [mapStyle,    setMapStyle]    = useState<StyleId>('satellite');
+  const [hoverArea,   setHoverArea]   = useState<AreaInfo | null>(null);
+  const [pinnedArea,  setPinnedArea]  = useState<AreaInfo | null>(null);
+  const shownArea = pinnedArea ?? hoverArea;
 
   // ── Layer toggle ──────────────────────────────────────────────────────────
   const handleToggle = (key: string, layerIds: string[]) => {
@@ -269,33 +274,25 @@ export default function MapPage() {
           }
         });
 
-        // ── Hover / click info for the survey areas ─────────────────────
+        // ── Hover / click info for the survey areas (shown in the side panel) ──
         const infoLayers = SURVEY_AREA_GROUPS.map(g => `${g.key}-fill`);
-        const infoHtml = (p: Record<string, unknown>) => {
-          const ha = Number(p.area_ha), m2 = Number(p.area_m2);
-          const groupHa = Number(p.group_ha), many = Number(p.group_count) > 1;
-          return `<p class="map-info-title">${p.name}</p>`
-            + `<p class="map-info-line">${ha} ha · ${m2.toLocaleString('en')} m²</p>`
-            + (many ? `<p class="map-info-meta">All ${String(p.name).toLowerCase()} areas: ${groupHa} ha</p>` : '');
-        };
-        const hoverPopup = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 14, className: 'map-area-popup' });
-        const clickPopup = new maplibregl.Popup({ closeButton: true, closeOnClick: true, offset: 14, className: 'map-area-popup' });
         const topFeature = (point: { x: number; y: number }) => {
           const layers = infoLayers.filter(id => mapInstance.getLayer(id));
           return layers.length ? mapInstance.queryRenderedFeatures([point.x, point.y] as [number, number], { layers })[0] : undefined;
         };
+        const toInfo = (p: Record<string, unknown>): AreaInfo => ({
+          name: String(p.name), areaHa: Number(p.area_ha), areaM2: Number(p.area_m2),
+          groupHa: Number(p.group_ha), groupCount: Number(p.group_count),
+        });
         mapInstance.on('mousemove', e => {
           const f = topFeature(e.point);
           mapInstance.getCanvas().style.cursor = f ? 'pointer' : '';
-          if (f && !clickPopup.isOpen()) hoverPopup.setLngLat(e.lngLat).setHTML(infoHtml(f.properties)).addTo(mapInstance);
-          else hoverPopup.remove();
+          setHoverArea(f ? toInfo(f.properties) : null);
         });
-        mapInstance.on('mouseout', () => hoverPopup.remove());
+        mapInstance.on('mouseout', () => setHoverArea(null));
         mapInstance.on('click', e => {
           const f = topFeature(e.point);
-          if (!f) return;
-          hoverPopup.remove();
-          clickPopup.setLngLat(e.lngLat).setHTML(infoHtml(f.properties)).addTo(mapInstance);
+          setPinnedArea(f ? toInfo(f.properties) : null); // click an area to pin it, click elsewhere to clear
         });
       });
     };
@@ -333,6 +330,20 @@ export default function MapPage() {
           ))}
         </div>
       </div>
+
+      {/* ── Area info — top-right, under the zoom controls ── */}
+      {shownArea && (
+        <div className="map-glass-panel map-area-panel">
+          {pinnedArea && (
+            <button type="button" className="map-area-panel-close" aria-label="Close" onClick={() => setPinnedArea(null)}>×</button>
+          )}
+          <p className="map-info-title">{shownArea.name}</p>
+          <p className="map-info-line">{shownArea.areaHa} ha · {shownArea.areaM2.toLocaleString('en')} m²</p>
+          {shownArea.groupCount > 1 && (
+            <p className="map-info-meta">All {shownArea.name.toLowerCase()} areas: {shownArea.groupHa} ha</p>
+          )}
+        </div>
+      )}
 
       <div className="map-bottom-dock">
         <div className="map-bottom-dock-row">
