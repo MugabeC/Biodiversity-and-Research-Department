@@ -1557,11 +1557,18 @@ select.chart-select {
   border: 1px solid var(--nav-glass-border);
 }
 
-.map-layer-panel {
+.map-left-stack {
   position: absolute;
   top: 16px;
   left: 16px;
   z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.map-layer-panel {
   padding: 16px;
   min-width: 210px;
   max-width: 240px;
@@ -1615,13 +1622,7 @@ select.chart-select {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 10px 12px;
-  border-radius: 16px;
-  background: var(--nav-glass-bg);
-  backdrop-filter: blur(16px) saturate(1.2);
-  -webkit-backdrop-filter: blur(16px) saturate(1.2);
-  border: 1px solid var(--nav-glass-border);
-  box-shadow: var(--card-shadow);
+  pointer-events: none; /* no tile any more: let the map underneath stay draggable */
 }
 
 .map-bottom-dock-row {
@@ -1636,24 +1637,31 @@ select.chart-select {
   margin: 0;
   font-family: 'Poppins', sans-serif;
   font-size: 10px;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.65);
   line-height: 1.2;
   text-align: center;
 }
 
-.map-page-root .maplibregl-ctrl-bottom-left,
 .map-page-root .maplibregl-ctrl-bottom-right {
   display: none !important;
+}
+
+/* Scale bar sits just above the style pill */
+.map-page-root .maplibregl-ctrl-bottom-left {
+  bottom: 64px;
+  left: 6px;
 }
 
 .map-btn-3d {
   position: static;
   flex-shrink: 0;
+  pointer-events: auto;
   padding: 8px 18px;
   border-radius: 9999px;
   border: none;
   font-family: 'Poppins', sans-serif;
-  font-weight: 600;
+  font-weight: 400;
   font-size: 13px;
   cursor: pointer;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
@@ -1670,24 +1678,27 @@ select.chart-select {
   color: var(--accent-text);
 }
 
+/* Satellite | Terrain as one pill */
 .map-style-bar {
   position: static;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  flex: 1 1 auto;
-  min-width: 0;
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  flex: 0 0 auto;
+  pointer-events: auto;
+  border-radius: 9999px;
+  background: var(--surface);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
 }
 
 .map-style-btn {
-  padding: 7px 14px;
+  padding: 6px 18px;
   border-radius: 9999px;
   border: none;
   font-family: 'Poppins', sans-serif;
-  font-weight: 600;
+  font-weight: 400;
   font-size: 13px;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   transition: background 0.2s ease, color 0.2s ease;
   white-space: nowrap;
 }
@@ -1698,15 +1709,11 @@ select.chart-select {
 }
 
 .map-style-btn--idle {
-  background: var(--surface);
+  background: transparent;
   color: var(--text-secondary);
 }
 
 .map-info-card {
-  position: absolute;
-  bottom: 96px;
-  right: 16px;
-  z-index: 10;
   padding: 12px 16px;
 }
 
@@ -2361,9 +2368,12 @@ select.chart-select {
     min-height: 55vh;
   }
 
-  .map-layer-panel {
+  .map-left-stack {
     top: 8px;
     left: 8px;
+  }
+
+  .map-layer-panel {
     min-width: 0;
     width: min(220px, calc(100vw - 16px));
     max-width: none;
@@ -2377,7 +2387,10 @@ select.chart-select {
     bottom: 8px;
     left: 8px;
     right: 8px;
-    padding: 8px 10px;
+  }
+
+  .map-page-root .maplibregl-ctrl-bottom-left {
+    bottom: 108px;
   }
 
   .map-bottom-dock-row {
@@ -2387,7 +2400,7 @@ select.chart-select {
   }
 
   .map-style-bar {
-    justify-content: center;
+    align-self: center;
   }
 
   .map-btn-3d {
@@ -2403,9 +2416,7 @@ select.chart-select {
   }
 
   .map-style-btn {
-    flex: 1 1 calc(33.333% - 6px);
-    min-width: 0;
-    padding: 8px 8px;
+    padding: 7px 16px;
     font-size: 12px;
     white-space: nowrap;
   }

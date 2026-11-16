@@ -3,12 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 import type { LayerSpecification, Map as MapLibreMap, StyleSpecification } from 'maplibre-gl';
 import { fetchMapGeoJson, MAP_GEOJSON } from '../lib/mapGeojson';
+import { annotateMeasures } from '../lib/mapStats';
 
 // ── Map style options ─────────────────────────────────────────────────────────
 
 const MAP_STYLES = [
   { id: 'satellite', label: 'Satellite', url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}' },
-  { id: 'street',    label: 'Street',    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}' },
   { id: 'terrain',   label: 'Terrain',   url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}' },
 ] as const;
 
@@ -50,7 +50,70 @@ const SURVEY_AREA_GROUPS = [
   { key: 'pond',             group: 'Pond',                     color: '#2962FF' },
 ];
 
-type AreaInfo = { name: string; areaHa: number; areaM2: number; groupHa: number; groupCount: number };
+type PanelInfo = { title: string; line: string; meta?: string };
+type Props = Record<string, unknown>;
+
+// ── Hover / click info ────────────────────────────────────────────────────────
+
+const TYPE_NAMES: Record<string, string> = {
+  'PEDESTRIAN WALKWAYS AND TRAILS': 'Pedestrian walkways and trails',
+  'DRAINAGE': 'Drainage',
+  'MASONRY DRAINAGE': 'Masonry drainage',
+  'MAIN ROAD_PEDESTRIAN': 'Main road / pedestrian',
+  'INTERNAL SERVICE ROAD': 'Internal service road',
+  'EXISTING EARTHROAD': 'Existing earth road',
+  'GARDEN': 'Garden',
+  'BAMBOO_TREE': 'Bamboo trees',
+  'BOTANIC GARDEN': 'Botanic garden',
+};
+const typeName = (raw: unknown, fallback: string) => {
+  const key = String(raw ?? '');
+  if (TYPE_NAMES[key]) return TYPE_NAMES[key];
+  const t = key.replace(/_/g, ' ').toLowerCase();
+  return t && t !== '0' ? t.charAt(0).toUpperCase() + t.slice(1) : fallback;
+};
+const titleCase = (v: unknown) => String(v ?? '').toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+const fmtLength = (m: number) => (m >= 1000 ? `${(m / 1000).toFixed(2)} km` : `${Math.round(m)} m`);
+const fmtHa = (m2: number) => `${(m2 / 1e4).toFixed(2)} ha`;
+const fmtArea = (m2: number) => `${fmtHa(m2)} · ${Math.round(m2).toLocaleString('en')} m²`;
+
+const describeSurveyArea = (p: Props): PanelInfo => ({
+  title: String(p.name),
+  line: `${p.area_ha} ha · ${Number(p.area_m2).toLocaleString('en')} m²`,
+  meta: Number(p.group_count) > 1 ? `All ${String(p.name).toLowerCase()} areas: ${p.group_ha} ha` : undefined,
+});
+const describeLine = (label: string) => (p: Props): PanelInfo => ({
+  title: typeName(p.Layer, label),
+  line: `Total length: ${fmtLength(Number(p._typeTotal))}`,
+  meta: Number(p._typeCount) > 1 ? `This segment: ${fmtLength(Number(p._size))}` : undefined,
+});
+
+// Layers that give info on hover/click, topmost first. Lines come before the big
+// fills so a trail is still hoverable on top of a garden or the restored area.
+const INFO_LAYERS: { id: string; describe: (p: Props) => PanelInfo }[] = [
+  { id: 'pond-fill',            describe: describeSurveyArea },
+  { id: 'macadamia-fill',       describe: describeSurveyArea },
+  { id: 'invasive-removal-fill', describe: describeSurveyArea },
+  { id: 'access-trail',         describe: p => ({ title: 'Access Trail', line: `Length: ${fmtLength(Number(p._size))}` }) },
+  { id: 'trails',               describe: describeLine('Trails & Walkways') },
+  { id: 'drainage',             describe: describeLine('Drainage & Streams') },
+  { id: 'roads',                describe: describeLine('Roads') },
+  { id: 'park-boundary',        describe: p => ({ title: 'Park Boundary', line: `Mapped area: ${fmtArea(Number(p._size))}`, meta: `Perimeter: ${fmtLength(Number(p._perimeter))}` }) },
+  { id: 'restored-area-fill',   describe: p => ({
+      title: 'Restored Area',
+      line: p.AREA ? `${p.AREA} ha` : fmtArea(Number(p._size)),
+      meta: [p.LocalName, titleCase(p.District), titleCase(p.Sector)].filter(Boolean).join(' · ') || undefined,
+    }) },
+  { id: 'open-grounds',         describe: p => {
+      const title = typeName(p.Layer, 'Open Grounds');
+      return {
+        title,
+        line: `This area: ${fmtArea(Number(p._size))}`,
+        meta: Number(p._typeCount) > 1 ? `All ${title.toLowerCase()}: ${fmtHa(Number(p._typeTotal))}` : undefined,
+      };
+    } },
+];
+const PICK_PX = 6; // how close (in pixels) the pointer must be to a thin line
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
@@ -62,9 +125,9 @@ export default function MapPage() {
   const [is3D,        setIs3D]        = useState(true);
   const [layerStates, setLayerStates] = useState<Record<string, boolean>>({ ...INIT_VISIBILITY });
   const [mapStyle,    setMapStyle]    = useState<StyleId>('satellite');
-  const [hoverArea,   setHoverArea]   = useState<AreaInfo | null>(null);
-  const [pinnedArea,  setPinnedArea]  = useState<AreaInfo | null>(null);
-  const shownArea = pinnedArea ?? hoverArea;
+  const [hoverInfo,   setHoverInfo]   = useState<PanelInfo | null>(null);
+  const [pinnedInfo,  setPinnedInfo]  = useState<PanelInfo | null>(null);
+  const shownInfo = pinnedInfo ?? hoverInfo;
 
   // ── Layer toggle ──────────────────────────────────────────────────────────
   const handleToggle = (key: string, layerIds: string[]) => {
@@ -139,6 +202,7 @@ export default function MapPage() {
 
       map.current = mapInstance;
       mapInstance.addControl(new maplibregl.NavigationControl(), 'top-right');
+      mapInstance.addControl(new maplibregl.ScaleControl({ maxWidth: 110, unit: 'metric' }), 'bottom-left');
 
       mapInstance.on('load', async () => {
         try {
@@ -260,7 +324,9 @@ export default function MapPage() {
             return;
           }
           try {
-            mapInstance.addSource(src, { type: 'geojson', data: result.value });
+            // Add lengths/areas (hover info). The survey areas already carry their own.
+            const data = src === 'survey-areas-src' ? result.value : annotateMeasures(result.value);
+            mapInstance.addSource(src, { type: 'geojson', data });
             layers.forEach(layer => {
               // Respect toggles flipped while the data was loading.
               const key = LAYERS.find(l => l.mapIds.includes(layer.id))?.id;
@@ -274,25 +340,26 @@ export default function MapPage() {
           }
         });
 
-        // ── Hover / click info for the survey areas (shown in the side panel) ──
-        const infoLayers = SURVEY_AREA_GROUPS.map(g => `${g.key}-fill`);
-        const topFeature = (point: { x: number; y: number }) => {
-          const layers = infoLayers.filter(id => mapInstance.getLayer(id));
-          return layers.length ? mapInstance.queryRenderedFeatures([point.x, point.y] as [number, number], { layers })[0] : undefined;
+        // ── Hover / click info for every layer (shown in the side panel) ──
+        const pick = (point: { x: number; y: number }): PanelInfo | undefined => {
+          const layers = INFO_LAYERS.map(l => l.id).filter(id => mapInstance.getLayer(id));
+          if (!layers.length) return undefined;
+          const hits = mapInstance.queryRenderedFeatures(
+            [[point.x - PICK_PX, point.y - PICK_PX], [point.x + PICK_PX, point.y + PICK_PX]], { layers });
+          for (const l of INFO_LAYERS) {
+            const f = hits.find(h => h.layer.id === l.id);
+            if (f) return l.describe(f.properties);
+          }
+          return undefined;
         };
-        const toInfo = (p: Record<string, unknown>): AreaInfo => ({
-          name: String(p.name), areaHa: Number(p.area_ha), areaM2: Number(p.area_m2),
-          groupHa: Number(p.group_ha), groupCount: Number(p.group_count),
-        });
         mapInstance.on('mousemove', e => {
-          const f = topFeature(e.point);
-          mapInstance.getCanvas().style.cursor = f ? 'pointer' : '';
-          setHoverArea(f ? toInfo(f.properties) : null);
+          const info = pick(e.point);
+          mapInstance.getCanvas().style.cursor = info ? 'pointer' : '';
+          setHoverInfo(info ?? null);
         });
-        mapInstance.on('mouseout', () => setHoverArea(null));
+        mapInstance.on('mouseout', () => setHoverInfo(null));
         mapInstance.on('click', e => {
-          const f = topFeature(e.point);
-          setPinnedArea(f ? toInfo(f.properties) : null); // click an area to pin it, click elsewhere to clear
+          setPinnedInfo(pick(e.point) ?? null); // click a feature to pin it, click elsewhere to clear
         });
       });
     };
@@ -310,38 +377,44 @@ export default function MapPage() {
       {/* Map canvas */}
       <div ref={mapContainer} style={{ width: '100%', height: '100%' }} />
 
-      {/* ── Layer toggle panel — top-left ── */}
-      <div className="map-glass-panel map-layer-panel">
-        <p className="map-layer-panel-title">Map Layers</p>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          {LAYERS.map(({ id, label, color, mapIds }) => (
-            <div key={id}
-              onClick={() => handleToggle(id, mapIds)}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', cursor: 'pointer' }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: color, flexShrink: 0, display: 'inline-block' }} />
-                <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px', color: 'var(--text-primary)' }}>
-                  {label}
-                </span>
+      {/* ── Left column: layer toggles, then the park info card ── */}
+      <div className="map-left-stack">
+        <div className="map-glass-panel map-layer-panel">
+          <p className="map-layer-panel-title">Map Layers</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {LAYERS.map(({ id, label, color, mapIds }) => (
+              <div key={id}
+                onClick={() => handleToggle(id, mapIds)}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', cursor: 'pointer' }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: color, flexShrink: 0, display: 'inline-block' }} />
+                  <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 400, fontSize: '13px', color: 'var(--text-primary)' }}>
+                    {label}
+                  </span>
+                </div>
+                <ToggleSwitch on={layerStates[id]} color={color} />
               </div>
-              <ToggleSwitch on={layerStates[id]} color={color} />
-            </div>
-          ))}
+            ))}
+          </div>
+        </div>
+
+        <div className="map-glass-panel map-info-card">
+          <p className="map-info-title">Nyandungu Eco-Park</p>
+          <p className="map-info-line">218.9 Ha · Kigali, Rwanda</p>
+          <p className="map-info-meta">2025 Biodiversity Survey</p>
         </div>
       </div>
 
-      {/* ── Area info — top-right, under the zoom controls ── */}
-      {shownArea && (
+      {/* ── Feature info — top-right, under the zoom controls ── */}
+      {shownInfo && (
         <div className="map-glass-panel map-area-panel">
-          {pinnedArea && (
-            <button type="button" className="map-area-panel-close" aria-label="Close" onClick={() => setPinnedArea(null)}>×</button>
+          {pinnedInfo && (
+            <button type="button" className="map-area-panel-close" aria-label="Close" onClick={() => setPinnedInfo(null)}>×</button>
           )}
-          <p className="map-info-title">{shownArea.name}</p>
-          <p className="map-info-line">{shownArea.areaHa} ha · {shownArea.areaM2.toLocaleString('en')} m²</p>
-          {shownArea.groupCount > 1 && (
-            <p className="map-info-meta">All {shownArea.name.toLowerCase()} areas: {shownArea.groupHa} ha</p>
-          )}
+          <p className="map-info-title">{shownInfo.title}</p>
+          <p className="map-info-line">{shownInfo.line}</p>
+          {shownInfo.meta && <p className="map-info-meta">{shownInfo.meta}</p>}
         </div>
       )}
 
@@ -364,16 +437,10 @@ export default function MapPage() {
             onClick={toggle3D}
             className={`map-btn-3d${is3D ? ' map-btn-3d--on' : ' map-btn-3d--off'}`}
           >
-            {is3D ? '3D ▲' : '2D ▬'}
+            {is3D ? '3D' : '2D'}
           </button>
         </div>
         <p className="map-attribution">Tiles © Esri</p>
-      </div>
-
-      <div className="map-glass-panel map-info-card">
-        <p className="map-info-title">Nyandungu Eco-Park</p>
-        <p className="map-info-line">218.9 Ha · Kigali, Rwanda</p>
-        <p className="map-info-meta">2025 Biodiversity Survey</p>
       </div>
 
     </div>
