@@ -20,7 +20,7 @@ export default function TaxaShareBarChart({ data, total }: { data: Row[]; total:
           layout="vertical"
           margin={{ top: 8, right: 16, left: 4, bottom: 28 }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke={c.grid} horizontal={false} />
+          <CartesianGrid strokeDasharray="2 6" stroke={c.grid} horizontal={false} />
           <XAxis type="number" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 10 }} />
           <YAxis
             type="category"

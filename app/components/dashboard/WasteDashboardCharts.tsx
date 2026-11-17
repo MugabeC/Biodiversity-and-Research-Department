@@ -62,33 +62,33 @@ export default function WasteDashboardCharts({ data }: { data: WasteFile }) {
 
   return (
     <div className="dashboard-charts-grid">
-      <div className="glass-card chart-card">
-        <h3 className="heading" style={{ fontSize: 16, margin: '0 0 0.5rem' }}>
+      <div className="chart-card chart-plain">
+        <h3 className="dash-chart-title">
           Waste collected (kg per month)
         </h3>
         <div className="chart-card-body" style={{ height: 280 }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={monthly} margin={{ top: 8, right: 8, left: -8, bottom: 8 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke={c.grid} vertical={false} />
+              <CartesianGrid strokeDasharray="2 6" stroke={c.grid} vertical={false} />
               <XAxis dataKey="monthShort" tick={axisTick} angle={-35} textAnchor="end" height={56} />
               <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} />
               <Tooltip {...tt} />
               <Legend wrapperStyle={{ fontFamily: 'Poppins', fontSize: 12, color: c.tick }} />
-              <Bar dataKey="total" name="Waste collected (kg)" fill={c.primary} radius={[4, 4, 0, 0]} barSize={28} />
+              <Bar dataKey="total" name="Waste collected (kg)" fill={c.primary} radius={[6, 6, 0, 0]} barSize={14} animationDuration={900} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      <div className="glass-card chart-card">
-        <h3 className="heading" style={{ fontSize: 16, margin: '0 0 0.5rem' }}>
+      <div className="chart-card chart-plain">
+        <h3 className="dash-chart-title">
           Cumulative waste collected (12 months)
         </h3>
         <p className="chart-card-desc">Running total of waste collected across the reporting year.</p>
         <div className="chart-card-body" style={{ height: 280 }}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={cumulative} margin={{ top: 8, right: 8, left: -8, bottom: 8 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke={c.grid} vertical={false} />
+              <CartesianGrid strokeDasharray="2 6" stroke={c.grid} vertical={false} />
               <XAxis dataKey="monthShort" tick={axisTick} angle={-35} textAnchor="end" height={56} />
               <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} />
               <Tooltip {...tt} />
