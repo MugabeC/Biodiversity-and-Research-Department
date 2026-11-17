@@ -2,10 +2,11 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ResponsiveContainer,
-  ComposedChart, ReferenceLine,
+  ComposedChart, ReferenceLine, Line, LabelList,
 } from 'recharts';
 import TaxaIcon from '../TaxaIcon';
 import {
@@ -30,10 +31,9 @@ import {
   withShortMonths,
   aggregateStudentsByQuarter,
 } from '@/app/lib/dashboardUtils';
-import { useChartColors, chartTooltipProps } from './chartTheme';
-import TaxaShareBarChart from './TaxaShareBarChart';
+import { useChartColors } from './chartTheme';
 import { normalizeWasteData } from './WasteDashboardCharts';
-import { CountUp, Sparkline, Ring, SegmentBar } from './minimal';
+import { CountUp, Sparkline, Ring, SegmentBar, GRADIENT_DEFS, SlickTooltip, StatRow, GrowthRows, Waffle, RankRows } from './minimal';
 
 const BiodiversityWaterCompliance = dynamic(() => import('./BiodiversityWaterCompliance'), { ssr: false });
 const BiodiversityWaterExplorer = dynamic(() => import('./BiodiversityWaterExplorer'), { ssr: false });
@@ -52,7 +52,6 @@ const SECTIONS = [
   { id: 'conflicts', label: 'Conflicts' },
   { id: 'waste', label: 'Waste' },
   { id: 'water', label: 'Water quality' },
-  { id: 'explore', label: 'Explore Data' },
 ] as const;
 
 type SectionId = (typeof SECTIONS)[number]['id'];
@@ -170,7 +169,7 @@ export default function DashboardExplorer() {
   const [loadError, setLoadError] = useState<string | null>(null);
 
   const c = useChartColors();
-  const tt = chartTooltipProps(c);
+  useEffect(() => { setSearch(''); }, [section]);
   const studentTarget = summary?.studentTargetPerQuarter ?? 500;
 
   useEffect(() => {
@@ -459,6 +458,412 @@ export default function DashboardExplorer() {
     );
   }
 
+  const RECORD_SETS: Record<string, { id: string; label: string }[]> = {
+    biodiversity: [{ id: 'taxa', label: `Species by group (${barBiodiversity.length})` }],
+    education: [{ id: 'schools', label: `School visits (${schools?.individualVisits.length ?? 0})` }],
+    community: [
+      { id: 'community', label: `Activities (${community.length})` },
+      { id: 'passes', label: `Complementary pass (${passes?.detail.length ?? 0})` },
+      { id: 'pass-groups', label: `Pass groups (${complementaryPassByGroup.length})` },
+    ],
+    research: [
+      { id: 'research', label: `Requests (${research.length})` },
+      { id: 'research-status', label: `Status (${researchByAction.length})` },
+      { id: 'internships', label: `Internships (${internships.reduce((t, r) => t + r.total, 0)})` },
+    ],
+    conflicts: [
+      { id: 'conflicts', label: `Cases (${conflicts.length})` },
+      { id: 'conflict-types', label: `Issue types (${conflictsByType.length})` },
+    ],
+    waste: [{ id: 'waste', label: `Monthly records (${waste.length})` }],
+    water: [
+      { id: 'water-bio', label: `Park survey (${bioWaterExplore.length})` },
+      { id: 'water-wasac', label: `WASAC (${wasacWaterExplore.length})` },
+    ],
+  };
+  const recIds = RECORD_SETS[section] ?? [];
+  const tab = recIds.some(r => r.id === exploreTab) ? exploreTab : recIds[0]?.id;
+  const recordsPanel = recIds.length > 0 ? (
+    <div className="dash-records">
+      <SectionTitle note="Search and browse the underlying records.">Records</SectionTitle>
+      <input
+        type="search"
+        className="species-search"
+        placeholder="Search these records…"
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        style={{ marginBottom: '1rem' }}
+      />
+      {recIds.length > 1 && (
+        <div className="dash-chips">
+          {recIds.map(t => (
+            <button
+              key={t.id}
+              type="button"
+              className={`dash-chip${tab === t.id ? ' dash-chip--active' : ''}`}
+              onClick={() => setExploreTab(t.id)}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+      )}
+            <div className="glass-card data-table-wrap" role="region" aria-label="Records">
+              {tab === 'taxa' && (
+                <table className="data-table">
+                  <thead>
+                    <tr><th>Group</th><th>2023</th><th>2025</th><th>Change</th></tr>
+                  </thead>
+                  <tbody>
+                    {barBiodiversity
+                      .filter(r => !search.trim() || r.taxa.toLowerCase().includes(search.toLowerCase()))
+                      .map(r => (
+                        <tr key={r.taxa}>
+                          <td>{r.taxa}</td>
+                          <td>{r['2023']}</td>
+                          <td>{r['2025']}</td>
+                          <td>{r['2025'] - r['2023'] > 0 ? `+${r['2025'] - r['2023']}` : '0'}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              )}
+              {tab === 'schools' && (
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Month</th>
+                      <th>School / group</th>
+                      <th>Groups</th>
+                      <th>Students</th>
+                      <th>Teachers</th>
+                      <th>Other adults</th>
+                      <th>Complimentary</th>
+                      <th>Programme</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredSchoolVisits.map((row, i) => (
+                      <tr key={i}>
+                        <td>{row.month}</td>
+                        <td>{row.school}</td>
+                        <td>{row.schoolGroups ?? '—'}</td>
+                        <td>{row.students ?? '—'}</td>
+                        <td>{row.teachers ?? '—'}</td>
+                        <td>{row.otherAdults ?? '—'}</td>
+                        <td>{row.complimentary ?? '—'}</td>
+                        <td>{row.programme ? `${row.programme}${row.programmePupils != null ? ` (${row.programmePupils} pupils)` : ''}` : (row.notes ?? '—')}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+              {tab === 'community' && (
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Month</th>
+                      <th>Activity</th>
+                      <th>Participant group</th>
+                      <th>Participants</th>
+                      <th>Women</th>
+                      <th>Men</th>
+                      <th>Institutions</th>
+                      <th>Complimentary</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredCommunity.map((row, i) => (
+                      <tr key={i}>
+                        <td>{row.month}</td>
+                        <td>{row.activity}</td>
+                        <td>{row.participantGroup ?? '—'}</td>
+                        <td>{row.participants ?? '—'}</td>
+                        <td>{row.women ?? '—'}</td>
+                        <td>{row.men ?? '—'}</td>
+                        <td>{row.institutions ?? '—'}</td>
+                        <td>{row.complimentary ?? '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+              {tab === 'research' && (
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Month</th>
+                      <th>Date received</th>
+                      <th>Researcher(s)</th>
+                      <th>Institution</th>
+                      <th>Category</th>
+                      <th>Topic</th>
+                      <th>Requested activity</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredResearch.map((row, i) => (
+                      <tr key={`${row.names}-${i}`}>
+                        <td>{row.month}</td>
+                        <td>{row.dateReceived ?? '—'}</td>
+                        <td>{row.names}</td>
+                        <td>{row.institution ?? '—'}</td>
+                        <td>{row.category}</td>
+                        <td>{row.topic ?? '—'}</td>
+                        <td>{row.requestedActivities ?? '—'}</td>
+                        <td>{row.status ?? '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+              {tab === 'research-status' && (
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Status</th>
+                      <th>Requests</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {researchByAction
+                      .filter(row => !search.trim() || row.name.toLowerCase().includes(search.toLowerCase()))
+                      .map(row => (
+                        <tr key={row.name}>
+                          <td>{row.name}</td>
+                          <td>{row.count}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              )}
+              {tab === 'conflicts' && (
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Issue type</th>
+                      <th>Area</th>
+                      <th>Location</th>
+                      <th>Description</th>
+                      <th>Status</th>
+                      <th>Action taken</th>
+                      <th>Follow-up needed</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredConflicts.map((row, i) => (
+                      <tr key={`${row.id ?? i}-${row.date ?? i}`}>
+                        <td>{row.date ?? '—'}</td>
+                        <td>{row.issueType ?? '—'}</td>
+                        <td>{row.areaType ?? '—'}</td>
+                        <td>{row.location ?? '—'}</td>
+                        <td>{row.description ?? '—'}</td>
+                        <td>{row.status ?? '—'}</td>
+                        <td>{row.actionTaken ?? '—'}</td>
+                        <td>{row.followUpRequired ?? '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+              {tab === 'conflict-types' && (
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Issue type</th>
+                      <th>Cases</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {conflictsByType
+                      .filter(row => !search.trim() || row.name.toLowerCase().includes(search.toLowerCase()))
+                      .map(row => (
+                        <tr key={row.name}>
+                          <td>{row.name}</td>
+                          <td>{row.count}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              )}
+              {tab === 'pass-groups' && (
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Group</th>
+                      <th>Complementary pass</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {complementaryPassByGroup
+                      .filter(row => !search.trim() || row.group.toLowerCase().includes(search.toLowerCase()))
+                      .map((row, i) => (
+                        <tr key={`${row.group}-${i}`}>
+                          <td>{row.group}</td>
+                          <td>{row.complementaryPasses}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              )}
+              {tab === 'internships' && (
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Month</th>
+                      <th>Academic</th>
+                      <th>Professional</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {internships
+                      .filter(row => !search.trim() || row.month.toLowerCase().includes(search.toLowerCase()))
+                      .map((row, i) => (
+                        <tr key={`${row.month}-${i}`}>
+                          <td>{row.month}</td>
+                          <td>{row.academic}</td>
+                          <td>{row.professional}</td>
+                          <td>{row.total}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              )}
+              {tab === 'passes' && passes && (
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Month</th>
+                      <th>Group</th>
+                      <th>Complementary pass</th>
+                      <th>Notes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {passes.detail
+                      .filter(d => !search.trim() || d.group.toLowerCase().includes(search.toLowerCase()) || d.month.toLowerCase().includes(search.toLowerCase()))
+                      .map((row, i) => (
+                        <tr key={i}>
+                          <td>{row.month}</td>
+                          <td>{row.group}</td>
+                          <td>{row.passes}</td>
+                          <td>{row.notes ?? '—'}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              )}
+              {tab === 'waste' && (
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Month</th>
+                      <th>Total (kg)</th>
+                      <th>Biodegradable (kg)</th>
+                      <th>Non-biodegradable (kg)</th>
+                      <th>Note</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {waste.map((row, i) => {
+                      const bio = row.biodegradableKg ?? (row.kg != null ? Math.round(row.kg * 0.7) : null);
+                      const nonBio = row.nonBiodegradableKg ?? (row.kg != null && bio != null ? row.kg - bio : null);
+                      return (
+                        <tr key={i}>
+                          <td>{row.month}</td>
+                          <td>{row.kg ?? '—'}</td>
+                          <td>{bio ?? '—'}</td>
+                          <td>{nonBio ?? '—'}</td>
+                          <td>{row.note ?? '—'}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              )}
+              {tab === 'water-bio' && (
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Parameter</th>
+                      <th>Sampling point</th>
+                      <th>Value</th>
+                      <th>Unit</th>
+                      <th>Limit</th>
+                      <th>Result</th>
+                      <th>Method</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredBioWaterExplore.length === 0 ? (
+                      <tr>
+                        <td colSpan={7} style={{ textAlign: 'center', padding: '1.5rem' }}>
+                          {bioWaterExplore.length === 0
+                            ? 'No biodiversity survey water data loaded.'
+                            : 'No rows match your search.'}
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredBioWaterExplore.map((row, i) => (
+                        <tr key={`${row.parameter}-${row.site}-${i}`}>
+                          <td>{row.parameter}</td>
+                          <td>{row.site}</td>
+                          <td>{row.value}</td>
+                          <td>{row.unit}</td>
+                          <td>{row.limit}</td>
+                          <ExploreResultCell result={row.result} />
+                          <td>{row.methodOrRemarks}</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              )}
+              {tab === 'water-wasac' && (
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Parameter</th>
+                      <th>Sampling point</th>
+                      <th>Value</th>
+                      <th>Unit</th>
+                      <th>Limit</th>
+                      <th>Result</th>
+                      <th>Remarks</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredWasacWaterExplore.length === 0 ? (
+                      <tr>
+                        <td colSpan={7} style={{ textAlign: 'center', padding: '1.5rem' }}>
+                          {wasacWaterExplore.length === 0
+                            ? 'No WASAC water data loaded.'
+                            : 'No rows match your search.'}
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredWasacWaterExplore.map((row, i) => (
+                        <tr key={`${row.parameter}-${row.site}-${i}`}>
+                          <td>{row.parameter}</td>
+                          <td>{row.site}</td>
+                          <td>{row.value}</td>
+                          <td>{row.unit}</td>
+                          <td>{row.limit}</td>
+                          <ExploreResultCell result={row.result} />
+                          <td>{row.methodOrRemarks}</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              )}
+            </div>
+    </div>
+  ) : null;
+
   const waterRate = bioWater?.rate ?? null;
   const waterTone: 'ok' | 'warn' | 'bad' = waterRate == null ? 'ok' : waterRate >= 90 ? 'ok' : waterRate >= 70 ? 'warn' : 'bad';
   const attention: { text: string; go: SectionId }[] = [];
@@ -557,8 +962,13 @@ export default function DashboardExplorer() {
         {section === 'biodiversity' && (
           <>
             <SectionTitle note={insights.sortedTaxa[0] ? `${insights.sortedTaxa[0].taxa} make up ${insights.topShare}% of the ${kpis.species} species recorded.` : undefined}>
-              Biodiversity survey
+              Biodiversity
             </SectionTitle>
+            <StatRow items={[
+              { label: 'species recorded', value: <CountUp value={kpis.species} /> },
+              { label: 'groups surveyed', value: <CountUp value={insights.sortedTaxa.length} /> },
+              { label: `${insights.sortedTaxa[0]?.taxa ?? 'largest group'} share`, value: <CountUp value={insights.topShare} suffix="%" /> },
+            ]} />
             <div className="taxa-mini">
               {taxaCards.map(card => (
                 <div key={card.taxa} className="taxa-mini-item">
@@ -570,568 +980,237 @@ export default function DashboardExplorer() {
               ))}
             </div>
             <div className="dashboard-charts-grid">
-              <ChartCard title="Species count: 2023 vs 2025">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={barBiodiversity} margin={{ top: 8, right: 8, left: -10, bottom: 16 }}>
-                    <CartesianGrid strokeDasharray="2 6" stroke={c.grid} vertical={false} />
-                    <XAxis dataKey="taxa" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 10 }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} tickLine={false} />
-                    <Tooltip {...tt} />
-                    <Legend wrapperStyle={{ fontSize: 12 }} />
-                    <Bar dataKey="2023" name="2023 Baseline" fill={c.secondary} radius={[6, 6, 0, 0]} barSize={12} animationDuration={900} />
-                    <Bar dataKey="2025" name="2025 Current" fill={c.primary} radius={[6, 6, 0, 0]} barSize={12} animationDuration={900} />
-                  </BarChart>
-                </ResponsiveContainer>
+              <ChartCard title="Growth since the 2023 baseline" content>
+                <GrowthRows rows={barBiodiversity.map(r => ({ label: r.taxa, from: r['2023'], to: r['2025'] }))} />
               </ChartCard>
-              <ChartCard title="Species share by taxa (2025)" content>
-                <TaxaShareBarChart data={donutBiodiversity} total={summary?.totalSpecies ?? 870} />
+              <ChartCard title="Who lives here: share of species" content>
+                <Waffle segments={insights.sortedTaxa.map(t => ({ label: t.taxa, value: t.count, color: t.color }))} />
               </ChartCard>
             </div>
+            <p className="dash-links">
+              <Link href="/species">Browse all {kpis.species} species →</Link>
+              <Link href="/map">See the survey areas on the map →</Link>
+            </p>
+            {recordsPanel}
           </>
         )}
 
         {section === 'education' && schoolQuarterly.length > 0 && (
           <>
-            <SectionTitle note={insights.bestQuarter ? `Best quarter: ${insights.bestQuarter.quarter} with ${insights.bestQuarter.students.toLocaleString()} students. ${insights.belowTarget} of ${insights.completedCount} completed quarters fell below the ${studentTarget} target.` : undefined}>Education & school visits</SectionTitle>
+            <SectionTitle note={insights.bestQuarter ? `Best quarter: ${insights.bestQuarter.quarter} with ${insights.bestQuarter.students.toLocaleString()} students. ${insights.belowTarget} of ${insights.completedCount} completed quarters fell below the ${studentTarget} target.` : undefined}>
+              Education & school visits
+            </SectionTitle>
+            <StatRow items={[
+              { label: 'students reached', value: <CountUp value={kpis.students} /> },
+              { label: 'school visits', value: <CountUp value={kpis.visits} /> },
+              { label: 'quarterly target', value: <CountUp value={studentTarget} /> },
+              { label: 'completed quarters on target', value: `${insights.completedCount - insights.belowTarget} of ${insights.completedCount}` },
+            ]} />
             <div className="dashboard-charts-grid dashboard-charts-grid--single">
-              <ChartCard
-                title="Quarterly student visits"
-                tall
-              >
+              <ChartCard title="Students per quarter" tall>
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={schoolQuarterly} margin={{ top: 12, right: 8, left: -8, bottom: 8 }}>
+                  <BarChart data={schoolQuarterly} margin={{ top: 24, right: 8, left: -8, bottom: 8 }}>
+                    {GRADIENT_DEFS}
                     <CartesianGrid strokeDasharray="2 6" stroke={c.grid} vertical={false} />
                     <XAxis dataKey="quarter" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} tickLine={false} />
-                    <Tooltip {...tt} />
+                    <Tooltip content={<SlickTooltip />} cursor={{ fill: 'rgba(12,96,56,0.05)' }} />
                     <ReferenceLine
                       y={studentTarget}
-                      stroke="#F5A623"
-                      strokeDasharray="6 4"
-                      strokeWidth={2}
-                      label={{ value: `Target: ${studentTarget}`, position: 'insideTopRight', fill: '#F5A623', fontSize: 11, fontFamily: 'Poppins' }}
+                      stroke="#E39A1F"
+                      strokeDasharray="4 4"
+                      strokeWidth={1.2}
+                      label={{ value: `Target ${studentTarget}`, position: 'insideTopRight', fill: '#C98516', fontSize: 11, fontFamily: 'Poppins' }}
                     />
-                    <Bar dataKey="students" name="Students" fill={c.primary} radius={[6, 6, 0, 0]} barSize={14} animationDuration={900} />
+                    <Bar dataKey="students" name="Students" fill="url(#gGreen)" radius={[8, 8, 0, 0]} barSize={26} animationDuration={900}>
+                      <LabelList dataKey="students" position="top" style={{ fontSize: 11, fill: c.tick, fontFamily: 'Poppins' }} />
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartCard>
+              <ChartCard title="Students per month">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={withShortMonths(schoolMonthlyRows)} margin={{ top: 8, right: 8, left: -8, bottom: 8 }}>
+                    {GRADIENT_DEFS}
+                    <CartesianGrid strokeDasharray="2 6" stroke={c.grid} vertical={false} />
+                    <XAxis dataKey="monthShort" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 9 }} angle={-35} textAnchor="end" height={56} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} tickLine={false} />
+                    <Tooltip content={<SlickTooltip />} cursor={{ fill: 'rgba(12,96,56,0.05)' }} />
+                    <Bar dataKey="students" name="Students" fill="url(#gGreen)" radius={[6, 6, 0, 0]} barSize={14} animationDuration={900} />
                   </BarChart>
                 </ResponsiveContainer>
               </ChartCard>
             </div>
+            {recordsPanel}
           </>
         )}
 
         {section === 'community' && (
           <>
-            <SectionTitle note={`${kpis.activities} activities reached about ${insights.participants.toLocaleString()} people.`}>Community engagement</SectionTitle>
+            <SectionTitle note={`${kpis.activities} activities reached about ${insights.participants.toLocaleString()} people.`}>
+              Community engagement
+            </SectionTitle>
+            <StatRow items={[
+              { label: 'outreach activities', value: <CountUp value={kpis.activities} /> },
+              { label: 'participants (est.)', value: <CountUp value={insights.participants} /> },
+              { label: 'complimentary passes', value: <CountUp value={passesMonthly.reduce((t, m) => t + (m.totalPasses ?? 0), 0)} /> },
+              ...(insights.peakActivity ? [{ label: 'busiest month', value: insights.peakActivity.month }] : []),
+            ]} />
             <div className="dashboard-charts-grid dashboard-charts-grid--single">
-              <ChartCard
-                title="Community outreach by month"
-                tall
-              >
+              <ChartCard title="Outreach by month" tall>
                 <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={communityByMonth} margin={{ top: 8, right: 16, left: 4, bottom: 16 }}>
+                  <ComposedChart data={communityByMonth} margin={{ top: 8, right: 12, left: -4, bottom: 16 }}>
+                    {GRADIENT_DEFS}
                     <CartesianGrid strokeDasharray="2 6" stroke={c.grid} vertical={false} />
-                    <XAxis dataKey="monthShort" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 9 }} angle={-35} textAnchor="end" height={56} />
-                    <YAxis
-                      yAxisId="left"
-                      orientation="left"
-                      tick={{ fill: c.primary, fontFamily: 'Poppins', fontSize: 10 }}
-                      axisLine={false}
-                      allowDecimals={false}
-                      label={{ value: 'Activities', angle: -90, position: 'insideLeft', fill: c.primary, fontSize: 10, fontFamily: 'Poppins' }}
-                    />
-                    <YAxis
-                      yAxisId="right"
-                      orientation="right"
-                      tick={{ fill: c.accent, fontFamily: 'Poppins', fontSize: 10 }}
-                      axisLine={false}
-                      label={{ value: 'Participants', angle: 90, position: 'insideRight', fill: c.accent, fontSize: 10, fontFamily: 'Poppins' }}
-                    />
-                    <Tooltip {...tt} />
-                    <Legend wrapperStyle={{ fontSize: 11, fontFamily: 'Poppins' }} />
-                    <Bar yAxisId="left" dataKey="activities" name="# Activities" fill={c.primary} radius={[6, 6, 0, 0]} barSize={14} animationDuration={900} />
-                    <Bar yAxisId="right" dataKey="participants" name="Participants (est.)" fill={c.accent} radius={[6, 6, 0, 0]} barSize={14} animationDuration={900} />
+                    <XAxis dataKey="monthShort" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 9 }} angle={-35} textAnchor="end" height={56} axisLine={false} tickLine={false} />
+                    <YAxis yAxisId="left" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 10 }} axisLine={false} tickLine={false} allowDecimals={false} />
+                    <YAxis yAxisId="right" orientation="right" tick={{ fill: '#C98516', fontFamily: 'Poppins', fontSize: 10 }} axisLine={false} tickLine={false} />
+                    <Tooltip content={<SlickTooltip />} cursor={{ fill: 'rgba(12,96,56,0.05)' }} />
+                    <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 11, fontFamily: 'Poppins' }} />
+                    <Bar yAxisId="left" dataKey="activities" name="Activities" fill="url(#gGreen)" radius={[6, 6, 0, 0]} barSize={14} animationDuration={900} />
+                    <Line yAxisId="right" type="monotone" dataKey="participants" name="Participants (est.)" stroke="#E39A1F" strokeWidth={2} dot={{ r: 3, fill: '#fff', stroke: '#E39A1F', strokeWidth: 2 }} activeDot={{ r: 5 }} animationDuration={1100} />
                   </ComposedChart>
                 </ResponsiveContainer>
               </ChartCard>
-            </div>
-
-            <SectionTitle note="Complimentary passes issued each month.">Complementary pass</SectionTitle>
-            <div className="dashboard-charts-grid dashboard-charts-grid--single">
-              <ChartCard title="Monthly complementary pass">
+              <ChartCard title="Complimentary passes per month">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={passesMonthly} margin={{ top: 8, right: 8, left: -8, bottom: 8 }}>
+                    {GRADIENT_DEFS}
                     <CartesianGrid strokeDasharray="2 6" stroke={c.grid} vertical={false} />
-                    <XAxis dataKey="monthShort" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 9 }} angle={-35} textAnchor="end" height={56} />
-                    <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} />
-                    <Tooltip {...tt} />
-                    <Bar dataKey="totalPasses" name="Complementary pass" fill={c.accent} radius={[6, 6, 0, 0]} barSize={14} animationDuration={900} />
+                    <XAxis dataKey="monthShort" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 9 }} angle={-35} textAnchor="end" height={56} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} tickLine={false} />
+                    <Tooltip content={<SlickTooltip />} cursor={{ fill: 'rgba(227,154,31,0.07)' }} />
+                    <Bar dataKey="totalPasses" name="Complimentary passes" fill="url(#gGold)" radius={[6, 6, 0, 0]} barSize={14} animationDuration={900} />
                   </BarChart>
                 </ResponsiveContainer>
               </ChartCard>
             </div>
+            {complementaryPassByGroup.length > 0 && (
+              <div className="dashboard-charts-grid dashboard-charts-grid--single">
+                <ChartCard title="Complimentary passes by group" content>
+                  <RankRows color="#E39A1F" items={complementaryPassByGroup.slice(0, 8).map(r => ({ label: r.group, value: r.complementaryPasses }))} />
+                </ChartCard>
+              </div>
+            )}
+            {recordsPanel}
           </>
         )}
 
         {section === 'research' && (research.length > 0 || internshipByMonth.length > 0) && (
           <>
-            <SectionTitle note={insights.peakResearch ? `${kpis.researchRequests} requests so far. Busiest month: ${insights.peakResearch.month} (${insights.peakResearch.value}).` : undefined}>Research coordination</SectionTitle>
+            <SectionTitle note={insights.peakResearch ? `${kpis.researchRequests} requests so far. Busiest month: ${insights.peakResearch.month} (${insights.peakResearch.value}).` : undefined}>
+              Research coordination
+            </SectionTitle>
+            <StatRow items={[
+              { label: 'research requests', value: <CountUp value={kpis.researchRequests} /> },
+              { label: 'internship placements', value: <CountUp value={internships.reduce((t, r) => t + r.total, 0)} /> },
+              ...(insights.peakResearch ? [{ label: 'busiest month', value: insights.peakResearch.month }] : []),
+            ]} />
             <div className="dashboard-charts-grid dashboard-charts-grid--single">
-              <ChartCard
-                title="Research requests by month"
-              >
+              <ChartCard title="Research requests by month">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={researchByMonth} margin={{ top: 8, right: 8, left: -8, bottom: 8 }}>
+                    {GRADIENT_DEFS}
                     <CartesianGrid strokeDasharray="2 6" stroke={c.grid} vertical={false} />
-                    <XAxis dataKey="monthShort" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 9 }} angle={-35} textAnchor="end" height={56} />
-                    <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} allowDecimals={false} />
-                    <Tooltip {...tt} />
-                    <Bar dataKey="requests" name="Requests" fill={c.primary} radius={[6, 6, 0, 0]} barSize={14} animationDuration={900} />
+                    <XAxis dataKey="monthShort" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 9 }} angle={-35} textAnchor="end" height={56} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+                    <Tooltip content={<SlickTooltip />} cursor={{ fill: 'rgba(12,96,56,0.05)' }} />
+                    <Bar dataKey="requests" name="Requests" fill="url(#gGreen)" radius={[6, 6, 0, 0]} barSize={14} animationDuration={900} />
                   </BarChart>
                 </ResponsiveContainer>
               </ChartCard>
-            </div>
-            {internshipByMonth.length > 0 && (
-              <div className="dashboard-charts-grid dashboard-charts-grid--single" style={{ marginTop: '1rem' }}>
-                <ChartCard
-                  title="Internship placements by month"
-                >
+              {internshipByMonth.length > 0 && (
+                <ChartCard title="Internship placements by month">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={internshipByMonth} margin={{ top: 8, right: 8, left: -8, bottom: 8 }}>
+                      {GRADIENT_DEFS}
                       <CartesianGrid strokeDasharray="2 6" stroke={c.grid} vertical={false} />
-                      <XAxis dataKey="monthShort" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 9 }} angle={-35} textAnchor="end" height={56} />
-                      <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} allowDecimals={false} />
-                      <Tooltip {...tt} />
-                      <Legend wrapperStyle={{ fontSize: 11, fontFamily: 'Poppins' }} />
-                      <Bar dataKey="academic" name="Academic" fill={c.primary} radius={[6, 6, 0, 0]} barSize={14} animationDuration={900} />
-                      <Bar dataKey="professional" name="Professional" fill={c.accent} radius={[6, 6, 0, 0]} barSize={14} animationDuration={900} />
+                      <XAxis dataKey="monthShort" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 9 }} angle={-35} textAnchor="end" height={56} axisLine={false} tickLine={false} />
+                      <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+                      <Tooltip content={<SlickTooltip />} cursor={{ fill: 'rgba(12,96,56,0.05)' }} />
+                      <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 11, fontFamily: 'Poppins' }} />
+                      <Bar dataKey="academic" name="Academic" stackId="i" fill="url(#gGreen)" barSize={16} animationDuration={900} />
+                      <Bar dataKey="professional" name="Professional" stackId="i" fill="url(#gGold)" radius={[6, 6, 0, 0]} barSize={16} animationDuration={900} />
                     </BarChart>
                   </ResponsiveContainer>
                 </ChartCard>
+              )}
+            </div>
+            {researchByAction.length > 0 && (
+              <div className="dashboard-charts-grid dashboard-charts-grid--single">
+                <ChartCard title="Requests by status" content>
+                  <RankRows items={researchByAction.map(r => ({ label: r.name, value: r.count }))} />
+                </ChartCard>
               </div>
             )}
+            {recordsPanel}
           </>
         )}
 
         {section === 'conflicts' && conflicts.length > 0 && (
           <>
-            <SectionTitle note={`${conflicts.length} cases logged: ${kpis.openConflicts} open, ${insights.inProgress} in progress, ${insights.resolved} resolved.`}>Conflict management</SectionTitle>
-            <div className="dashboard-charts-grid dashboard-charts-grid--single">
-              <ChartCard title="Conflict cases by status" content>
+            <SectionTitle note={`${conflicts.length} cases logged: ${kpis.openConflicts} open, ${insights.inProgress} in progress, ${insights.resolved} resolved.`}>
+              Conflict management
+            </SectionTitle>
+            <StatRow items={[
+              { label: 'cases logged', value: <CountUp value={conflicts.length} /> },
+              { label: 'open', value: <CountUp value={kpis.openConflicts} /> },
+              { label: 'in progress', value: <CountUp value={insights.inProgress} /> },
+              { label: 'resolved', value: <CountUp value={insights.resolved} /> },
+            ]} />
+            <div className="dashboard-charts-grid">
+              <ChartCard title="Cases by status" content>
                 <SegmentBar segments={conflictsByStatus.map(r => ({ label: r.name, value: r.count, color: /resolved/i.test(r.name) ? '#2E9E5B' : /progress/i.test(r.name) ? '#E0A030' : /open/i.test(r.name) ? '#D9534F' : '#B9C4BC' }))} />
               </ChartCard>
+              <ChartCard title="Cases by issue type" content>
+                <RankRows color="#D9534F" items={conflictsByType.map(r => ({ label: r.name, value: r.count }))} />
+              </ChartCard>
             </div>
+            {recordsPanel}
           </>
         )}
 
         {section === 'waste' && (
           <>
-            <SectionTitle note={`${kpis.wasteKg.toLocaleString()} kg collected, about ${insights.avgWaste} kg a month.`}>Waste management</SectionTitle>
+            <SectionTitle note={`${kpis.wasteKg.toLocaleString()} kg collected, about ${insights.avgWaste} kg a month.`}>
+              Waste management
+            </SectionTitle>
+            <StatRow items={[
+              { label: 'kg collected', value: <CountUp value={kpis.wasteKg} /> },
+              { label: 'kg per month, average', value: <CountUp value={insights.avgWaste} /> },
+              ...(insights.peakWaste ? [{ label: `peak month (${Math.round(insights.peakWaste.value)} kg)`, value: insights.peakWaste.month }] : []),
+            ]} />
             <WasteDashboardCharts data={wasteData} />
+            {recordsPanel}
           </>
         )}
 
         {section === 'water' && (
           <>
-            <SectionTitle note={bioWater ? `${bioWater.rate}% of tests were within Rwanda freshwater limits.` : undefined}>Water quality</SectionTitle>
+            <SectionTitle note={bioWater ? `${bioWater.rate}% of tests were within Rwanda freshwater limits.` : undefined}>
+              Water quality
+            </SectionTitle>
             <div className="dashboard-charts-grid dashboard-charts-grid--single">
               {bioWater && (
-                <ChartCard title="Park water quality — biodiversity survey compliance" content>
+                <ChartCard title="Park water quality: biodiversity survey" content>
                   <BiodiversityWaterCompliance summary={bioWater} />
                 </ChartCard>
               )}
             </div>
-            <div className="dashboard-charts-grid dashboard-charts-grid--single" style={{ marginTop: '1.25rem' }}>
+            <div className="dashboard-charts-grid dashboard-charts-grid--single">
               {bioWater && (
-                <ChartCard title="Explore park water parameters (biodiversity survey)" content>
+                <ChartCard title="Explore park water parameters" content>
                   <BiodiversityWaterExplorer summary={bioWater} />
                 </ChartCard>
               )}
-              <ChartCard title="WASAC effluent & industrial wastewater (separate programme)" content>
+              <ChartCard title="WASAC effluent and industrial wastewater (separate programme)" content>
                 <WasacWaterPanel />
               </ChartCard>
             </div>
+            {recordsPanel}
           </>
         )}
 
-        {section === 'explore' && (
-          <>
-            <SectionTitle>Explore all records</SectionTitle>
-            <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: '0 0 1rem', lineHeight: 1.6 }}>
-              Search and browse department datasets. Water quality has two programmes: the{' '}
-              <strong>biodiversity survey</strong> (park ponds & wetlands, Nov 2025) and{' '}
-              <strong>WASAC / RS 109</strong> (industrial wastewater & Phoenix Apartment community effluent, Oct 2025).
-              Use the <strong>Water quality</strong> tab for charts and compliance summaries.
-            </p>
-            <input
-              type="search"
-              className="species-search"
-              placeholder="Search schools, activities, research, conflicts, water parameters…"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              style={{ marginBottom: '1rem' }}
-            />
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '1rem' }}>
-              {[
-                { id: 'schools', label: `School visits (${schools?.individualVisits.length ?? 0})` },
-                { id: 'community', label: `Activities (${community.length})` },
-                { id: 'research', label: `Research (${research.length})` },
-                { id: 'research-status', label: `Research status (${researchByAction.length})` },
-                { id: 'internships', label: `Internships (${internships.reduce((s, r) => s + r.total, 0)})` },
-                { id: 'conflicts', label: `Conflicts (${conflicts.length})` },
-                { id: 'conflict-types', label: `Conflict types (${conflictsByType.length})` },
-                { id: 'passes', label: `Complementary pass (${passes?.detail.length ?? 0})` },
-                { id: 'pass-groups', label: `Pass groups (${complementaryPassByGroup.length})` },
-                { id: 'waste', label: `Waste (${waste.length})` },
-                { id: 'water-bio', label: `Water — Biodiversity (${bioWaterExplore.length})` },
-                { id: 'water-wasac', label: `Water — WASAC (${wasacWaterExplore.length})` },
-              ].map(t => (
-                <button
-                  key={t.id}
-                  type="button"
-                  className={`dashboard-nav-btn${exploreTab === t.id ? ' dashboard-nav-btn--active' : ''}`}
-                  onClick={() => setExploreTab(t.id)}
-                >
-                  {t.label}
-                </button>
-              ))}
-            </div>
-
-            <div className="glass-card data-table-wrap" role="region" aria-label="Explore data records">
-              {exploreTab === 'schools' && (
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>Month</th>
-                      <th>School / group</th>
-                      <th>Groups</th>
-                      <th>Students</th>
-                      <th>Teachers</th>
-                      <th>Other adults</th>
-                      <th>Complimentary</th>
-                      <th>Programme</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredSchoolVisits.map((row, i) => (
-                      <tr key={i}>
-                        <td>{row.month}</td>
-                        <td>{row.school}</td>
-                        <td>{row.schoolGroups ?? '—'}</td>
-                        <td>{row.students ?? '—'}</td>
-                        <td>{row.teachers ?? '—'}</td>
-                        <td>{row.otherAdults ?? '—'}</td>
-                        <td>{row.complimentary ?? '—'}</td>
-                        <td>{row.programme ? `${row.programme}${row.programmePupils != null ? ` (${row.programmePupils} pupils)` : ''}` : (row.notes ?? '—')}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-              {exploreTab === 'community' && (
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>Month</th>
-                      <th>Activity</th>
-                      <th>Participant group</th>
-                      <th>Participants</th>
-                      <th>Women</th>
-                      <th>Men</th>
-                      <th>Institutions</th>
-                      <th>Complimentary</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredCommunity.map((row, i) => (
-                      <tr key={i}>
-                        <td>{row.month}</td>
-                        <td>{row.activity}</td>
-                        <td>{row.participantGroup ?? '—'}</td>
-                        <td>{row.participants ?? '—'}</td>
-                        <td>{row.women ?? '—'}</td>
-                        <td>{row.men ?? '—'}</td>
-                        <td>{row.institutions ?? '—'}</td>
-                        <td>{row.complimentary ?? '—'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-              {exploreTab === 'research' && (
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>Month</th>
-                      <th>Date received</th>
-                      <th>Researcher(s)</th>
-                      <th>Institution</th>
-                      <th>Category</th>
-                      <th>Topic</th>
-                      <th>Requested activity</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredResearch.map((row, i) => (
-                      <tr key={`${row.names}-${i}`}>
-                        <td>{row.month}</td>
-                        <td>{row.dateReceived ?? '—'}</td>
-                        <td>{row.names}</td>
-                        <td>{row.institution ?? '—'}</td>
-                        <td>{row.category}</td>
-                        <td>{row.topic ?? '—'}</td>
-                        <td>{row.requestedActivities ?? '—'}</td>
-                        <td>{row.status ?? '—'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-              {exploreTab === 'research-status' && (
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>Status</th>
-                      <th>Requests</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {researchByAction
-                      .filter(row => !search.trim() || row.name.toLowerCase().includes(search.toLowerCase()))
-                      .map(row => (
-                        <tr key={row.name}>
-                          <td>{row.name}</td>
-                          <td>{row.count}</td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              )}
-              {exploreTab === 'conflicts' && (
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Issue type</th>
-                      <th>Area</th>
-                      <th>Location</th>
-                      <th>Description</th>
-                      <th>Status</th>
-                      <th>Action taken</th>
-                      <th>Follow-up needed</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredConflicts.map((row, i) => (
-                      <tr key={`${row.id ?? i}-${row.date ?? i}`}>
-                        <td>{row.date ?? '—'}</td>
-                        <td>{row.issueType ?? '—'}</td>
-                        <td>{row.areaType ?? '—'}</td>
-                        <td>{row.location ?? '—'}</td>
-                        <td>{row.description ?? '—'}</td>
-                        <td>{row.status ?? '—'}</td>
-                        <td>{row.actionTaken ?? '—'}</td>
-                        <td>{row.followUpRequired ?? '—'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-              {exploreTab === 'conflict-types' && (
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>Issue type</th>
-                      <th>Cases</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {conflictsByType
-                      .filter(row => !search.trim() || row.name.toLowerCase().includes(search.toLowerCase()))
-                      .map(row => (
-                        <tr key={row.name}>
-                          <td>{row.name}</td>
-                          <td>{row.count}</td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              )}
-              {exploreTab === 'pass-groups' && (
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>Group</th>
-                      <th>Complementary pass</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {complementaryPassByGroup
-                      .filter(row => !search.trim() || row.group.toLowerCase().includes(search.toLowerCase()))
-                      .map((row, i) => (
-                        <tr key={`${row.group}-${i}`}>
-                          <td>{row.group}</td>
-                          <td>{row.complementaryPasses}</td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              )}
-              {exploreTab === 'internships' && (
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>Month</th>
-                      <th>Academic</th>
-                      <th>Professional</th>
-                      <th>Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {internships
-                      .filter(row => !search.trim() || row.month.toLowerCase().includes(search.toLowerCase()))
-                      .map((row, i) => (
-                        <tr key={`${row.month}-${i}`}>
-                          <td>{row.month}</td>
-                          <td>{row.academic}</td>
-                          <td>{row.professional}</td>
-                          <td>{row.total}</td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              )}
-              {exploreTab === 'passes' && passes && (
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>Month</th>
-                      <th>Group</th>
-                      <th>Complementary pass</th>
-                      <th>Notes</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {passes.detail
-                      .filter(d => !search.trim() || d.group.toLowerCase().includes(search.toLowerCase()) || d.month.toLowerCase().includes(search.toLowerCase()))
-                      .map((row, i) => (
-                        <tr key={i}>
-                          <td>{row.month}</td>
-                          <td>{row.group}</td>
-                          <td>{row.passes}</td>
-                          <td>{row.notes ?? '—'}</td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              )}
-              {exploreTab === 'waste' && (
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>Month</th>
-                      <th>Total (kg)</th>
-                      <th>Biodegradable (kg)</th>
-                      <th>Non-biodegradable (kg)</th>
-                      <th>Note</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {waste.map((row, i) => {
-                      const bio = row.biodegradableKg ?? (row.kg != null ? Math.round(row.kg * 0.7) : null);
-                      const nonBio = row.nonBiodegradableKg ?? (row.kg != null && bio != null ? row.kg - bio : null);
-                      return (
-                        <tr key={i}>
-                          <td>{row.month}</td>
-                          <td>{row.kg ?? '—'}</td>
-                          <td>{bio ?? '—'}</td>
-                          <td>{nonBio ?? '—'}</td>
-                          <td>{row.note ?? '—'}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              )}
-              {exploreTab === 'water-bio' && (
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>Parameter</th>
-                      <th>Sampling point</th>
-                      <th>Value</th>
-                      <th>Unit</th>
-                      <th>Limit</th>
-                      <th>Result</th>
-                      <th>Method</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredBioWaterExplore.length === 0 ? (
-                      <tr>
-                        <td colSpan={7} style={{ textAlign: 'center', padding: '1.5rem' }}>
-                          {bioWaterExplore.length === 0
-                            ? 'No biodiversity survey water data loaded.'
-                            : 'No rows match your search.'}
-                        </td>
-                      </tr>
-                    ) : (
-                      filteredBioWaterExplore.map((row, i) => (
-                        <tr key={`${row.parameter}-${row.site}-${i}`}>
-                          <td>{row.parameter}</td>
-                          <td>{row.site}</td>
-                          <td>{row.value}</td>
-                          <td>{row.unit}</td>
-                          <td>{row.limit}</td>
-                          <ExploreResultCell result={row.result} />
-                          <td>{row.methodOrRemarks}</td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              )}
-              {exploreTab === 'water-wasac' && (
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>Parameter</th>
-                      <th>Sampling point</th>
-                      <th>Value</th>
-                      <th>Unit</th>
-                      <th>Limit</th>
-                      <th>Result</th>
-                      <th>Remarks</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredWasacWaterExplore.length === 0 ? (
-                      <tr>
-                        <td colSpan={7} style={{ textAlign: 'center', padding: '1.5rem' }}>
-                          {wasacWaterExplore.length === 0
-                            ? 'No WASAC water data loaded.'
-                            : 'No rows match your search.'}
-                        </td>
-                      </tr>
-                    ) : (
-                      filteredWasacWaterExplore.map((row, i) => (
-                        <tr key={`${row.parameter}-${row.site}-${i}`}>
-                          <td>{row.parameter}</td>
-                          <td>{row.site}</td>
-                          <td>{row.value}</td>
-                          <td>{row.unit}</td>
-                          <td>{row.limit}</td>
-                          <ExploreResultCell result={row.result} />
-                          <td>{row.methodOrRemarks}</td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              )}
-            </div>
-          </>
-        )}
         </div>
       </div>
     </div>
