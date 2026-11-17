@@ -122,7 +122,7 @@ export default function MapPage() {
   const map           = useRef<MapLibreMap | null>(null);
   const visibilityRef = useRef<Record<string, boolean>>({ ...INIT_VISIBILITY });
 
-  const [is3D,        setIs3D]        = useState(true);
+  const [is3D,        setIs3D]        = useState(false);
   const [layerStates, setLayerStates] = useState<Record<string, boolean>>({ ...INIT_VISIBILITY });
   const [mapStyle,    setMapStyle]    = useState<StyleId>('satellite');
   const [hoverInfo,   setHoverInfo]   = useState<PanelInfo | null>(null);
@@ -196,8 +196,8 @@ export default function MapPage() {
         } as StyleSpecification,
         center: [30.1491, -1.9555],
         zoom: 15,
-        pitch: 60,
-        bearing: -17,
+        pitch: 0,
+        bearing: 0,
       });
 
       map.current = mapInstance;
@@ -206,13 +206,12 @@ export default function MapPage() {
 
       mapInstance.on('load', async () => {
         try {
-          // ── Terrain & sky (3D, enabled by default) ──────────────────────
+          // ── Terrain & sky (3D, switched on with the 3D button) ──────────
           mapInstance.addSource('terrain-source', {
             type: 'raster-dem',
             url: 'https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=g8UGiMdXyHomD5NmJULL',
             tileSize: 256,
           });
-          mapInstance.setTerrain({ source: 'terrain-source', exaggeration: 1.8 });
           // MapLibre supports sky layers at runtime; bundled typings lag behind for some versions.
           mapInstance.addLayer({
             id: 'sky-layer',
@@ -403,6 +402,7 @@ export default function MapPage() {
           <p className="map-info-title">Nyandungu Eco-Park</p>
           <p className="map-info-line">183.94 Ha · Kigali, Rwanda</p>
           <p className="map-info-meta">2025 Biodiversity Survey</p>
+          <p className="map-info-meta"><a href="/" style={{ color: 'inherit' }}>See survey results in the dashboard →</a></p>
         </div>
       </div>
 
