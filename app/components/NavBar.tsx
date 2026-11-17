@@ -4,7 +4,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useTheme } from './ThemeProvider';
 
 const NAV_LINKS = [
   { label: 'Dashboard', href: '/' },
@@ -46,7 +45,6 @@ function NavLinkList({
 
 export default function NavBar() {
   const pathname = usePathname();
-  const { theme, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -97,15 +95,6 @@ export default function NavBar() {
             <span className="sr-only">{menuOpen ? 'Close menu' : 'Open menu'}</span>
           </button>
 
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="theme-toggle"
-            aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
-            title={theme === 'light' ? 'Dark mode' : 'Light mode'}
-          >
-            {theme === 'light' ? '🌙' : '☀️'}
-          </button>
         </div>
       </div>
       </div>

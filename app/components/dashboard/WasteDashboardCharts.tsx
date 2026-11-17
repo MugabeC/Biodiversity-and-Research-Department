@@ -2,11 +2,12 @@
 
 import { useMemo } from 'react';
 import {
-  BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+  BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer,
 } from 'recharts';
 import { sortByMonth, withShortMonths } from '@/app/lib/dashboardUtils';
-import { chartTooltipProps, useChartColors } from './chartTheme';
+import { useChartColors } from './chartTheme';
+import { GRADIENT_DEFS, SlickTooltip } from './minimal';
 
 export type WasteRecord = {
   month: string;
@@ -25,7 +26,6 @@ export function normalizeWasteData(data: WasteFile): WasteRecord[] {
 
 export default function WasteDashboardCharts({ data }: { data: WasteFile }) {
   const c = useChartColors();
-  const tt = chartTooltipProps(c);
   const rows = normalizeWasteData(data);
 
   const monthly = useMemo(() => {
@@ -64,17 +64,17 @@ export default function WasteDashboardCharts({ data }: { data: WasteFile }) {
     <div className="dashboard-charts-grid">
       <div className="chart-card chart-plain">
         <h3 className="dash-chart-title">
-          Waste collected (kg per month)
+          Collected per month (kg)
         </h3>
         <div className="chart-card-body" style={{ height: 280 }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={monthly} margin={{ top: 8, right: 8, left: -8, bottom: 8 }}>
+              {GRADIENT_DEFS}
               <CartesianGrid strokeDasharray="2 6" stroke={c.grid} vertical={false} />
-              <XAxis dataKey="monthShort" tick={axisTick} angle={-35} textAnchor="end" height={56} />
-              <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} />
-              <Tooltip {...tt} />
-              <Legend wrapperStyle={{ fontFamily: 'Poppins', fontSize: 12, color: c.tick }} />
-              <Bar dataKey="total" name="Waste collected (kg)" fill={c.primary} radius={[6, 6, 0, 0]} barSize={14} animationDuration={900} />
+              <XAxis dataKey="monthShort" tick={axisTick} angle={-35} textAnchor="end" height={56} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <Tooltip content={<SlickTooltip unit=" kg" />} cursor={{ fill: 'rgba(12,96,56,0.05)' }} />
+              <Bar dataKey="total" name="Collected" fill="url(#gGreen)" radius={[6, 6, 0, 0]} barSize={14} animationDuration={900} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -82,26 +82,18 @@ export default function WasteDashboardCharts({ data }: { data: WasteFile }) {
 
       <div className="chart-card chart-plain">
         <h3 className="dash-chart-title">
-          Cumulative waste collected (12 months)
+          Running total
         </h3>
-        <p className="chart-card-desc">Running total of waste collected across the reporting year.</p>
         <div className="chart-card-body" style={{ height: 280 }}>
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={cumulative} margin={{ top: 8, right: 8, left: -8, bottom: 8 }}>
+            <AreaChart data={cumulative} margin={{ top: 8, right: 8, left: -8, bottom: 8 }}>
+              {GRADIENT_DEFS}
               <CartesianGrid strokeDasharray="2 6" stroke={c.grid} vertical={false} />
-              <XAxis dataKey="monthShort" tick={axisTick} angle={-35} textAnchor="end" height={56} />
-              <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} />
-              <Tooltip {...tt} />
-              <Line
-                type="monotone"
-                dataKey="cumulative"
-                name="Cumulative (kg)"
-                stroke={c.primary}
-                strokeWidth={2.5}
-                dot={{ r: 3, fill: c.primary }}
-                activeDot={{ r: 5 }}
-              />
-            </LineChart>
+              <XAxis dataKey="monthShort" tick={axisTick} angle={-35} textAnchor="end" height={56} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <Tooltip content={<SlickTooltip unit=" kg" />} cursor={{ stroke: '#2E9E5B', strokeDasharray: '3 3' }} />
+              <Area type="monotone" dataKey="cumulative" name="Running total" stroke="#2E9E5B" strokeWidth={2} fill="url(#gAreaGreen)" dot={false} activeDot={{ r: 5, fill: '#fff', stroke: '#2E9E5B', strokeWidth: 2 }} animationDuration={1100} />
+            </AreaChart>
           </ResponsiveContainer>
         </div>
       </div>
