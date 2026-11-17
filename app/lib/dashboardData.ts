@@ -18,25 +18,37 @@ export type DashboardSummary = {
   parkSize: string;
   location: string;
   surveyYear: string;
+  /** Student target per quarter (orange line on the quarterly chart). */
+  studentTargetPerQuarter?: number;
   totalSpecies: number;
   taxa: Record<string, { count2025: number; count2023: number; [k: string]: unknown }>;
 };
 
 export type SchoolVisitsData = {
-  monthlyTotals: { month: string; totalStudents: number | null; label?: string }[];
+  monthlyTotals: { month: string; totalStudents: number | null; schoolGroups?: number | null; label?: string }[];
   individualVisits: {
     month: string;
     school: string;
     students: number | null;
-    teachers?: string | null;
+    teachers?: string | number | null;
     notes?: string | null;
+    schoolGroups?: number | null;
+    otherAdults?: number | null;
+    complimentary?: number | null;
+    programme?: string | null;
+    programmePupils?: number | null;
   }[];
 };
 
 export type CommunityRow = {
   month: string;
   activity: string;
-  participants: string;
+  participants: number | null;
+  participantGroup?: string | null;
+  women?: number | null;
+  men?: number | null;
+  institutions?: number | null;
+  complimentary?: number | null;
   notes?: string | null;
 };
 
@@ -46,8 +58,8 @@ export type PassesData = {
 };
 
 export type WasteFile =
-  | { month: string; kg: number | null; biodegradableKg?: number | null; nonBiodegradableKg?: number | null; note?: string | null }[]
-  | { records: { month: string; kg: number | null; biodegradableKg?: number | null; nonBiodegradableKg?: number | null; note?: string | null }[]; splitNote?: string };
+  | { month: string; kg: number | null; biodegradableKg?: number | null; nonBiodegradableKg?: number | null; splitEstimated?: boolean; note?: string | null }[]
+  | { records: { month: string; kg: number | null; biodegradableKg?: number | null; nonBiodegradableKg?: number | null; splitEstimated?: boolean; note?: string | null }[]; splitNote?: string };
 
 export type ResearchRow = {
   month: string;
@@ -58,6 +70,8 @@ export type ResearchRow = {
   program: string | null;
   topic: string | null;
   requestedActivities: string | null;
+  /** Approved / permission granted, Under review / revise, Advised to revise, Pending … */
+  status: string | null;
   internalRemarks: string | null;
   actionTaken: string | null;
   followUpDate: string | null;
@@ -67,15 +81,12 @@ export type ResearchRow = {
 export type ConflictRow = {
   id: number | null;
   date: string | null;
-  reporter: string | null;
   stakeholder: string | null;
-  phone: string | null;
-  source: string | null;
+  areaType: string | null;
   location: string | null;
   category: string | null;
   issueType: string | null;
   description: string | null;
-  scale: string | null;
   affectedArea: string | null;
   actionType: string | null;
   assignedTo: string | null;
@@ -83,7 +94,6 @@ export type ConflictRow = {
   resolutionDate: string | null;
   actionTaken: string | null;
   followUpRequired: string | null;
-  followUpStatus: string | null;
 };
 
 export type LoadedDashboard = {
@@ -122,21 +132,31 @@ function isSubtotal(label: string | null): boolean {
 }
 
 function normalizeSchoolVisits(): SchoolVisitsData {
-  type NewVisit = { school?: string; students?: number | null; teachers_other?: string | null; notes?: string | null };
-  type NewMonth = { month?: string; subtotal_students?: number | null; visits?: NewVisit[] };
+  type NewVisit = {
+    school?: string; students?: number | null; school_groups?: number | null; teachers?: number | null;
+    other_adults?: number | null; complimentary?: number | null; programme?: string | null; programme_pupils?: number | null;
+    teachers_other?: string | null; notes?: string | null;
+  };
+  type NewMonth = { month?: string; subtotal_students?: number | null; school_groups?: number | null; visits?: NewVisit[] };
   const newMonths = ((schoolVisitsJson as WrappedMonths<NewMonth>).months ?? []);
   if (newMonths.length > 0) {
     const monthlyTotals = newMonths.map(m => ({
       month: cleanString(m.month) ?? 'Unknown',
       totalStudents: parseNumber(m.subtotal_students),
+      schoolGroups: parseNumber(m.school_groups),
     }));
     const individualVisits = newMonths.flatMap(m =>
       (m.visits ?? []).map(v => ({
         month: cleanString(m.month) ?? 'Unknown',
-        school: cleanString(v.school) ?? 'Unknown',
+        school: cleanString(v.school) ?? 'School groups (names not listed)',
         students: parseNumber(v.students),
-        teachers: cleanString(v.teachers_other),
+        teachers: parseNumber(v.teachers) ?? cleanString(v.teachers_other),
         notes: cleanString(v.notes),
+        schoolGroups: parseNumber(v.school_groups),
+        otherAdults: parseNumber(v.other_adults),
+        complimentary: parseNumber(v.complimentary),
+        programme: cleanString(v.programme),
+        programmePupils: parseNumber(v.programme_pupils),
       }))
     );
     return { monthlyTotals, individualVisits };
@@ -163,27 +183,24 @@ function normalizeSchoolVisits(): SchoolVisitsData {
 }
 
 function normalizeCommunityActivities(): CommunityRow[] {
-  type NewActivity = { activity?: string; participants_scale?: string | null; notes?: string | null };
+  type NewActivity = {
+    activity?: string; participant_group?: string | null; participants?: number | null;
+    women?: number | null; men?: number | null; institutions?: number | null; complimentary?: number | null; notes?: string | null;
+  };
   type NewMonth = { month?: string; activities?: NewActivity[] };
-  const newMonths = ((communityActivitiesJson as WrappedMonths<NewMonth>).months ?? []);
-  if (newMonths.length > 0) {
-    return newMonths.flatMap(m =>
-      (m.activities ?? []).map(a => ({
-        month: cleanString(m.month) ?? 'Unknown',
-        activity: cleanString(a.activity) ?? 'Untitled activity',
-        participants: cleanString(a.participants_scale) ?? 'Not specified',
-        notes: cleanString(a.notes),
-      }))
-    );
-  }
-
-  type Old = { Month?: string; Activity?: string; 'Participants / Scale'?: string | null; Notes?: string | null };
-  return ((communityActivitiesJson as WrappedRows<Old>).data ?? []).map(row => ({
-    month: cleanString(row.Month) ?? 'Unknown',
-    activity: cleanString(row.Activity) ?? 'Untitled activity',
-    participants: cleanString(row['Participants / Scale']) ?? 'Not specified',
-    notes: cleanString(row.Notes),
-  }));
+  return ((communityActivitiesJson as WrappedMonths<NewMonth>).months ?? []).flatMap(m =>
+    (m.activities ?? []).map(a => ({
+      month: cleanString(m.month) ?? 'Unknown',
+      activity: cleanString(a.activity) ?? 'Untitled activity',
+      participants: parseNumber(a.participants),
+      participantGroup: cleanString(a.participant_group),
+      women: parseNumber(a.women),
+      men: parseNumber(a.men),
+      institutions: parseNumber(a.institutions),
+      complimentary: parseNumber(a.complimentary),
+      notes: cleanString(a.notes),
+    }))
+  );
 }
 
 function normalizeComplementaryPasses(): PassesData {
@@ -227,23 +244,41 @@ function normalizeComplementaryPasses(): PassesData {
 }
 
 function normalizeWaste(): WasteFile {
-  type NewRow = { month?: string; waste_collected_kg?: number | string | null };
+  type NewRow = {
+    month?: string;
+    waste_collected_kg?: number | string | null;
+    biodegradable_kg?: number | null;
+    non_biodegradable_kg?: number | null;
+  };
   const newRows = (wasteJson as { records?: NewRow[] }).records ?? [];
-  const source = newRows.length > 0
-    ? newRows.map(r => ({ month: r.month, rawKg: r.waste_collected_kg }))
-    : ((wasteJson as WrappedRows<{ Month?: string; 'Waste Collected (kg)'?: number | string | null }>).data ?? [])
-        .map(r => ({ month: r.Month, rawKg: r['Waste Collected (kg)'] }));
 
-  const records = source.map(row => {
-    const kg = parseNumber(row.rawKg);
-    const note = typeof row.rawKg === 'string' && row.rawKg.trim().startsWith('>') ? `${row.rawKg} total` : null;
-    const biodegradableKg = kg == null ? null : Math.round(kg * 0.7);
-    const nonBiodegradableKg = kg == null || biodegradableKg == null ? null : kg - biodegradableKg;
-    return { month: cleanString(row.month) ?? 'Unknown', kg, biodegradableKg, nonBiodegradableKg, note };
+  const records = newRows.map(row => {
+    const kg = parseNumber(row.waste_collected_kg);
+    const note = typeof row.waste_collected_kg === 'string' && row.waste_collected_kg.trim().startsWith('>') ? `${row.waste_collected_kg} total` : null;
+    const bioActual = parseNumber(row.biodegradable_kg);
+    const nonActual = parseNumber(row.non_biodegradable_kg);
+    const weighed = kg != null && (bioActual != null || nonActual != null);
+    let biodegradableKg: number | null;
+    let nonBiodegradableKg: number | null;
+    if (weighed) {
+      biodegradableKg = bioActual ?? (kg as number) - (nonActual as number);
+      nonBiodegradableKg = nonActual ?? (kg as number) - (bioActual as number);
+    } else {
+      biodegradableKg = kg == null ? null : Math.round(kg * 0.7);
+      nonBiodegradableKg = kg == null || biodegradableKg == null ? null : kg - biodegradableKg;
+    }
+    return {
+      month: cleanString(row.month) ?? 'Unknown',
+      kg,
+      biodegradableKg,
+      nonBiodegradableKg,
+      splitEstimated: kg != null && !weighed,
+      note: note ?? (kg != null && !weighed ? 'Split estimated (70 / 30)' : null),
+    };
   });
 
   return {
-    splitNote: 'Biodegradable / non-biodegradable split uses 70% / 30% estimates until weighed data is entered.',
+    splitNote: 'Months without weighed figures use a 70% / 30% estimate for the biodegradable / non-biodegradable split.',
     records,
   };
 }
@@ -258,6 +293,7 @@ function normalizeResearch(): ResearchRow[] {
     'Program/Degree level'?: string | null;
     'Research Title / Topic'?: string | null;
     'Requested Activities'?: string | null;
+    Status?: string | null;
     'Internal Remarks'?: string | null;
     'Action taken'?: string | null;
     'Follow-Up Date'?: string | null;
@@ -275,6 +311,7 @@ function normalizeResearch(): ResearchRow[] {
       program: cleanString(row['Program/Degree level']),
       topic: cleanString(row['Research Title / Topic']),
       requestedActivities: cleanString(row['Requested Activities']),
+      status: cleanString(row.Status),
       internalRemarks: cleanString(row['Internal Remarks']),
       actionTaken: cleanString(row['Action taken']),
       followUpDate: cleanString(row['Follow-Up Date']),
@@ -287,27 +324,23 @@ function normalizeConflicts(): ConflictRow[] {
   const rows = ((conflictJson as WrappedRows<Raw>).data ?? []);
 
   return rows
-    .filter(row => typeof row['1.0'] === 'number')
+    .filter(row => typeof row.id === 'number')
     .map(row => ({
-      id: parseNumber(row['1.0']),
-      date: cleanString(row['2026-05-04 00:00:00']),
-      reporter: cleanString(row.Duff),
-      stakeholder: cleanString(row['Park Staff']),
-      phone: cleanString(row['REDACTED.0']),
-      source: cleanString(row['Nearby Community']),
-      location: cleanString(row['Kamashashi Cell/ King David Academy']),
-      category: cleanString(row.Other),
-      issueType: cleanString(row['Pollution Incident']),
-      description: cleanString(row['Kind David Academ realease sewage water to the park']),
-      scale: cleanString(row['More than 10']),
-      affectedArea: cleanString(row['Park and wildlife']),
-      actionType: cleanString(row['Monitoring Conducted']),
-      assignedTo: cleanString(row['Elie and Arielle']),
-      status: cleanString(row.Open),
-      resolutionDate: cleanString(row.col_16),
-      actionTaken: cleanString(row['Reported to the source and reffered to Cell']),
-      followUpRequired: cleanString(row.Yes),
-      followUpStatus: cleanString(row['Followup ongoing']),
+      id: parseNumber(row.id),
+      date: cleanString(row.date),
+      stakeholder: cleanString(row.stakeholder),
+      areaType: cleanString(row.areaType),
+      location: cleanString(row.location),
+      category: cleanString(row.category),
+      issueType: cleanString(row.issueType),
+      description: cleanString(row.description),
+      affectedArea: cleanString(row.affectedArea),
+      actionType: cleanString(row.actionType),
+      assignedTo: cleanString(row.assignedTo),
+      status: cleanString(row.status),
+      resolutionDate: cleanString(row.resolutionDate),
+      actionTaken: cleanString(row.actionTaken),
+      followUpRequired: cleanString(row.followUpRequired),
     }));
 }
 

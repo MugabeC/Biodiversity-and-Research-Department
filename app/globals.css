@@ -1115,6 +1115,11 @@ select.chart-select {
   color: #fff;
 }
 
+/* keep the selected tab readable while the pointer rests on it */
+.dashboard-nav-btn--active:hover {
+  color: #fff;
+}
+
 [data-theme='dark'] .dashboard-nav-btn--active {
   background: var(--meadow-green);
   color: #0a120e;
