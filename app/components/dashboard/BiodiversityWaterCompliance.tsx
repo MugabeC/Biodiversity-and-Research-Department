@@ -1,49 +1,30 @@
 'use client';
 
 import type { BioComplianceSummary } from '@/app/lib/parseBiodiversityWater';
+import { CountUp, Ring } from './minimal';
 
 export default function BiodiversityWaterCompliance({ summary }: { summary: BioComplianceSummary }) {
   const { pass, fail, total, rate, standard, samplingDate } = summary;
+  const tone = rate >= 90 ? 'ok' : rate >= 70 ? 'warn' : 'bad';
 
   return (
     <div className="wq-compliance-tile">
-      <p className="chart-card-desc" style={{ marginTop: 0 }}>
-        Park pond & wetland survey ({samplingDate}) — {standard}. Excludes WASAC industrial / effluent monitoring.
-      </p>
-
-      <div className="wq-formula-box">
-        <p className="heading" style={{ fontSize: 14, margin: '0 0 8px', color: 'var(--accent-text)' }}>
-          Compliance formula
-        </p>
-        <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: 0, lineHeight: 1.6 }}>
-          For each parameter with a defined limit, each sampling point is scored{' '}
-          <strong style={{ color: 'var(--text-primary)' }}>PASS</strong> or{' '}
-          <strong style={{ color: '#D4251C' }}>FAIL</strong> against Rwanda freshwater/wetland limits
-          (max, min, or range). Non-detect (&quot;ND&quot;) and below-detection (&quot;&lt;limit&quot;) count as pass.
-        </p>
-        <p
-          style={{
-            fontSize: 14,
-            fontFamily: 'Poppins, monospace',
-            margin: '12px 0 0',
-            padding: '10px 12px',
-            borderRadius: 10,
-            background: 'rgba(12, 96, 56, 0.08)',
-            color: 'var(--text-primary)',
-          }}
-        >
-          Rate = PASS tests ÷ (PASS + FAIL) × 100 = {pass} ÷ {total} × 100
-        </p>
+      <div className="wq-summary">
+        <Ring percent={rate} size={92} tone={tone} />
+        <div>
+          <p className="wq-rate"><CountUp value={rate} decimals={1} suffix="%" /></p>
+          <p className="wq-rate-sub">{pass} of {total} tests within limits · {fail} outside</p>
+          <p className="wq-rate-sub">Park ponds and wetland, {samplingDate} · {standard}</p>
+        </div>
       </div>
-
-      <div className="wq-rate-display">
-        <p className="heading wq-rate-value" style={{ color: rate >= 70 ? 'var(--accent-text)' : '#D4251C' }}>
-          {rate}%
+      <details className="wq-how">
+        <summary>How is this calculated?</summary>
+        <p>
+          Each sampling point is scored PASS or FAIL against Rwanda freshwater and wetland limits (maximum, minimum or range).
+          Non-detect and below-detection values count as pass. Rate = PASS ÷ (PASS + FAIL) × 100 = {pass} ÷ {total} × 100.
+          WASAC industrial and effluent monitoring is reported separately.
         </p>
-        <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: '4px 0 0' }}>
-          Overall compliance ({pass} pass · {fail} fail · {total} scored tests)
-        </p>
-      </div>
+      </details>
     </div>
   );
 }
