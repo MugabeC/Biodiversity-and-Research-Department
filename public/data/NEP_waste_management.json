@@ -1,62 +1,90 @@
 {
-  "dataset": "Nyandungu Eco-Park – Waste Collected by Month (kg)",
-  "source_sheet": "Waste Management",
+  "dataset": "NEP Waste Management",
+  "source_sheet": "Waste",
   "records": [
     {
-      "month": "March 2025",
-      "waste_collected_kg": null
-    },
-    {
-      "month": "April 2025",
-      "waste_collected_kg": null
-    },
-    {
-      "month": "May 2025",
-      "waste_collected_kg": null
-    },
-    {
-      "month": "June 2025",
-      "waste_collected_kg": 500
-    },
-    {
-      "month": "July 2025",
-      "waste_collected_kg": null
-    },
-    {
-      "month": "August 2025",
-      "waste_collected_kg": null
-    },
-    {
-      "month": "September 2025",
-      "waste_collected_kg": null
-    },
-    {
       "month": "October 2025",
-      "waste_collected_kg": 225
+      "waste_collected_kg": 225,
+      "biodegradable_kg": null,
+      "non_biodegradable_kg": null
     },
     {
       "month": "November 2025",
-      "waste_collected_kg": 204
+      "waste_collected_kg": 204,
+      "biodegradable_kg": null,
+      "non_biodegradable_kg": null
     },
     {
       "month": "December 2025",
-      "waste_collected_kg": 52
+      "waste_collected_kg": 52,
+      "biodegradable_kg": null,
+      "non_biodegradable_kg": null
     },
     {
       "month": "January 2026",
-      "waste_collected_kg": 56
+      "waste_collected_kg": 56,
+      "biodegradable_kg": null,
+      "non_biodegradable_kg": null
     },
     {
       "month": "February 2026",
-      "waste_collected_kg": 108
+      "waste_collected_kg": 108,
+      "biodegradable_kg": null,
+      "non_biodegradable_kg": null
     },
     {
       "month": "March 2026",
-      "waste_collected_kg": 320
+      "waste_collected_kg": 320,
+      "biodegradable_kg": 124,
+      "non_biodegradable_kg": 196
     },
     {
       "month": "April 2026",
-      "waste_collected_kg": 324
+      "waste_collected_kg": 324,
+      "biodegradable_kg": 126,
+      "non_biodegradable_kg": 198
+    },
+    {
+      "month": "May 2026",
+      "waste_collected_kg": 287,
+      "biodegradable_kg": null,
+      "non_biodegradable_kg": null
+    },
+    {
+      "month": "June 2026",
+      "waste_collected_kg": 144,
+      "biodegradable_kg": null,
+      "non_biodegradable_kg": null
+    },
+    {
+      "month": "July 2026",
+      "waste_collected_kg": 139,
+      "biodegradable_kg": 40,
+      "non_biodegradable_kg": 99
+    },
+    {
+      "month": "August 2026",
+      "waste_collected_kg": 25,
+      "biodegradable_kg": 7,
+      "non_biodegradable_kg": 18
+    },
+    {
+      "month": "September 2026",
+      "waste_collected_kg": 460,
+      "biodegradable_kg": 168,
+      "non_biodegradable_kg": 292
+    },
+    {
+      "month": "October 2026",
+      "waste_collected_kg": 433,
+      "biodegradable_kg": 183,
+      "non_biodegradable_kg": 250
+    },
+    {
+      "month": "November 2026",
+      "waste_collected_kg": 123,
+      "biodegradable_kg": 39,
+      "non_biodegradable_kg": 84
     }
   ]
 }

@@ -3,6 +3,7 @@
   "parkSize": "183.94 Ha",
   "location": "Kigali, Rwanda",
   "surveyYear": "2025/2026",
+  "studentTargetPerQuarter": 500,
   "totalSpecies": 870,
   "taxa": {
     "birds": {
@@ -13,8 +14,7 @@
     },
     "plants": {
       "count2025": 468,
-      "count2023": 260,
-      "families": "multiple"
+      "count2023": 260
     },
     "amphibians_reptiles": {
       "count2025": 22,
