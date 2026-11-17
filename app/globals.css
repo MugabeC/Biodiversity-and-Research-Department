@@ -1424,6 +1424,11 @@ select.chart-select {
   background: rgba(21, 101, 192, 0.08);
 }
 
+.doc-type-badge--powerpoint {
+  color: #c2571a;
+  background: rgba(194, 87, 26, 0.1);
+}
+
 .doc-type-badge--excel {
   color: #2e7d32;
   background: rgba(46, 125, 50, 0.1);
@@ -1443,6 +1448,27 @@ select.chart-select {
   color: #6ecf96;
   background: rgba(110, 207, 150, 0.12);
 }
+
+[data-theme='dark'] .doc-type-badge--powerpoint {
+  color: #ffb27a;
+  background: rgba(255, 178, 122, 0.12);
+}
+
+.doc-upload-bar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 0 0 1.5rem; }
+.doc-upload-panel { padding: 20px; margin: 0 0 1.5rem; max-width: 560px; display: flex; flex-direction: column; gap: 12px; }
+.doc-upload-title { margin: 0; font-size: 20px; color: var(--meadow-green); }
+.doc-upload-help { margin: 0; font-size: 13px; color: var(--text-secondary); }
+.doc-upload-label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--text-secondary); }
+.doc-upload-input { font-size: 14px; color: var(--text-primary); }
+.doc-upload-field { padding-left: 14px; height: 44px; width: 100%; box-sizing: border-box; }
+.doc-upload-progress { height: 6px; border-radius: 3px; background: rgba(128, 128, 128, 0.2); overflow: hidden; }
+.doc-upload-progress > div { height: 100%; background: var(--meadow-green); transition: width 0.2s; }
+.doc-upload-error { margin: 0; font-size: 13px; color: #c62828; }
+.doc-upload-ok { margin: 0; font-size: 13px; color: #2e7d32; }
+.doc-upload-meta { color: var(--text-secondary); }
+.doc-remove-form { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+[data-theme='dark'] .doc-upload-error { color: #f08078; }
+[data-theme='dark'] .doc-upload-ok { color: #6ecf96; }
 
 .doc-action-btn {
   display: inline-flex;
