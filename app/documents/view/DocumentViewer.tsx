@@ -18,7 +18,7 @@ export default function DocumentViewer({ doc }: { doc: LibraryDocument }) {
   }, [href]);
 
   const officeEmbed =
-    absoluteUrl && (doc.type === 'word' || doc.type === 'excel')
+    absoluteUrl && (doc.type !== 'pdf')
       ? `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(absoluteUrl)}`
       : null;
 
@@ -51,12 +51,12 @@ export default function DocumentViewer({ doc }: { doc: LibraryDocument }) {
         {officeEmbed && (
           <iframe title={doc.title} src={officeEmbed} className="doc-viewer-frame" allowFullScreen />
         )}
-        {(doc.type === 'word' || doc.type === 'excel') && !absoluteUrl && (
+        {(doc.type !== 'pdf') && !absoluteUrl && (
           <p className="doc-viewer-loading">Loading preview…</p>
         )}
       </div>
 
-      {(doc.type === 'word' || doc.type === 'excel') && (
+      {(doc.type !== 'pdf') && (
         <p className="doc-viewer-hint">
           Office preview is provided by Microsoft Office Online. If the preview does not load, use{' '}
           <strong>Download</strong> or <strong>Open in new tab</strong>.
