@@ -27,7 +27,7 @@ function NavLinkList({
   return (
     <ul id={id} className={className}>
       {NAV_LINKS.map((link) => {
-        const isActive = pathname === link.href;
+        const isActive = link.href === '/' ? pathname === '/' : pathname === link.href || pathname.startsWith(`${link.href}/`);
         return (
           <li key={link.href}>
             <Link

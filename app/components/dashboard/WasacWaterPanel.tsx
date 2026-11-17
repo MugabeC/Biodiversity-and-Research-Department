@@ -102,12 +102,12 @@ export default function WasacWaterPanel() {
               data={chartData}
               margin={{ top: 8, right: 40, left: 4, bottom: 24 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke={c.grid} horizontal={false} />
+              <CartesianGrid strokeDasharray="2 6" stroke={c.grid} horizontal={false} />
               <YAxis type="category" dataKey="site" width={56} tick={{ fill: c.tick, fontSize: 11, fontFamily: 'Poppins' }} />
               <XAxis type="number" domain={[0, xMax]} tick={{ fill: c.tick, fontSize: 10, fontFamily: 'Poppins' }} />
               <Tooltip {...tt} />
               <ReferenceLine x={paramData.limit} stroke="#D4251C" strokeDasharray="5 3" />
-              <Bar dataKey="value" name={selected} radius={[0, 4, 4, 0]} barSize={32}>
+              <Bar dataKey="value" name={selected} radius={[0, 6, 6, 0]} barSize={12} animationDuration={900}>
                 {chartData.map((d, i) => (
                   <Cell key={i} fill={d.pass ? '#1A7D2E' : '#D4251C'} />
                 ))}

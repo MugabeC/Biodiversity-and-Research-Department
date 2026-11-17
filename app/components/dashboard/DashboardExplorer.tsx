@@ -4,8 +4,8 @@ import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  ResponsiveContainer, AreaChart, Area,
-  ComposedChart, ReferenceLine, Cell, PieChart, Pie,
+  ResponsiveContainer,
+  ComposedChart, ReferenceLine,
 } from 'recharts';
 import TaxaIcon from '../TaxaIcon';
 import {
@@ -33,6 +33,7 @@ import {
 import { useChartColors, chartTooltipProps } from './chartTheme';
 import TaxaShareBarChart from './TaxaShareBarChart';
 import { normalizeWasteData } from './WasteDashboardCharts';
+import { CountUp, Sparkline, Ring, SegmentBar } from './minimal';
 
 const BiodiversityWaterCompliance = dynamic(() => import('./BiodiversityWaterCompliance'), { ssr: false });
 const BiodiversityWaterExplorer = dynamic(() => import('./BiodiversityWaterExplorer'), { ssr: false });
@@ -75,11 +76,38 @@ function researchMonthLabel(label: string): string {
   return `${trimmed} 2025`;
 }
 
-function SectionTitle({ children }: { children: React.ReactNode }) {
+function SectionTitle({ children, note }: { children: React.ReactNode; note?: React.ReactNode }) {
   return (
-    <h2 className="heading" style={{ fontSize: '22px', color: 'var(--accent-text)', margin: '0 0 1.25rem' }}>
-      {children}
-    </h2>
+    <div className="dash-sec-head">
+      <h2>{children}</h2>
+      {note && <p>{note}</p>}
+    </div>
+  );
+}
+
+function peakOf<T extends { month: string }>(rows: T[], pick: (r: T) => number): { month: string; value: number } | null {
+  let best: { month: string; value: number } | null = null;
+  for (const r of rows) {
+    const v = pick(r);
+    if (!best || v > best.value) best = { month: r.month, value: v };
+  }
+  return best;
+}
+
+function Tile({
+  title, value, unit, viz, note, onOpen, delay,
+}: {
+  title: string; value: React.ReactNode; unit: string; viz: React.ReactNode; note: React.ReactNode;
+  onOpen: () => void; delay: number;
+}) {
+  return (
+    <button type="button" className="dash-tile" onClick={onOpen} style={{ animationDelay: `${delay}ms` }}>
+      <span className="dash-tile-title">{title}<i aria-hidden>→</i></span>
+      <span className="dash-tile-value">{value}</span>
+      <span className="dash-tile-unit">{unit}</span>
+      <span className="dash-tile-viz">{viz}</span>
+      <span className="dash-tile-note">{note}</span>
+    </button>
   );
 }
 
@@ -110,8 +138,8 @@ function ChartCard({
   content?: boolean;
 }) {
   return (
-    <div className="glass-card chart-card">
-      <h3 className="heading" style={{ fontSize: '16px', margin: '0 0 0.5rem' }}>{title}</h3>
+    <div className="chart-card chart-plain">
+      <h3 className="dash-chart-title">{title}</h3>
       {description && <p className="chart-card-desc">{description}</p>}
       {content ? (
         <div className="chart-card-body">{children}</div>
@@ -368,6 +396,50 @@ export default function DashboardExplorer() {
     [wasacWaterExplore, search],
   );
 
+  const latestMonth = useMemo(() => {
+    const all = [
+      ...schoolMonthlyRows, ...wasteMonthly, ...passesMonthly, ...communityByMonth, ...researchByMonth,
+    ].map(r => r.month);
+    return all.sort((x, y) => monthSortKey(x) - monthSortKey(y)).pop() ?? '';
+  }, [schoolMonthlyRows, wasteMonthly, passesMonthly, communityByMonth, researchByMonth]);
+
+  const insights = useMemo(() => {
+    const sortedTaxa = [...donutBiodiversity].sort((x, y) => x.count === y.count ? 0 : y.count - x.count);
+    const totalSpecies = summary?.totalSpecies ?? 870;
+    const bestQuarter = schoolQuarterly.reduce<{ quarter: string; students: number } | null>(
+      (best, q) => (!best || q.students > best.students ? q : best), null);
+    const completedQuarters = schoolQuarterly.slice(0, -1); // the latest quarter is still in progress
+    const belowTarget = completedQuarters.filter(q => q.students < studentTarget).length;
+    const participants = communityByMonth.reduce((t, m) => t + m.participants, 0);
+    const cumulativeWaste = (() => {
+      let sum = 0;
+      return wasteMonthly.map(m => (sum += m.kg));
+    })();
+    const inProgress = conflicts.filter(r => /progress/i.test(r.status ?? '')).length;
+    const resolved = conflicts.filter(r => /resolved/i.test(r.status ?? '')).length;
+    return {
+      sortedTaxa,
+      totalSpecies,
+      topShare: sortedTaxa[0] ? Math.round((sortedTaxa[0].count / totalSpecies) * 100) : 0,
+      bestQuarter,
+      belowTarget,
+      completedCount: completedQuarters.length,
+      participants,
+      peakActivity: peakOf(communityByMonth, r => r.activities),
+      peakResearch: peakOf(researchByMonth, r => r.requests),
+      peakWaste: peakOf(wasteMonthly, r => r.kg),
+      avgWaste: wasteMonthly.length ? Math.round(kpis.wasteKg / wasteMonthly.length) : 0,
+      cumulativeWaste,
+      inProgress,
+      resolved,
+    };
+  }, [donutBiodiversity, summary, schoolQuarterly, studentTarget, communityByMonth, wasteMonthly, conflicts, researchByMonth, kpis.wasteKg]);
+
+  const go = (id: SectionId) => {
+    setSection(id);
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   if (loading) {
     return (
       <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--text-secondary)' }}>
@@ -387,104 +459,127 @@ export default function DashboardExplorer() {
     );
   }
 
+  const waterRate = bioWater?.rate ?? null;
+  const waterTone: 'ok' | 'warn' | 'bad' = waterRate == null ? 'ok' : waterRate >= 90 ? 'ok' : waterRate >= 70 ? 'warn' : 'bad';
+  const attention: { text: string; go: SectionId }[] = [];
+  if (kpis.openConflicts > 0) attention.push({ text: `${kpis.openConflicts} open conflict case${kpis.openConflicts === 1 ? '' : 's'}`, go: 'conflicts' });
+  if (bioWater && bioWater.fail > 0) attention.push({ text: `${bioWater.fail} water tests outside limits`, go: 'water' });
+  if (insights.belowTarget > 0) attention.push({ text: `${insights.belowTarget} of ${insights.completedCount} completed quarters below the ${studentTarget} student target`, go: 'education' });
+
   return (
     <div style={{ paddingBottom: '2rem' }}>
       <div className="dashboard-shell">
-        <nav className="dashboard-nav" aria-label="Dashboard sections">
-          {SECTIONS.map(s => (
+        <header className="dash-head">
+          <div>
+            <h1 className="dash-title">Biodiversity and Research Department</h1>
+            <p className="dash-sub">
+              {summary?.parkName ?? 'Nyandungu Eco-Park'} · {summary?.location ?? 'Kigali, Rwanda'} · {summary?.parkSize ?? '183.94 Ha'}
+            </p>
+          </div>
+          {latestMonth && (
+            <p className="dash-updated"><span className="dash-dot" aria-hidden />Data to {latestMonth}</p>
+          )}
+        </header>
+
+        <nav className="dash-tabs" aria-label="Dashboard sections">
+          {SECTIONS.map(t => (
             <button
-              key={s.id}
+              key={t.id}
               type="button"
-              className={`dashboard-nav-btn${section === s.id ? ' dashboard-nav-btn--active' : ''}`}
-              onClick={() => setSection(s.id)}
+              className={`dash-tab${section === t.id ? ' dash-tab--active' : ''}`}
+              onClick={() => setSection(t.id)}
             >
-              {s.label}
+              {t.label}
             </button>
           ))}
         </nav>
 
-        <div className="dashboard-title-block">
-          <h1 className="dashboard-title">Biodiversity and Research Department</h1>
-        </div>
-
-        <p className="dashboard-subtitle">
-          {summary?.parkName ?? 'Nyandungu Eco-Park'} · {summary?.location ?? 'Kigali, Rwanda'} ·{' '}
-          {summary?.parkSize ?? '183.94 Ha'}
-          <br />
-          <span style={{ fontSize: 13, opacity: 0.85 }}>
-            Interactive dashboard
-          </span>
-        </p>
-
-        {(section === 'overview' || section === 'biodiversity') && (
-          <>
-            {section === 'overview' && (
-              <>
-                <div className="kpi-row">
-                  {[
-                    { label: 'Species recorded', value: kpis.species },
-                    { label: 'Students reached', value: kpis.students.toLocaleString() },
-                    { label: 'School visits logged', value: kpis.visits },
-                    { label: 'Community activities', value: kpis.activities },
-                    { label: 'Research requests', value: kpis.researchRequests },
-                    { label: 'Open conflict cases', value: kpis.openConflicts },
-                    { label: 'Water quality compliance', value: kpis.waterCompliance },
-                    { label: 'Waste collected (kg)', value: kpis.wasteKg.toLocaleString() },
-                  ].map(k => (
-                    <div key={k.label} className="glass-card kpi-tile">
-                      <p className="heading kpi-value">{k.value}</p>
-                      <p className="kpi-label">{k.label}</p>
-                    </div>
+        <div className="dash-body" key={section}>
+        {section === 'overview' && (
+          <div className="dash-tiles">
+            <Tile
+              title="Biodiversity" onOpen={() => go('biodiversity')} delay={0}
+              value={<CountUp value={kpis.species} />} unit="species recorded"
+              viz={<SegmentBar labels={false} segments={insights.sortedTaxa.map(t => ({ label: t.taxa, value: t.count, color: t.color }))} />}
+              note={insights.sortedTaxa[0] ? `${insights.sortedTaxa[0].taxa} lead with ${insights.sortedTaxa[0].count} (${insights.topShare}%)` : ''}
+            />
+            <Tile
+              title="Education" onOpen={() => go('education')} delay={60}
+              value={<CountUp value={kpis.students} />} unit={`students reached · ${kpis.visits} school visits`}
+              viz={<Sparkline values={schoolQuarterly.map(q => q.students)} />}
+              note={insights.bestQuarter ? `Best quarter ${insights.bestQuarter.quarter}: ${insights.bestQuarter.students.toLocaleString()} (target ${studentTarget})` : ''}
+            />
+            <Tile
+              title="Community" onOpen={() => go('community')} delay={120}
+              value={<CountUp value={kpis.activities} />} unit="outreach activities"
+              viz={<Sparkline values={communityByMonth.map(m => m.activities)} />}
+              note={`${insights.participants.toLocaleString()} participants${insights.peakActivity ? ` · busiest ${insights.peakActivity.month}` : ''}`}
+            />
+            <Tile
+              title="Research" onOpen={() => go('research')} delay={180}
+              value={<CountUp value={kpis.researchRequests} />} unit="research requests"
+              viz={<Sparkline values={researchByMonth.map(m => m.requests)} />}
+              note={insights.peakResearch ? `Busiest month ${insights.peakResearch.month} (${insights.peakResearch.value})` : ''}
+            />
+            <Tile
+              title="Conflicts" onOpen={() => go('conflicts')} delay={240}
+              value={<CountUp value={kpis.openConflicts} />} unit="open cases"
+              viz={<SegmentBar labels={false} segments={conflictsByStatus.map(r => ({ label: r.name, value: r.count, color: /resolved/i.test(r.name) ? '#2E9E5B' : /progress/i.test(r.name) ? '#E0A030' : /open/i.test(r.name) ? '#D9534F' : '#B9C4BC' }))} />}
+              note={`${conflicts.length} logged · ${insights.inProgress} in progress · ${insights.resolved} resolved`}
+            />
+            <Tile
+              title="Waste" onOpen={() => go('waste')} delay={300}
+              value={<CountUp value={kpis.wasteKg} />} unit="kg collected"
+              viz={<Sparkline values={insights.cumulativeWaste} />}
+              note={`About ${insights.avgWaste} kg a month${insights.peakWaste ? ` · peak ${insights.peakWaste.month}` : ''}`}
+            />
+            <Tile
+              title="Water quality" onOpen={() => go('water')} delay={360}
+              value={waterRate != null ? <CountUp value={waterRate} decimals={1} suffix="%" /> : '—'} unit="of tests within limits"
+              viz={waterRate != null ? <Ring percent={waterRate} tone={waterTone} /> : null}
+              note={bioWater ? `${bioWater.pass} pass · ${bioWater.fail} outside limits` : ''}
+            />
+            <div className="dash-tile dash-tile--static" style={{ animationDelay: '420ms' }}>
+              <span className="dash-tile-title">Needs attention</span>
+              {attention.length === 0 ? (
+                <span className="dash-tile-note">Nothing flagged right now.</span>
+              ) : (
+                <ul className="dash-attention">
+                  {attention.map(a => (
+                    <li key={a.text}><button type="button" onClick={() => go(a.go)}>{a.text}<i aria-hidden>→</i></button></li>
                   ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        )}
+
+        {section === 'biodiversity' && (
+          <>
+            <SectionTitle note={insights.sortedTaxa[0] ? `${insights.sortedTaxa[0].taxa} make up ${insights.topShare}% of the ${kpis.species} species recorded.` : undefined}>
+              Biodiversity survey
+            </SectionTitle>
+            <div className="taxa-mini">
+              {taxaCards.map(card => (
+                <div key={card.taxa} className="taxa-mini-item">
+                  <TaxaIcon taxa={card.taxa} size={30} />
+                  <b>{card.count}</b>
+                  <span>{card.taxa}</span>
+                  <em className={card.stable ? 'is-stable' : ''}>{card.badge}</em>
                 </div>
-
-                <section className="taxa-section-float">
-                  <SectionTitle>Species by taxa (2025)</SectionTitle>
-                  <div className="taxa-row-scroll">
-                  <div className="taxa-grid taxa-grid--row">
-                    {taxaCards.map(card => (
-                      <div
-                        key={card.taxa}
-                        className="taxa-card taxa-card--compact"
-                      >
-                        <div className="taxa-card-icon-float" aria-hidden>
-                          <TaxaIcon taxa={card.taxa} size={52} />
-                        </div>
-                        <span
-                          className="taxa-card-badge"
-                          style={{
-                            background: card.stable ? 'rgba(74,94,79,0.15)' : 'rgba(12,96,56,0.15)',
-                            color: card.stable ? 'var(--text-secondary)' : 'var(--accent-text)',
-                          }}
-                        >
-                          {card.badge}
-                        </span>
-                        <p className="taxa-card-label" style={{ color: 'var(--text-secondary)', margin: 0, textAlign: 'center', fontSize: 10 }}>
-                          {card.taxa}
-                        </p>
-                        <p className="heading taxa-card-count" style={{ color: 'var(--accent-text)', margin: 0, lineHeight: 1 }}>
-                          {card.count}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                  </div>
-                </section>
-              </>
-            )}
-
-            <SectionTitle>Biodiversity survey</SectionTitle>
+              ))}
+            </div>
             <div className="dashboard-charts-grid">
               <ChartCard title="Species count: 2023 vs 2025">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={barBiodiversity} margin={{ top: 8, right: 8, left: -10, bottom: 16 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke={c.grid} vertical={false} />
+                    <CartesianGrid strokeDasharray="2 6" stroke={c.grid} vertical={false} />
                     <XAxis dataKey="taxa" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 10 }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} tickLine={false} />
                     <Tooltip {...tt} />
                     <Legend wrapperStyle={{ fontSize: 12 }} />
-                    <Bar dataKey="2023" name="2023 Baseline" fill={c.secondary} radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="2025" name="2025 Current" fill={c.primary} radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="2023" name="2023 Baseline" fill={c.secondary} radius={[6, 6, 0, 0]} barSize={12} animationDuration={900} />
+                    <Bar dataKey="2025" name="2025 Current" fill={c.primary} radius={[6, 6, 0, 0]} barSize={12} animationDuration={900} />
                   </BarChart>
                 </ResponsiveContainer>
               </ChartCard>
@@ -495,9 +590,9 @@ export default function DashboardExplorer() {
           </>
         )}
 
-        {(section === 'overview' || section === 'education') && schoolQuarterly.length > 0 && (
+        {section === 'education' && schoolQuarterly.length > 0 && (
           <>
-            <SectionTitle>Education & school visits</SectionTitle>
+            <SectionTitle note={insights.bestQuarter ? `Best quarter: ${insights.bestQuarter.quarter} with ${insights.bestQuarter.students.toLocaleString()} students. ${insights.belowTarget} of ${insights.completedCount} completed quarters fell below the ${studentTarget} target.` : undefined}>Education & school visits</SectionTitle>
             <div className="dashboard-charts-grid dashboard-charts-grid--single">
               <ChartCard
                 title="Quarterly student visits"
@@ -505,7 +600,7 @@ export default function DashboardExplorer() {
               >
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={schoolQuarterly} margin={{ top: 12, right: 8, left: -8, bottom: 8 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke={c.grid} vertical={false} />
+                    <CartesianGrid strokeDasharray="2 6" stroke={c.grid} vertical={false} />
                     <XAxis dataKey="quarter" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} tickLine={false} />
                     <Tooltip {...tt} />
@@ -516,7 +611,7 @@ export default function DashboardExplorer() {
                       strokeWidth={2}
                       label={{ value: `Target: ${studentTarget}`, position: 'insideTopRight', fill: '#F5A623', fontSize: 11, fontFamily: 'Poppins' }}
                     />
-                    <Bar dataKey="students" name="Students" fill={c.primary} radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="students" name="Students" fill={c.primary} radius={[6, 6, 0, 0]} barSize={14} animationDuration={900} />
                   </BarChart>
                 </ResponsiveContainer>
               </ChartCard>
@@ -524,9 +619,9 @@ export default function DashboardExplorer() {
           </>
         )}
 
-        {(section === 'overview' || section === 'community') && (
+        {section === 'community' && (
           <>
-            <SectionTitle>Community engagement</SectionTitle>
+            <SectionTitle note={`${kpis.activities} activities reached about ${insights.participants.toLocaleString()} people.`}>Community engagement</SectionTitle>
             <div className="dashboard-charts-grid dashboard-charts-grid--single">
               <ChartCard
                 title="Community outreach by month"
@@ -534,7 +629,7 @@ export default function DashboardExplorer() {
               >
                 <ResponsiveContainer width="100%" height="100%">
                   <ComposedChart data={communityByMonth} margin={{ top: 8, right: 16, left: 4, bottom: 16 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke={c.grid} vertical={false} />
+                    <CartesianGrid strokeDasharray="2 6" stroke={c.grid} vertical={false} />
                     <XAxis dataKey="monthShort" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 9 }} angle={-35} textAnchor="end" height={56} />
                     <YAxis
                       yAxisId="left"
@@ -553,44 +648,44 @@ export default function DashboardExplorer() {
                     />
                     <Tooltip {...tt} />
                     <Legend wrapperStyle={{ fontSize: 11, fontFamily: 'Poppins' }} />
-                    <Bar yAxisId="left" dataKey="activities" name="# Activities" fill={c.primary} radius={[4, 4, 0, 0]} barSize={16} />
-                    <Bar yAxisId="right" dataKey="participants" name="Participants (est.)" fill={c.accent} radius={[4, 4, 0, 0]} barSize={16} />
+                    <Bar yAxisId="left" dataKey="activities" name="# Activities" fill={c.primary} radius={[6, 6, 0, 0]} barSize={14} animationDuration={900} />
+                    <Bar yAxisId="right" dataKey="participants" name="Participants (est.)" fill={c.accent} radius={[6, 6, 0, 0]} barSize={14} animationDuration={900} />
                   </ComposedChart>
                 </ResponsiveContainer>
               </ChartCard>
             </div>
 
-            <SectionTitle>Complementary pass</SectionTitle>
+            <SectionTitle note="Complimentary passes issued each month.">Complementary pass</SectionTitle>
             <div className="dashboard-charts-grid dashboard-charts-grid--single">
               <ChartCard title="Monthly complementary pass">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={passesMonthly} margin={{ top: 8, right: 8, left: -8, bottom: 8 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke={c.grid} vertical={false} />
+                  <BarChart data={passesMonthly} margin={{ top: 8, right: 8, left: -8, bottom: 8 }}>
+                    <CartesianGrid strokeDasharray="2 6" stroke={c.grid} vertical={false} />
                     <XAxis dataKey="monthShort" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 9 }} angle={-35} textAnchor="end" height={56} />
                     <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} />
                     <Tooltip {...tt} />
-                    <Area type="monotone" dataKey="totalPasses" name="Complementary pass" stroke={c.accent} fill={c.accent} fillOpacity={0.25} />
-                  </AreaChart>
+                    <Bar dataKey="totalPasses" name="Complementary pass" fill={c.accent} radius={[6, 6, 0, 0]} barSize={14} animationDuration={900} />
+                  </BarChart>
                 </ResponsiveContainer>
               </ChartCard>
             </div>
           </>
         )}
 
-        {(section === 'overview' || section === 'research') && (research.length > 0 || internshipByMonth.length > 0) && (
+        {section === 'research' && (research.length > 0 || internshipByMonth.length > 0) && (
           <>
-            <SectionTitle>Research coordination</SectionTitle>
+            <SectionTitle note={insights.peakResearch ? `${kpis.researchRequests} requests so far. Busiest month: ${insights.peakResearch.month} (${insights.peakResearch.value}).` : undefined}>Research coordination</SectionTitle>
             <div className="dashboard-charts-grid dashboard-charts-grid--single">
               <ChartCard
                 title="Research requests by month"
               >
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={researchByMonth} margin={{ top: 8, right: 8, left: -8, bottom: 8 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke={c.grid} vertical={false} />
+                    <CartesianGrid strokeDasharray="2 6" stroke={c.grid} vertical={false} />
                     <XAxis dataKey="monthShort" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 9 }} angle={-35} textAnchor="end" height={56} />
                     <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} allowDecimals={false} />
                     <Tooltip {...tt} />
-                    <Bar dataKey="requests" name="Requests" fill={c.primary} radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="requests" name="Requests" fill={c.primary} radius={[6, 6, 0, 0]} barSize={14} animationDuration={900} />
                   </BarChart>
                 </ResponsiveContainer>
               </ChartCard>
@@ -602,13 +697,13 @@ export default function DashboardExplorer() {
                 >
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={internshipByMonth} margin={{ top: 8, right: 8, left: -8, bottom: 8 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke={c.grid} vertical={false} />
+                      <CartesianGrid strokeDasharray="2 6" stroke={c.grid} vertical={false} />
                       <XAxis dataKey="monthShort" tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 9 }} angle={-35} textAnchor="end" height={56} />
                       <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} allowDecimals={false} />
                       <Tooltip {...tt} />
                       <Legend wrapperStyle={{ fontSize: 11, fontFamily: 'Poppins' }} />
-                      <Bar dataKey="academic" name="Academic" fill={c.primary} radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="professional" name="Professional" fill={c.accent} radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="academic" name="Academic" fill={c.primary} radius={[6, 6, 0, 0]} barSize={14} animationDuration={900} />
+                      <Bar dataKey="professional" name="Professional" fill={c.accent} radius={[6, 6, 0, 0]} barSize={14} animationDuration={900} />
                     </BarChart>
                   </ResponsiveContainer>
                 </ChartCard>
@@ -617,51 +712,27 @@ export default function DashboardExplorer() {
           </>
         )}
 
-        {(section === 'overview' || section === 'conflicts') && conflicts.length > 0 && (
+        {section === 'conflicts' && conflicts.length > 0 && (
           <>
-            <SectionTitle>Conflict management</SectionTitle>
+            <SectionTitle note={`${conflicts.length} cases logged: ${kpis.openConflicts} open, ${insights.inProgress} in progress, ${insights.resolved} resolved.`}>Conflict management</SectionTitle>
             <div className="dashboard-charts-grid dashboard-charts-grid--single">
-              <ChartCard title="Conflict cases by status">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart margin={{ top: 8, right: 8, left: 8, bottom: 8 }}>
-                    <Tooltip {...tt} />
-                    <Legend wrapperStyle={{ fontSize: 11, fontFamily: 'Poppins' }} />
-                    <Pie
-                      data={conflictsByStatus}
-                      dataKey="count"
-                      nameKey="name"
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={96}
-                      innerRadius={42}
-                      paddingAngle={2}
-                      label={({ name, count }) => `${name}: ${count}`}
-                      labelLine={false}
-                    >
-                      {conflictsByStatus.map((row, idx) => (
-                        <Cell
-                          key={`${row.name}-${idx}`}
-                          fill={row.name.toLowerCase() === 'resolved' ? '#1A7D2E' : c.accent}
-                        />
-                      ))}
-                    </Pie>
-                  </PieChart>
-                </ResponsiveContainer>
+              <ChartCard title="Conflict cases by status" content>
+                <SegmentBar segments={conflictsByStatus.map(r => ({ label: r.name, value: r.count, color: /resolved/i.test(r.name) ? '#2E9E5B' : /progress/i.test(r.name) ? '#E0A030' : /open/i.test(r.name) ? '#D9534F' : '#B9C4BC' }))} />
               </ChartCard>
             </div>
           </>
         )}
 
-        {(section === 'overview' || section === 'waste') && (
+        {section === 'waste' && (
           <>
-            <SectionTitle>Waste management</SectionTitle>
+            <SectionTitle note={`${kpis.wasteKg.toLocaleString()} kg collected, about ${insights.avgWaste} kg a month.`}>Waste management</SectionTitle>
             <WasteDashboardCharts data={wasteData} />
           </>
         )}
 
-        {(section === 'overview' || section === 'water') && (
+        {section === 'water' && (
           <>
-            <SectionTitle>Water quality</SectionTitle>
+            <SectionTitle note={bioWater ? `${bioWater.rate}% of tests were within Rwanda freshwater limits.` : undefined}>Water quality</SectionTitle>
             <div className="dashboard-charts-grid dashboard-charts-grid--single">
               {bioWater && (
                 <ChartCard title="Park water quality — biodiversity survey compliance" content>
@@ -1061,6 +1132,7 @@ export default function DashboardExplorer() {
             </div>
           </>
         )}
+        </div>
       </div>
     </div>
   );
