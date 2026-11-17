@@ -94,7 +94,7 @@ export default function BiodiversityWaterExplorer({ summary }: { summary: BioCom
               data={chartData}
               margin={{ top: 8, right: 44, left: 4, bottom: 20 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke={c.grid} horizontal={false} />
+              <CartesianGrid strokeDasharray="2 6" stroke={c.grid} horizontal={false} />
               <YAxis type="category" dataKey="site" width={92} tick={{ fill: c.tick, fontSize: 9, fontFamily: 'Poppins' }} />
               <XAxis type="number" domain={[0, xMax]} tick={{ fill: c.tick, fontSize: 10, fontFamily: 'Poppins' }} />
               <Tooltip {...tt} />
@@ -106,7 +106,7 @@ export default function BiodiversityWaterExplorer({ summary }: { summary: BioCom
                   label={{ value: `${refX}`, position: 'top', fontSize: 10, fill: '#D4251C' }}
                 />
               )}
-              <Bar dataKey="value" name={param.parameter} radius={[0, 4, 4, 0]} barSize={20}>
+              <Bar dataKey="value" name={param.parameter} radius={[0, 6, 6, 0]} barSize={10} animationDuration={900}>
                 {chartData.map((d, i) => (
                   <Cell key={i} fill={d.pass ? '#1A7D2E' : '#D4251C'} />
                 ))}
