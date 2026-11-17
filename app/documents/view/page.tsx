@@ -1,13 +1,15 @@
 import { notFound } from 'next/navigation';
-import { getDocumentById } from '@/app/lib/documents';
+import { getAnyDocumentById } from '@/app/lib/documents';
 import DocumentViewer from './DocumentViewer';
 
-export default function DocumentViewPage({
+export const dynamic = 'force-dynamic';
+
+export default async function DocumentViewPage({
   searchParams,
 }: {
   searchParams: { id?: string };
 }) {
-  const doc = getDocumentById(searchParams.id);
+  const doc = await getAnyDocumentById(searchParams.id);
   if (!doc) notFound();
 
   return (
