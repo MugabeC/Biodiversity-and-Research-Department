@@ -27,7 +27,6 @@ import {
   TAXA_META,
   monthSortKey,
   sortByMonth,
-  parseParticipantCount,
   withShortMonths,
   aggregateStudentsByQuarter,
 } from '@/app/lib/dashboardUtils';
@@ -144,7 +143,7 @@ export default function DashboardExplorer() {
 
   const c = useChartColors();
   const tt = chartTooltipProps(c);
-  const STUDENT_TARGET = 500;
+  const studentTarget = summary?.studentTargetPerQuarter ?? 500;
 
   useEffect(() => {
     try {
@@ -223,7 +222,7 @@ export default function DashboardExplorer() {
     for (const row of community) {
       const cur = map.get(row.month) ?? { month: row.month, activities: 0, participants: 0 };
       cur.activities += 1;
-      cur.participants += parseParticipantCount(row.participants);
+      cur.participants += row.participants ?? 0;
       map.set(row.month, cur);
     }
     return withShortMonths(sortByMonth(Array.from(map.values())));
@@ -266,16 +265,10 @@ export default function DashboardExplorer() {
     );
   }, [research]);
 
-  const researchByAction = useMemo(() => (
-    countBy(research, row => {
-      const action = row.actionTaken?.toLowerCase() ?? '';
-      if (action.includes('approved') || action.includes('permission granted')) return 'Approved / permission granted';
-      if (action.includes('review') || row.internalRemarks?.toLowerCase().includes('review')) return 'Under review / revise';
-      if (action.includes('advised')) return 'Advised to revise';
-      if (!row.actionTaken) return 'No action recorded';
-      return row.actionTaken;
-    }).slice(0, 8)
-  ), [research]);
+  const researchByAction = useMemo(
+    () => countBy(research, row => row.status).slice(0, 8),
+    [research]
+  );
 
   const internshipByMonth = useMemo(
     () => withShortMonths(sortByMonth(internships.map(row => ({ ...row })))),
@@ -296,7 +289,10 @@ export default function DashboardExplorer() {
       openConflicts: conflicts.filter(row => row.status?.toLowerCase() === 'open').length,
       waterCompliance: bioWater != null ? `${bioWater.rate}%` : '—',
       wasteKg: Math.round(totalWaste),
-      visits: schools?.individualVisits?.length ?? 0,
+      visits: (() => {
+        const groups = (schools?.monthlyTotals ?? []).reduce((s, m) => s + (m.schoolGroups ?? 0), 0);
+        return groups > 0 ? groups : schools?.individualVisits?.length ?? 0;
+      })(),
     };
   }, [summary, schoolMonthlyRows, wasteMonthly, community, schools, bioWater, research, conflicts]);
 
@@ -308,6 +304,7 @@ export default function DashboardExplorer() {
       v =>
         v.school?.toLowerCase().includes(q) ||
         v.month?.toLowerCase().includes(q) ||
+        v.programme?.toLowerCase().includes(q) ||
         v.notes?.toLowerCase().includes(q)
     );
   }, [schools, search]);
@@ -319,7 +316,8 @@ export default function DashboardExplorer() {
       v =>
         v.activity.toLowerCase().includes(q) ||
         v.month.toLowerCase().includes(q) ||
-        v.participants.toLowerCase().includes(q)
+        v.participantGroup?.toLowerCase().includes(q) ||
+        String(v.participants ?? '').includes(q)
     );
   }, [community, search]);
 
@@ -332,7 +330,8 @@ export default function DashboardExplorer() {
       row.category.toLowerCase().includes(q) ||
       row.institution?.toLowerCase().includes(q) ||
       row.topic?.toLowerCase().includes(q) ||
-      row.actionTaken?.toLowerCase().includes(q)
+      row.requestedActivities?.toLowerCase().includes(q) ||
+      row.status?.toLowerCase().includes(q)
     );
   }, [research, search]);
 
@@ -345,6 +344,7 @@ export default function DashboardExplorer() {
       row.issueType?.toLowerCase().includes(q) ||
       row.description?.toLowerCase().includes(q) ||
       row.status?.toLowerCase().includes(q) ||
+      row.areaType?.toLowerCase().includes(q) ||
       row.actionTaken?.toLowerCase().includes(q)
     );
   }, [conflicts, search]);
@@ -510,11 +510,11 @@ export default function DashboardExplorer() {
                     <YAxis tick={{ fill: c.tick, fontFamily: 'Poppins', fontSize: 11 }} axisLine={false} tickLine={false} />
                     <Tooltip {...tt} />
                     <ReferenceLine
-                      y={STUDENT_TARGET}
+                      y={studentTarget}
                       stroke="#F5A623"
                       strokeDasharray="6 4"
                       strokeWidth={2}
-                      label={{ value: 'Target: 500', position: 'insideTopRight', fill: '#F5A623', fontSize: 11, fontFamily: 'Poppins' }}
+                      label={{ value: `Target: ${studentTarget}`, position: 'insideTopRight', fill: '#F5A623', fontSize: 11, fontFamily: 'Poppins' }}
                     />
                     <Bar dataKey="students" name="Students" fill={c.primary} radius={[4, 4, 0, 0]} />
                   </BarChart>
@@ -731,10 +731,13 @@ export default function DashboardExplorer() {
                   <thead>
                     <tr>
                       <th>Month</th>
-                      <th>School</th>
+                      <th>School / group</th>
+                      <th>Groups</th>
                       <th>Students</th>
                       <th>Teachers</th>
-                      <th>Notes</th>
+                      <th>Other adults</th>
+                      <th>Complimentary</th>
+                      <th>Programme</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -742,9 +745,12 @@ export default function DashboardExplorer() {
                       <tr key={i}>
                         <td>{row.month}</td>
                         <td>{row.school}</td>
+                        <td>{row.schoolGroups ?? '—'}</td>
                         <td>{row.students ?? '—'}</td>
                         <td>{row.teachers ?? '—'}</td>
-                        <td>{row.notes ?? '—'}</td>
+                        <td>{row.otherAdults ?? '—'}</td>
+                        <td>{row.complimentary ?? '—'}</td>
+                        <td>{row.programme ? `${row.programme}${row.programmePupils != null ? ` (${row.programmePupils} pupils)` : ''}` : (row.notes ?? '—')}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -756,8 +762,12 @@ export default function DashboardExplorer() {
                     <tr>
                       <th>Month</th>
                       <th>Activity</th>
+                      <th>Participant group</th>
                       <th>Participants</th>
-                      <th>Notes</th>
+                      <th>Women</th>
+                      <th>Men</th>
+                      <th>Institutions</th>
+                      <th>Complimentary</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -765,8 +775,12 @@ export default function DashboardExplorer() {
                       <tr key={i}>
                         <td>{row.month}</td>
                         <td>{row.activity}</td>
-                        <td>{row.participants}</td>
-                        <td>{row.notes ?? '—'}</td>
+                        <td>{row.participantGroup ?? '—'}</td>
+                        <td>{row.participants ?? '—'}</td>
+                        <td>{row.women ?? '—'}</td>
+                        <td>{row.men ?? '—'}</td>
+                        <td>{row.institutions ?? '—'}</td>
+                        <td>{row.complimentary ?? '—'}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -777,24 +791,26 @@ export default function DashboardExplorer() {
                   <thead>
                     <tr>
                       <th>Month</th>
+                      <th>Date received</th>
                       <th>Researcher(s)</th>
                       <th>Institution</th>
                       <th>Category</th>
                       <th>Topic</th>
-                      <th>Action taken</th>
-                      <th>Contact</th>
+                      <th>Requested activity</th>
+                      <th>Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredResearch.map((row, i) => (
                       <tr key={`${row.names}-${i}`}>
                         <td>{row.month}</td>
+                        <td>{row.dateReceived ?? '—'}</td>
                         <td>{row.names}</td>
                         <td>{row.institution ?? '—'}</td>
                         <td>{row.category}</td>
                         <td>{row.topic ?? '—'}</td>
-                        <td>{row.actionTaken ?? '—'}</td>
-                        <td>{row.assignedContact ?? '—'}</td>
+                        <td>{row.requestedActivities ?? '—'}</td>
+                        <td>{row.status ?? '—'}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -804,7 +820,7 @@ export default function DashboardExplorer() {
                 <table className="data-table">
                   <thead>
                     <tr>
-                      <th>Status / action</th>
+                      <th>Status</th>
                       <th>Requests</th>
                     </tr>
                   </thead>
@@ -826,11 +842,12 @@ export default function DashboardExplorer() {
                     <tr>
                       <th>Date</th>
                       <th>Issue type</th>
+                      <th>Area</th>
                       <th>Location</th>
                       <th>Description</th>
                       <th>Status</th>
                       <th>Action taken</th>
-                      <th>Follow-up</th>
+                      <th>Follow-up needed</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -838,11 +855,12 @@ export default function DashboardExplorer() {
                       <tr key={`${row.id ?? i}-${row.date ?? i}`}>
                         <td>{row.date ?? '—'}</td>
                         <td>{row.issueType ?? '—'}</td>
+                        <td>{row.areaType ?? '—'}</td>
                         <td>{row.location ?? '—'}</td>
                         <td>{row.description ?? '—'}</td>
                         <td>{row.status ?? '—'}</td>
                         <td>{row.actionTaken ?? '—'}</td>
-                        <td>{row.followUpStatus ?? '—'}</td>
+                        <td>{row.followUpRequired ?? '—'}</td>
                       </tr>
                     ))}
                   </tbody>
