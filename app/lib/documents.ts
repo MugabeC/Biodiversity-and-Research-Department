@@ -202,3 +202,16 @@ export function formatFileSize(bytes: number | null | undefined): string {
   if (!bytes) return '';
   return bytes >= 1024 * 1024 ? `${(bytes / 1024 / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`;
 }
+
+// ── Categories (for filtering on the Documents page) ──────────────────────────
+
+export type DocumentCategory = 'Policies & plans' | 'Reports & studies' | 'Data workbooks';
+export const DOCUMENT_CATEGORIES: DocumentCategory[] = ['Policies & plans', 'Reports & studies', 'Data workbooks'];
+
+const POLICY_IDS = new Set(['dos-donts-2023', 'eco-park-presentation', 'business-management-plan', 'research-policy', 'emergency-response-plan']);
+
+export function documentCategory(doc: LibraryDocument): DocumentCategory {
+  if (POLICY_IDS.has(doc.id)) return 'Policies & plans';
+  if (doc.type === 'excel') return 'Data workbooks';
+  return 'Reports & studies';
+}
