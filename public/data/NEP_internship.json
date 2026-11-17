@@ -1,26 +1,22 @@
 {
-  "dataset": "Nyandungu Eco-Park – Academic & Professional Internship by Month",
-  "source_sheet": "Internship",
+  "dataset": "NEP Internships (placements = start month)",
+  "source_sheet": "Internships",
   "academic_internship": [
     {
-      "month": "June 2025",
-      "count": 0
-    },
-    {
       "month": "July 2025",
-      "count": 3
+      "count": 1
     },
     {
       "month": "August 2025",
-      "count": 5
+      "count": 6
     },
     {
       "month": "September 2025",
-      "count": 1
+      "count": 2
     },
     {
       "month": "October 2025",
-      "count": 1
+      "count": 0
     },
     {
       "month": "November 2025",
@@ -40,7 +36,7 @@
     },
     {
       "month": "March 2026",
-      "count": 0
+      "count": 7
     },
     {
       "month": "April 2026",
@@ -49,12 +45,86 @@
     {
       "month": "May 2026",
       "count": 3
+    },
+    {
+      "month": "June 2026",
+      "count": 2
+    },
+    {
+      "month": "July 2026",
+      "count": 3
     }
   ],
   "professional_internship": [
     {
       "month": "January 2026",
       "count": 4
+    }
+  ],
+  "applications": [
+    {
+      "month": "July 2025",
+      "count": 2
+    },
+    {
+      "month": "August 2025",
+      "count": 5
+    },
+    {
+      "month": "September 2025",
+      "count": 2
+    },
+    {
+      "month": "October 2025",
+      "count": 1
+    },
+    {
+      "month": "November 2025",
+      "count": 2
+    },
+    {
+      "month": "January 2026",
+      "count": 4
+    },
+    {
+      "month": "February 2026",
+      "count": 4
+    },
+    {
+      "month": "March 2026",
+      "count": 3
+    },
+    {
+      "month": "April 2026",
+      "count": 10
+    },
+    {
+      "month": "May 2026",
+      "count": 3
+    },
+    {
+      "month": "June 2026",
+      "count": 2
+    },
+    {
+      "month": "July 2026",
+      "count": 3
+    },
+    {
+      "month": "August 2026",
+      "count": 2
+    },
+    {
+      "month": "September 2026",
+      "count": 4
+    },
+    {
+      "month": "October 2026",
+      "count": 4
+    },
+    {
+      "month": "November 2026",
+      "count": 6
     }
   ]
 }
