@@ -9,6 +9,7 @@ import wasteJson from '@/public/data/NEP_waste_management.json';
 import researchJson from '@/public/data/Research_ALL.json';
 import conflictJson from '@/public/data/Conflict_Management.json';
 import internshipJson from '@/public/data/NEP_internship.json';
+import internshipPipelineJson from '@/public/data/NEP_internship_pipeline.json';
 import waterQualityJson from '@/public/data/water_quality.json';
 import { parseBiodiversitySurvey, type BioComplianceSummary } from '@/app/lib/parseBiodiversityWater';
 import type { WasacRawParam } from '@/app/lib/exploreWaterQuality';
@@ -96,6 +97,16 @@ export type ConflictRow = {
   followUpRequired: string | null;
 };
 
+export type InternshipPipeline = {
+  since: string;
+  asOf: string;
+  total: number;
+  byType: { Academic: number; Professional: number };
+  stages: { stage: string; academic: number; professional: number }[];
+  institutions: { name: string; count: number }[];
+  requestedPeriod: { period: string; count: number }[];
+};
+
 export type LoadedDashboard = {
   summary: DashboardSummary;
   schools: SchoolVisitsData;
@@ -105,6 +116,7 @@ export type LoadedDashboard = {
   research: ResearchRow[];
   conflicts: ConflictRow[];
   internships: { month: string; academic: number; professional: number; total: number }[];
+  internshipPipeline: InternshipPipeline;
   bioWater: BioComplianceSummary | null;
   wasacParams: WasacRawParam[];
   wasacSiteLabels: string[];
@@ -397,6 +409,7 @@ export function loadDashboardFromBundle(): LoadedDashboard {
     research: normalizeResearch(),
     conflicts: normalizeConflicts(),
     internships: normalizeInternships(),
+    internshipPipeline: internshipPipelineJson as InternshipPipeline,
     bioWater,
     wasacParams: wq.wasac?.parameters ?? [],
     wasacSiteLabels: wq.wasac?.samplingPoints ?? [],
