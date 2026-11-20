@@ -1,0 +1,26 @@
+{
+  "dataset": "Internship applications received since July 2026 (anonymised: counts only, no names)",
+  "since": "July 2026",
+  "asOf": "20 November 2026",
+  "total": 11,
+  "byType": { "Academic": 5, "Professional": 6 },
+  "stages": [
+    { "stage": "Application received", "academic": 1, "professional": 2 },
+    { "stage": "Invited for discussion", "academic": 2, "professional": 0 },
+    { "stage": "Additional documents requested", "academic": 1, "professional": 0 },
+    { "stage": "Under review", "academic": 1, "professional": 0 },
+    { "stage": "With HR", "academic": 0, "professional": 4 }
+  ],
+  "institutions": [
+    { "name": "UNILAK", "count": 3 },
+    { "name": "University of Rwanda", "count": 3 },
+    { "name": "Mount Kigali University", "count": 1 },
+    { "name": "RP Kitabi College", "count": 1 },
+    { "name": "Not specified", "count": 3 }
+  ],
+  "requestedPeriod": [
+    { "period": "6 weeks", "count": 3 },
+    { "period": "3 months", "count": 1 },
+    { "period": "Not specified", "count": 7 }
+  ]
+}

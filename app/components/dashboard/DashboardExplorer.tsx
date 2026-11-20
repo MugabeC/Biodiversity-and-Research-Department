@@ -160,6 +160,7 @@ export default function DashboardExplorer() {
   const [research, setResearch] = useState<ResearchRow[]>([]);
   const [conflicts, setConflicts] = useState<ConflictRow[]>([]);
   const [internships, setInternships] = useState<ReturnType<typeof loadDashboardFromBundle>['internships']>([]);
+  const [pipeline, setPipeline] = useState<ReturnType<typeof loadDashboardFromBundle>['internshipPipeline'] | null>(null);
   const waste = useMemo(() => normalizeWasteData(wasteData), [wasteData]);
   const [bioWater, setBioWater] = useState<ReturnType<typeof loadDashboardFromBundle>['bioWater']>(null);
   const [wasacParams, setWasacParams] = useState<ReturnType<typeof loadDashboardFromBundle>['wasacParams']>([]);
@@ -183,6 +184,7 @@ export default function DashboardExplorer() {
       setResearch(data.research);
       setConflicts(data.conflicts);
       setInternships(data.internships);
+      setPipeline(data.internshipPipeline);
       setBioWater(data.bioWater);
       setWasacParams(data.wasacParams);
       setWasacSiteLabels(data.wasacSiteLabels);
@@ -470,6 +472,7 @@ export default function DashboardExplorer() {
       { id: 'research', label: `Requests (${research.length})` },
       { id: 'research-status', label: `Status (${researchByAction.length})` },
       { id: 'internships', label: `Internships (${internships.reduce((t, r) => t + r.total, 0)})` },
+      { id: 'internship-pipeline', label: `Applications since ${pipeline?.since ?? 'July'} (${pipeline?.total ?? 0})` },
     ],
     conflicts: [
       { id: 'conflicts', label: `Cases (${conflicts.length})` },
@@ -727,6 +730,25 @@ export default function DashboardExplorer() {
                           <td>{row.academic}</td>
                           <td>{row.professional}</td>
                           <td>{row.total}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              )}
+              {tab === 'internship-pipeline' && pipeline && (
+                <table className="data-table">
+                  <thead>
+                    <tr><th>Stage</th><th>Academic</th><th>Professional</th><th>Total</th></tr>
+                  </thead>
+                  <tbody>
+                    {pipeline.stages
+                      .filter(r => !search.trim() || r.stage.toLowerCase().includes(search.toLowerCase()))
+                      .map(r => (
+                        <tr key={r.stage}>
+                          <td>{r.stage}</td>
+                          <td>{r.academic}</td>
+                          <td>{r.professional}</td>
+                          <td>{r.academic + r.professional}</td>
                         </tr>
                       ))}
                   </tbody>
@@ -1104,6 +1126,7 @@ export default function DashboardExplorer() {
             <StatRow items={[
               { label: 'research requests', value: <CountUp value={kpis.researchRequests} /> },
               { label: 'internship placements', value: <CountUp value={internships.reduce((t, r) => t + r.total, 0)} /> },
+              ...(pipeline ? [{ label: `applications since ${pipeline.since}`, value: <CountUp value={pipeline.total} /> }] : []),
               ...(insights.peakResearch ? [{ label: 'busiest month', value: insights.peakResearch.month }] : []),
             ]} />
             <div className="dashboard-charts-grid dashboard-charts-grid--single">
@@ -1136,6 +1159,23 @@ export default function DashboardExplorer() {
                 </ChartCard>
               )}
             </div>
+            {pipeline && (
+              <div className="dashboard-charts-grid">
+                <ChartCard title={`Internship applications since ${pipeline.since}: where they stand`} content>
+                  <SegmentBar segments={pipeline.stages.map((st, i) => ({
+                    label: st.stage,
+                    value: st.academic + st.professional,
+                    color: ['#B9C4BC', '#2E9E5B', '#E0A030', '#4895ef', '#808847'][i % 5],
+                  }))} />
+                  <p className="chart-card-desc" style={{ marginTop: 14 }}>
+                    {pipeline.total} applicants: {pipeline.byType.Academic} academic and {pipeline.byType.Professional} professional. Counts only, as of {pipeline.asOf}.
+                  </p>
+                </ChartCard>
+                <ChartCard title="Applicants by institution" content>
+                  <RankRows items={pipeline.institutions.map(i => ({ label: i.name, value: i.count }))} />
+                </ChartCard>
+              </div>
+            )}
             {researchByAction.length > 0 && (
               <div className="dashboard-charts-grid dashboard-charts-grid--single">
                 <ChartCard title="Requests by status" content>
