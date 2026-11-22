@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import { callUploadFunction } from '@/app/documents/UploadPanel';
 import { fetchEntries, type FormEntry } from '@/app/lib/entries';
 import { PLANT_SPECIES } from '@/app/lib/plantSpecies';
@@ -79,6 +79,9 @@ export default function FormClient({ formId }: { formId: string }) {
 
   const [date, setDate] = useState(() => { const t = rwandaToday(); return t < FORMS_START_DATE ? FORMS_START_DATE : t; });
   const [values, setValues] = useState<Record<string, string>>(() => blankValues(spec.fields));
+  const rowKeys = spec.rowKeys ?? [];
+  const blankRow = () => Object.fromEntries(rowKeys.map(k => [k, blankValues(spec.fields)[k]]));
+  const [rows, setRows] = useState<Record<string, string>[]>(() => [blankRow()]);
   const [editing, setEditing] = useState<string | null>(null);
   const [entries, setEntries] = useState<FormEntry[] | null>(null);
   const [plantingEntries, setPlantingEntries] = useState<FormEntry[]>([]);
@@ -96,22 +99,36 @@ export default function FormClient({ formId }: { formId: string }) {
   function reset() {
     setEditing(null);
     setValues(blankValues(spec.fields));
+    setRows([blankRow()]);
   }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setOk('');
-    const check = validateEntry(formId, date, values, { today: rwandaToday() });
-    if (check.errors.length) return setErrors(check.errors);
+    const today = rwandaToday();
+    // several records at once: one per row, sharing the date and the other fields
+    const several = rowKeys.length > 0 && !editing;
+    const filled = (r: Record<string, string>) => rowKeys.some(k => (r[k] ?? '').trim() !== '');
+    const filledRows = rows.filter(filled);
+    const used = several && filledRows.length > 0 ? filledRows : [rows[0] ?? {}];
+    const list = used.map(r => ({ ...values, ...r }));
+    const checked = list.map(v => validateEntry(formId, date, v, { today }));
+    const problems = checked.flatMap((c, i) => c.errors.map(m => (list.length > 1 ? `Row ${i + 1}: ${m}` : m)));
+    if (problems.length) return setErrors(Array.from(new Set(problems)));
     const password = getStaffPassword();
     if (!password) return lockStaff();
     setBusy(true); setErrors([]);
+    let saved = 0;
     try {
-      await callUploadFunction({ action: 'entry-save', password, form: formId, id: editing ?? undefined, entry_date: check.clean!.entry_date, data: check.clean!.data });
-      setOk(editing ? 'Updated.' : 'Saved.');
+      for (const c of checked) {
+        await callUploadFunction({ action: 'entry-save', password, form: formId, id: editing ?? undefined, entry_date: c.clean!.entry_date, data: c.clean!.data });
+        saved += 1;
+      }
+      setOk(editing ? 'Updated.' : saved > 1 ? `Saved ${saved} entries.` : 'Saved.');
       reset();
       refresh();
     } catch (err) {
+      if (saved > 0) { setRows(used.slice(saved)); refresh(); setOk(`Saved ${saved} of ${checked.length}. Fix the next row and save again.`); }
       handleError(err);
     } finally {
       setBusy(false);
@@ -146,7 +163,9 @@ export default function FormClient({ formId }: { formId: string }) {
     setOk(''); setErrors([]);
     setEditing(entry.id);
     setDate(entry.entry_date);
-    setValues({ ...blankValues(spec.fields), ...Object.fromEntries(Object.entries(entry.data).map(([k, v]) => [k, String(v)])) });
+    const loaded = { ...blankValues(spec.fields), ...Object.fromEntries(Object.entries(entry.data).map(([k, v]) => [k, String(v)])) };
+    setValues(loaded);
+    setRows([Object.fromEntries(rowKeys.map(k => [k, loaded[k] ?? '']))]);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -170,13 +189,43 @@ export default function FormClient({ formId }: { formId: string }) {
             {spec.dateLabel} *
             <input id="f-date" type="date" min={spec.start ?? FORMS_START_DATE} max={rwandaToday()} value={date} disabled={busy} onChange={e => setDate(e.target.value)} className="species-search doc-upload-field" />
           </label>
-          {spec.fields.map(f => (
-            <label key={f.key} className={`doc-upload-label${f.type === 'longtext' ? ' entry-wide' : ''}`} htmlFor={`f-${f.key}`}>
-              {f.label}{f.required ? ' *' : ''}
-              <FieldInput f={f} value={values[f.key] ?? ''} onChange={v => setValues(s => ({ ...s, [f.key]: v }))} options={f.suggest ? suggestions[f.suggest] ?? [] : []} choices={choices} disabled={busy} />
-            </label>
+          {spec.fields.filter(f => !rowKeys.includes(f.key)).map((f, i, all) => (
+            <Fragment key={f.key}>
+              {f.group && f.group !== all[i - 1]?.group && <p className="entry-wide entry-group">{f.group}</p>}
+              <label className={`doc-upload-label${f.type === 'longtext' ? ' entry-wide' : ''}`} htmlFor={`f-${f.key}`}>
+                {f.label}{f.required ? ' *' : ''}
+                <FieldInput f={f} value={values[f.key] ?? ''} onChange={v => setValues(s => ({ ...s, [f.key]: v }))} options={f.suggest ? suggestions[f.suggest] ?? [] : []} choices={choices} disabled={busy} />
+              </label>
+              {f.key === 'planting_id' && (
+                <label className="doc-upload-label">
+                  Date planted
+                  <input type="text" readOnly value={plantingById.get(values.planting_id ?? '')?.entry_date ?? ''} className="species-search doc-upload-field" tabIndex={-1} />
+                </label>
+              )}
+            </Fragment>
           ))}
         </div>
+
+        {rowKeys.length > 0 && (
+          <div className="entry-rows">
+            {rows.map((row, i) => (
+              <div key={i} className="entry-row">
+                {spec.fields.filter(f => rowKeys.includes(f.key)).map(f => (
+                  <label key={f.key} className="doc-upload-label">
+                    {f.label}{f.required ? ' *' : ''}
+                    <FieldInput f={{ ...f, key: `${f.key}-${i}` }} value={row[f.key] ?? ''} onChange={v => setRows(rs => rs.map((r, j) => (j === i ? { ...r, [f.key]: v } : r)))} options={f.suggest ? suggestions[f.suggest] ?? [] : []} disabled={busy} />
+                  </label>
+                ))}
+                {!editing && rows.length > 1 && (
+                  <button type="button" className="entry-link entry-row-remove" disabled={busy} onClick={() => setRows(rs => rs.filter((_, j) => j !== i))}>Remove</button>
+                )}
+              </div>
+            ))}
+            {!editing && (
+              <button type="button" className="doc-action-btn doc-action-btn--ghost" disabled={busy} onClick={() => setRows(rs => [...rs, blankRow()])}>Add another species</button>
+            )}
+          </div>
+        )}
 
         {errors.length > 0 && <div role="alert">{errors.map((m, i) => <p key={i} className="doc-upload-error">{m}</p>)}</div>}
         {ok && <p className="doc-upload-ok">{ok}</p>}

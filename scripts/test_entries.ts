@@ -79,13 +79,14 @@ eq('planting needs a sector', errs('planting', '2026-11-25', { species: 'Croton 
 eq('check needs a real planting id', errs('survival-check', '2026-12-02', { planting_id: 'abc', checkpoint: 'Week 1', alive: 5 }).length, 1);
 eq('check ok', errs('survival-check', '2026-12-02', { planting_id: uuidA, checkpoint: 'Week 1', alive: 5 }), []);
 eq('check needs a count', errs('survival-check', '2026-12-02', { planting_id: uuidA, checkpoint: 'Week 1' }).length >= 1, true);
+eq('replaced is no longer a field', errs('survival-check', '2026-12-02', { planting_id: uuidA, checkpoint: 'Week 1', alive: 5, replaced: 1 }).length, 1);
 const pe = (id: string, d: string, data: Record<string, string | number>, n: number): FormEntry => ({ id, form: 'planting', entry_date: d, data, created_at: `2026-11-2${n}T10:00:00Z`, updated_at: '' });
 const ce = (id: string, d: string, data: Record<string, string | number>, n: number): FormEntry => ({ id, form: 'survival-check', entry_date: d, data, created_at: `2026-12-0${n}T10:00:00Z`, updated_at: '' });
 const rest = buildRestoration([
   pe(uuidA, '2026-11-01', { species: 'Croton megalocarpus', sector: 'S3', trees_planted: 50 }, 1),
   pe(uuidB, '2026-11-10', { species: 'Ficus sur', sector: 'S1', trees_planted: 20 }, 2),
   ce('c1', '2026-11-08', { planting_id: uuidA, checkpoint: 'Week 1', alive: 48, dead: 2 }, 1),
-  ce('c2', '2026-12-01', { planting_id: uuidA, checkpoint: 'Month 1', alive: 45, dead: 3, replaced: 2 }, 2),
+  ce('c2', '2026-12-01', { planting_id: uuidA, checkpoint: 'Month 1', alive: 45, dead: 5 }, 2),
   ce('c3', '2026-12-02', { planting_id: uuidB, checkpoint: 'Month 1', alive: 20 }, 3),
   ce('orphan', '2026-12-02', { planting_id: '99999999-9999-4999-8999-999999999999', checkpoint: 'Week 1', alive: 5 }, 4),
 ]);

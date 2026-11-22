@@ -1,6 +1,6 @@
 /**
  * Tree planting and survival, from the two staff forms. Survival is counted per planting (a group of trees of one species
- * in one sector on one day): at each check the officer records how many are alive, dead, or dead and replaced.
+ * in one sector on one day): at each check the officer records how many are alive and how many are dead.
  */
 import type { FormEntry } from '@/app/lib/entries';
 
@@ -13,14 +13,14 @@ export const CHECKPOINTS = [
 ] as const;
 export const SECTORS = ['S1', 'S2', 'S3', 'S4', 'S5', 'EA'] as const;
 
-export type Check = { id: string; date: string; checkpoint: string; alive: number; dead: number; replaced: number; rate: number };
+export type Check = { id: string; date: string; checkpoint: string; alive: number; dead: number; rate: number };
 export type Planting = {
   id: string; date: string; species: string; common: string | null; sector: string; planted: number; by: string | null;
   checks: Record<string, Check | undefined>;
   /** The most advanced checkpoint with a record. */
   latest: Check | null;
 };
-export type SurvivalRow = { label: string; planted: number; alive: number; dead: number; replaced: number; rate: number | null; batches: number };
+export type SurvivalRow = { label: string; planted: number; alive: number; dead: number; rate: number | null; batches: number };
 export type Restoration = {
   totalPlanted: number;
   species: number;
@@ -53,7 +53,7 @@ export function buildRestoration(entries: FormEntry[]): Restoration | null {
     if (!p || !checkpoint || p.planted < 1) continue;
     const alive = Math.min(num(e.data.alive), p.planted);
     p.checks[checkpoint] = {
-      id: e.id, date: e.entry_date, checkpoint, alive, dead: num(e.data.dead), replaced: num(e.data.replaced), rate: round1((alive / p.planted) * 100),
+      id: e.id, date: e.entry_date, checkpoint, alive, dead: num(e.data.dead), rate: round1((alive / p.planted) * 100),
     };
   }
   for (const p of plantings.values()) {
@@ -65,7 +65,7 @@ export function buildRestoration(entries: FormEntry[]): Restoration | null {
     const planted = items.reduce((s, i) => s + i.planted, 0);
     const alive = items.reduce((s, i) => s + i.c.alive, 0);
     return {
-      label, planted, alive, dead: items.reduce((s, i) => s + i.c.dead, 0), replaced: items.reduce((s, i) => s + i.c.replaced, 0),
+      label, planted, alive, dead: items.reduce((s, i) => s + i.c.dead, 0),
       rate: planted > 0 ? round1((alive / planted) * 100) : null, batches: items.length,
     };
   };

@@ -32,6 +32,8 @@ export type Field = {
   uuid?: boolean;
   /** The page offers a list of existing entries to choose from. */
   choose?: string;
+  /** A heading shown above this field and the ones after it, until the next heading. */
+  group?: string;
 };
 
 export type FormSpec = {
@@ -46,6 +48,8 @@ export type FormSpec = {
   note?: string;
   /** Earliest date allowed on this form (default: FORMS_START_DATE). */
   start?: string;
+  /** Fields that repeat, one set per row, when several records are entered at once. */
+  rowKeys?: string[];
 };
 
 /**
@@ -233,6 +237,7 @@ export const FORM_SPECS: FormSpec[] = [
     dateLabel: 'Date planted',
     listKeys: ['species', 'trees_planted', 'sector'],
     start: '2020-01-01',
+    rowKeys: ['species', 'common_name', 'trees_planted'],
     fields: [
       { key: 'species', label: 'Species (scientific name)', type: 'text', required: true, max: 120, suggest: 'plantSpecies' },
       { key: 'common_name', label: 'Common name', type: 'text', max: 80 },
@@ -248,16 +253,14 @@ export const FORM_SPECS: FormSpec[] = [
     section: 'habitat',
     blurb: '',
     dateLabel: 'Date checked',
-    listKeys: ['planting_id', 'checkpoint', 'alive'],
+    listKeys: ['planting_id', 'checkpoint', 'alive', 'dead'],
     start: '2020-01-01',
     fields: [
       { key: 'planting_id', label: 'Planting', type: 'text', required: true, uuid: true, choose: 'plantings' },
       { key: 'checkpoint', label: 'Checkpoint', type: 'select', required: true, options: ['Week 1', 'Month 1', 'Month 3', 'Month 6'] },
-      { key: 'alive', label: 'Alive', type: 'int', required: true },
+      { key: 'alive', label: 'Alive', type: 'int', required: true, group: 'Status' },
       { key: 'dead', label: 'Dead', type: 'int' },
-      { key: 'replaced', label: 'Dead and replaced', type: 'int' },
       { key: 'note', label: 'Note', type: 'text', max: 200 },
-      { key: 'photo_ref', label: 'Photo reference', type: 'text', max: 80, allowDigits: true },
     ],
   },
 ];
@@ -353,8 +356,8 @@ export function validateEntry(
   if (formId === 'conflict-case' && s('status') === 'Resolved' && !s('resolution_date')) errors.push('Resolution date: required when the status is Resolved.');
   if (formId === 'planting' && n('trees_planted') !== undefined && (n('trees_planted') as number) < 1) errors.push('Trees planted: at least 1.');
   if (formId === 'survival-check') {
-    const total = (n('alive') ?? 0) + (n('dead') ?? 0) + (n('replaced') ?? 0);
-    if (total < 1) errors.push('Enter how many trees are alive, dead or replaced.');
+    const total = (n('alive') ?? 0) + (n('dead') ?? 0);
+    if (total < 1) errors.push('Enter how many trees are alive or dead.');
   }
   if (formId === 'water-test' && !WATER_PARAMETERS.some(p => clean[p.key] !== undefined)) errors.push('Fill in at least one parameter.');
   if (formId === 'waste') {
