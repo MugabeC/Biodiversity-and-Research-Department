@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { callUploadFunction } from '@/app/documents/UploadPanel';
 import { fetchEntries, type FormEntry } from '@/app/lib/entries';
+import { PLANT_SPECIES } from '@/app/lib/plantSpecies';
+import { buildRestoration, checksDue } from '@/app/lib/restoration';
 import { FORMS_START_DATE, getFormSpec, validateEntry, type Field } from '@/app/lib/formSpec';
 import { getStaffPassword, lockStaff } from '@/app/lib/staffAuth';
 import { useDashboardData } from '@/app/lib/useDashboardData';
@@ -41,8 +43,16 @@ function blankValues(fields: Field[]): Record<string, string> {
   return Object.fromEntries(fields.map(f => [f.key, f.initial ?? '']));
 }
 
-function FieldInput({ f, value, onChange, options, disabled }: { f: Field; value: string; onChange: (v: string) => void; options: string[]; disabled: boolean }) {
+function FieldInput({ f, value, onChange, options, choices, disabled }: { f: Field; value: string; onChange: (v: string) => void; options: string[]; choices?: { value: string; label: string }[]; disabled: boolean }) {
   const common = { id: `f-${f.key}`, name: `entry-${f.key}`, autoComplete: 'off', disabled, value, onChange: (e: React.ChangeEvent<HTMLInputElement & HTMLSelectElement & HTMLTextAreaElement>) => onChange(e.target.value) };
+  if (f.choose) {
+    return (
+      <select {...common} className="species-search doc-upload-field">
+        <option value="">Choose…</option>
+        {(choices ?? []).map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+      </select>
+    );
+  }
   if (f.type === 'select') {
     return (
       <select {...common} className="species-search doc-upload-field">
@@ -65,19 +75,22 @@ function FieldInput({ f, value, onChange, options, disabled }: { f: Field; value
 export default function FormClient({ formId }: { formId: string }) {
   const spec = getFormSpec(formId)!;
   const { data } = useDashboardData();
-  const suggestions = useMemo(() => suggestionsFrom(data), [data]);
+  const suggestions = useMemo((): Record<string, string[]> => ({ ...suggestionsFrom(data), plantSpecies: PLANT_SPECIES }), [data]);
 
   const [date, setDate] = useState(() => { const t = rwandaToday(); return t < FORMS_START_DATE ? FORMS_START_DATE : t; });
   const [values, setValues] = useState<Record<string, string>>(() => blankValues(spec.fields));
   const [editing, setEditing] = useState<string | null>(null);
   const [entries, setEntries] = useState<FormEntry[] | null>(null);
+  const [plantingEntries, setPlantingEntries] = useState<FormEntry[]>([]);
+  const needsPlantings = formId === 'survival-check';
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const [ok, setOk] = useState('');
 
   const refresh = useCallback(() => {
     fetchEntries(formId).then(setEntries).catch(() => setEntries([]));
-  }, [formId]);
+    if (needsPlantings) fetchEntries('planting').then(setPlantingEntries).catch(() => setPlantingEntries([]));
+  }, [formId, needsPlantings]);
   useEffect(() => { refresh(); }, [refresh]);
 
   function reset() {
@@ -139,6 +152,13 @@ export default function FormClient({ formId }: { formId: string }) {
 
   const label = (key: string) => spec.fields.find(f => f.key === key)?.label ?? key;
 
+  // survival checks: the list of plantings to choose from, and the checks that are due
+  const plantingLabel = (en: FormEntry) => `${en.data.species}, ${en.data.sector}, ${en.entry_date} (${en.data.trees_planted} trees)`;
+  const choices = plantingEntries.map(en => ({ value: en.id, label: plantingLabel(en) }));
+  const plantingById = new Map(plantingEntries.map(en => [en.id, en]));
+  const due = needsPlantings ? checksDue(buildRestoration([...plantingEntries, ...(entries ?? [])])?.plantings ?? [], rwandaToday()) : [];
+  const cell = (k: string, en: FormEntry) => (k === 'planting_id' ? (plantingById.get(String(en.data[k])) ? plantingLabel(plantingById.get(String(en.data[k]))!) : '') : en.data[k] ?? '');
+
   return (
     <div className="report-page">
       <p className="doc-upload-help" style={{ marginBottom: 8 }}><Link href="/update" className="dash-report-link">← Staff data tools</Link></p>
@@ -148,12 +168,12 @@ export default function FormClient({ formId }: { formId: string }) {
         <div className="entry-grid">
           <label className="doc-upload-label" htmlFor="f-date">
             {spec.dateLabel} *
-            <input id="f-date" type="date" min={FORMS_START_DATE} max={rwandaToday()} value={date} disabled={busy} onChange={e => setDate(e.target.value)} className="species-search doc-upload-field" />
+            <input id="f-date" type="date" min={spec.start ?? FORMS_START_DATE} max={rwandaToday()} value={date} disabled={busy} onChange={e => setDate(e.target.value)} className="species-search doc-upload-field" />
           </label>
           {spec.fields.map(f => (
             <label key={f.key} className={`doc-upload-label${f.type === 'longtext' ? ' entry-wide' : ''}`} htmlFor={`f-${f.key}`}>
               {f.label}{f.required ? ' *' : ''}
-              <FieldInput f={f} value={values[f.key] ?? ''} onChange={v => setValues(s => ({ ...s, [f.key]: v }))} options={f.suggest ? suggestions[f.suggest] ?? [] : []} disabled={busy} />
+              <FieldInput f={f} value={values[f.key] ?? ''} onChange={v => setValues(s => ({ ...s, [f.key]: v }))} options={f.suggest ? suggestions[f.suggest] ?? [] : []} choices={choices} disabled={busy} />
             </label>
           ))}
         </div>
@@ -166,6 +186,22 @@ export default function FormClient({ formId }: { formId: string }) {
           {editing && <button type="button" className="doc-action-btn doc-action-btn--ghost" disabled={busy} onClick={() => { reset(); setErrors([]); }}>Cancel edit</button>}
         </div>
       </form>
+
+      {due.length > 0 && (
+        <>
+          <h2 className="doc-upload-title" style={{ margin: '1.5rem 0 8px' }}>Checks due</h2>
+          <table className="report-table entry-table">
+            <thead><tr><th>Due</th><th>Planting</th><th>Checkpoint</th><th></th></tr></thead>
+            <tbody>
+              {due.map(d => (
+                <tr key={d.planting.id + d.checkpoint}>
+                  <td>{d.due}</td><td>{d.planting.species}, {d.planting.sector}, {d.planting.date}</td><td>{d.checkpoint}</td><td>{d.overdue ? 'Overdue' : ''}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
 
       <h2 className="doc-upload-title" style={{ margin: '1.5rem 0 8px' }}>Saved entries</h2>
       {entries === null ? (
@@ -185,7 +221,7 @@ export default function FormClient({ formId }: { formId: string }) {
             {entries.slice(0, 50).map(en => (
               <tr key={en.id}>
                 <td>{en.entry_date}</td>
-                {spec.listKeys.map(k => <td key={k}>{en.data[k] ?? ''}</td>)}
+                {spec.listKeys.map(k => <td key={k}>{cell(k, en)}</td>)}
                 <td>
                   <button type="button" className="entry-link" disabled={busy} onClick={() => edit(en)}>Edit</button>
                   {' · '}

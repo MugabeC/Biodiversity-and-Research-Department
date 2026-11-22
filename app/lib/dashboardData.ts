@@ -15,6 +15,7 @@ import { parseBiodiversitySurvey, type BioComplianceSummary } from '@/app/lib/pa
 import { SUPABASE_URL } from '@/app/lib/documents';
 import { applyEntries, type FormEntry } from '@/app/lib/entries';
 import { buildWaterTests, combineWater, type WaterOverall, type WaterTest } from '@/app/lib/waterTests';
+import { buildRestoration, type Restoration } from '@/app/lib/restoration';
 
 /** The workbook-driven data files. They ship with the site, and a newer set can be published from the Update page. */
 export type DataFiles = {
@@ -168,6 +169,8 @@ export type LoadedDashboard = {
   waterTests: WaterTest[];
   /** The park survey and the website tests counted together. */
   waterOverall: WaterOverall | null;
+  /** Tree planting and survival from the staff forms, or null when nothing is recorded. */
+  restoration: Restoration | null;
   wasacParams: WasacRawParam[];
   wasacSiteLabels: string[];
 };
@@ -470,6 +473,7 @@ export function loadDashboardFromBundle(overrides?: Partial<DataFiles>, entries:
     bioWater,
     waterTests,
     waterOverall: combineWater(bioWater, waterTests),
+    restoration: buildRestoration(entries),
     wasacParams: wq.wasac?.parameters ?? [],
     wasacSiteLabels: wq.wasac?.samplingPoints ?? [],
   };

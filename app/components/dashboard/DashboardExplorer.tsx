@@ -34,6 +34,7 @@ import {
 import { useChartColors } from './chartTheme';
 import { useDashboardData } from '@/app/lib/useDashboardData';
 import { normalizeWasteData } from './WasteDashboardCharts';
+import { SURVIVAL_TARGET } from '@/app/lib/restoration';
 import { CountUp, Sparkline, Ring, SegmentBar, GRADIENT_DEFS, SlickTooltip, StatRow, GrowthRows, Waffle, RankRows } from './minimal';
 
 const BiodiversityWaterCompliance = dynamic(() => import('./BiodiversityWaterCompliance'), { ssr: false });
@@ -53,6 +54,7 @@ const SECTIONS = [
   { id: 'conflicts', label: 'Conflicts' },
   { id: 'waste', label: 'Waste' },
   { id: 'water', label: 'Water quality' },
+  { id: 'restoration', label: 'Restoration' },
 ] as const;
 
 type SectionId = (typeof SECTIONS)[number]['id'];
@@ -177,6 +179,7 @@ export default function DashboardExplorer() {
   const { data: loaded, error: dataError } = useDashboardData();
   const waterTests = loaded?.waterTests ?? [];
   const waterOverall = loaded?.waterOverall ?? null;
+  const restoration = loaded?.restoration ?? null;
   useEffect(() => {
     if (dataError) { setLoadError(dataError); setLoading(false); return; }
     if (!loaded) return;
@@ -910,7 +913,7 @@ export default function DashboardExplorer() {
         </header>
 
         <nav className="dash-tabs" aria-label="Dashboard sections">
-          {SECTIONS.map(t => (
+          {SECTIONS.filter(t => t.id !== 'restoration' || restoration).map(t => (
             <button
               key={t.id}
               type="button"
@@ -967,6 +970,17 @@ export default function DashboardExplorer() {
               viz={waterRate != null ? <Ring percent={waterRate} tone={waterTone} /> : null}
               note={waterOverall ? `${waterOverall.pass} pass · ${waterOverall.fail} outside limits` : ''}
             />
+            {restoration && (() => {
+              const latest = restoration.byCheckpoint.filter(r => r.rate != null).at(-1);
+              return (
+                <Tile
+                  title="Trees planted" onOpen={() => go('restoration')} delay={390}
+                  value={<CountUp value={restoration.totalPlanted} />} unit={`trees · ${restoration.species} species`}
+                  viz={latest?.rate != null ? <Ring percent={latest.rate} tone={latest.rate >= SURVIVAL_TARGET ? 'ok' : latest.rate >= 70 ? 'warn' : 'bad'} /> : null}
+                  note={latest?.rate != null ? `${latest.rate}% alive at ${latest.label}` : 'No survival check yet'}
+                />
+              );
+            })()}
             <div className="dash-tile dash-tile--static" style={{ animationDelay: '420ms' }}>
               <span className="dash-tile-title">Needs attention</span>
               {attention.length === 0 ? (
@@ -1223,6 +1237,59 @@ export default function DashboardExplorer() {
             ]} />
             <WasteDashboardCharts data={wasteData} />
             {recordsPanel}
+          </>
+        )}
+
+        {section === 'restoration' && restoration && (
+          <>
+            <SectionTitle>Tree planting and survival</SectionTitle>
+            <StatRow items={[
+              { label: 'trees planted', value: <CountUp value={restoration.totalPlanted} /> },
+              { label: 'species', value: <CountUp value={restoration.species} /> },
+              { label: 'plantings', value: <CountUp value={restoration.plantings.length} /> },
+            ]} />
+            <div className="dashboard-charts-grid dashboard-charts-grid--single">
+              <ChartCard title="Survival at each check" content>
+                <table className="report-table entry-table">
+                  <thead><tr><th>Check</th><th>Trees checked</th><th>Alive</th><th>Dead</th><th>Dead and replaced</th><th>Survival</th></tr></thead>
+                  <tbody>
+                    {restoration.byCheckpoint.map(r => (
+                      <tr key={r.label}>
+                        <td>{r.label}</td><td>{r.batches ? r.planted.toLocaleString('en-US') : '—'}</td><td>{r.batches ? r.alive : '—'}</td><td>{r.batches ? r.dead : '—'}</td><td>{r.batches ? r.replaced : '—'}</td>
+                        <td>{r.rate != null ? `${r.rate}%${r.rate >= SURVIVAL_TARGET ? '' : ` (target ${SURVIVAL_TARGET}%)`}` : '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </ChartCard>
+            </div>
+            <div className="dashboard-charts-grid dashboard-charts-grid--single">
+              <ChartCard title="By sector" content>
+                <table className="report-table entry-table">
+                  <thead><tr><th>Sector</th><th>Trees planted</th><th>Alive at latest check</th><th>Survival</th></tr></thead>
+                  <tbody>
+                    {restoration.bySector.map(r => (
+                      <tr key={r.label}><td>{r.label}</td><td>{r.planted.toLocaleString('en-US')}</td><td>{r.rate != null ? r.alive : '—'}</td><td>{r.rate != null ? `${r.rate}%` : '—'}</td></tr>
+                    ))}
+                  </tbody>
+                </table>
+              </ChartCard>
+            </div>
+            <div className="dashboard-charts-grid dashboard-charts-grid--single">
+              <ChartCard title="Plantings" content>
+                <table className="report-table entry-table">
+                  <thead><tr><th>Date planted</th><th>Species</th><th>Sector</th><th>Trees</th><th>Latest check</th></tr></thead>
+                  <tbody>
+                    {restoration.plantings.slice(0, 30).map(p => (
+                      <tr key={p.id}>
+                        <td>{p.date}</td><td><em>{p.species}</em>{p.common ? ` (${p.common})` : ''}</td><td>{p.sector}</td><td>{p.planted}</td>
+                        <td>{p.latest ? `${p.latest.checkpoint}: ${p.latest.rate}% alive` : '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </ChartCard>
+            </div>
           </>
         )}
 
