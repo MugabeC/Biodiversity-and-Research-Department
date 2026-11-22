@@ -375,10 +375,11 @@ export default function MapPage() {
             layout: { visibility: visibilityRef.current['wildlife'] ? 'visible' : 'none' },
             paint: {
               'circle-color': '#2EBD59',
-              'circle-opacity': 0.85,
+              'circle-opacity': 0.6,
               'circle-stroke-color': '#ffffff',
-              'circle-stroke-width': 1,
-              'circle-radius': ['interpolate', ['linear'], ['get', 'species'], 1, 4, 5, 7, 20, 12, 60, 18],
+              'circle-stroke-width': 0.5,
+              'circle-stroke-opacity': 0.6,
+              'circle-radius': ['interpolate', ['linear'], ['get', 'species'], 1, 3, 5, 4, 20, 5.5, 60, 7.5],
             },
           } as LayerSpecification);
           setMapLoaded(true);
