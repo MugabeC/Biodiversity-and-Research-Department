@@ -69,6 +69,8 @@ export function applyEntries(files: Files, entries: FormEntry[], pipelineBase: u
   const waste = own('waste'), research = own('research'), conflicts = own('conflicts'), internships = own('internships');
   const pipeline = structuredClone(pipelineBase) as Json;
 
+  // In a month where one total was given for all complimentary admissions, school and community entries add nothing of their own.
+  const allScopeMonths = new Set(entries.filter(x => x.form === 'complimentary-pass' && x.data.notes === 'All complimentary admissions').map(x => monthLabelOf(x.entry_date)));
   const addPass = (month: string, group: string, count: number, notes: string) => {
     const row = monthRow(passes.months, month, () => ({ subtotal: 0, passes: [] }));
     const item = (row.passes as Json[]).find(p => p.group === group);
@@ -81,7 +83,9 @@ export function applyEntries(files: Files, entries: FormEntry[], pipelineBase: u
     list.push(field ? { [key]: name, academic: 0, professional: 0, [field]: 1 } : { [key]: name, count: 1 });
   };
 
-  let nextConflictId = Math.max(0, ...((conflicts.data as Json[]) ?? []).map(c => num(c.id) ?? 0)) + 1;
+  // case numbers follow the order the cases were logged, whatever date they carry
+  const baseMax = Math.max(0, ...((conflicts.data as Json[]) ?? []).map(c => num(c.id) ?? 0));
+  const conflictIds = new Map(entries.filter(x => x.form === 'conflict-case').sort((a, b) => a.created_at.localeCompare(b.created_at)).map((x, i) => [x.id, baseMax + i + 1]));
   const ordered = [...entries].sort((a, b) => a.entry_date.localeCompare(b.entry_date) || a.created_at.localeCompare(b.created_at));
 
   for (const e of ordered) {
@@ -90,14 +94,14 @@ export function applyEntries(files: Files, entries: FormEntry[], pipelineBase: u
     switch (e.form) {
       case 'school-visit': {
         const row = monthRow(schoolVisits.months, month, () => ({ subtotal_students: null, school_groups: null, visits: [] }));
-        const students = num(d.students) ?? 0, groups = num(d.school_groups) ?? 1;
-        row.subtotal_students = (num(row.subtotal_students) ?? 0) + students;
-        row.school_groups = (num(row.school_groups) ?? 0) + groups;
+        const students = num(d.students), groups = num(d.school_groups);
+        if (students !== undefined) row.subtotal_students = (num(row.subtotal_students) ?? 0) + students;
+        if (groups !== undefined) row.school_groups = (num(row.school_groups) ?? 0) + groups;
         row.visits.push({
-          school: str(d.school) ?? null, students, school_groups: groups, teachers: num(d.teachers) ?? null, other_adults: num(d.other_adults) ?? null,
+          school: str(d.school) ?? null, students: students ?? null, school_groups: groups ?? null, teachers: num(d.teachers) ?? null, other_adults: num(d.other_adults) ?? null,
           complimentary: num(d.complimentary) ?? null, programme: str(d.programme) ?? null, programme_pupils: num(d.programme_pupils) ?? null,
         });
-        if (num(d.complimentary)) addPass(month, 'Complimentary participants in school visits', num(d.complimentary) as number, 'From School_Visits');
+        if (num(d.complimentary) && !allScopeMonths.has(month)) addPass(month, 'Complimentary participants in school visits', num(d.complimentary) as number, 'From School_Visits');
         break;
       }
       case 'community-activity': {
@@ -106,7 +110,7 @@ export function applyEntries(files: Files, entries: FormEntry[], pipelineBase: u
           activity: str(d.activity) ?? null, participant_group: str(d.participant_group) ?? null, participants: num(d.participants) ?? null,
           women: num(d.women) ?? null, men: num(d.men) ?? null, institutions: num(d.institutions) ?? null, complimentary: num(d.complimentary) ?? null,
         });
-        if (num(d.complimentary)) addPass(month, 'Complimentary participants in community activities', num(d.complimentary) as number, 'From Community_Activities');
+        if (num(d.complimentary) && !allScopeMonths.has(month)) addPass(month, 'Complimentary participants in community activities', num(d.complimentary) as number, 'From Community_Activities');
         break;
       }
       case 'complimentary-pass':
@@ -143,7 +147,7 @@ export function applyEntries(files: Files, entries: FormEntry[], pipelineBase: u
         break;
       case 'conflict-case':
         conflicts.data.push({
-          id: nextConflictId++, month, date: e.entry_date, stakeholder: str(d.stakeholder) ?? null, areaType: str(d.area_type) ?? null, location: str(d.location) ?? null,
+          id: conflictIds.get(e.id) ?? null, month, date: e.entry_date, stakeholder: str(d.stakeholder) ?? null, areaType: str(d.area_type) ?? null, location: str(d.location) ?? null,
           category: str(d.category) ?? null, issueType: str(d.issue_type) ?? null, description: str(d.description) ?? null, affectedArea: str(d.affected_area) ?? null,
           actionType: str(d.action_type) ?? null, assignedTo: str(d.assigned_to) ?? null, status: str(d.status) ?? null, resolutionDate: str(d.resolution_date) ?? null,
           actionTaken: str(d.action_taken) ?? null, followUpRequired: str(d.follow_up_required) ?? null,
@@ -166,5 +170,6 @@ export function applyEntries(files: Files, entries: FormEntry[], pipelineBase: u
       }
     }
   }
+  conflicts.data.sort((a: Json, b: Json) => (num(a.id) ?? 0) - (num(b.id) ?? 0));
   return { files: f, pipeline };
 }

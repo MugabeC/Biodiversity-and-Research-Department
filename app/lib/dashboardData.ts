@@ -2,13 +2,8 @@
  * Dashboard datasets bundled at build time — avoids dev-server fetch hangs on /data/*.json.
  */
 import summaryJson from '@/public/data/summary.json';
-import schoolVisitsJson from '@/public/data/NEP_school_visits.json';
-import communityActivitiesJson from '@/public/data/NEP_community_engagement.json';
-import complementaryPassesJson from '@/public/data/NEP_complementary_passes.json';
-import wasteJson from '@/public/data/NEP_waste_management.json';
-import researchJson from '@/public/data/Research_ALL.json';
-import conflictJson from '@/public/data/Conflict_Management.json';
 import internshipJson from '@/public/data/NEP_internship.json';
+import legacySnapshot from '@/public/data/entries-snapshot.json';
 import internshipPipelineJson from '@/public/data/NEP_internship_pipeline.json';
 import waterQualityJson from '@/public/data/water_quality.json';
 import { parseBiodiversitySurvey, type BioComplianceSummary } from '@/app/lib/parseBiodiversityWater';
@@ -22,10 +17,18 @@ export type DataFiles = {
   summary: unknown; schoolVisits: unknown; community: unknown; passes: unknown;
   waste: unknown; research: unknown; conflicts: unknown; internships: unknown;
 };
+/**
+ * Summary and internship counts ship with the site. School visits, community activities, complimentary admissions, research
+ * requests, conflict cases and waste are all staff entries now.
+ */
 const BUNDLED: DataFiles = {
-  summary: summaryJson, schoolVisits: schoolVisitsJson, community: communityActivitiesJson, passes: complementaryPassesJson,
-  waste: wasteJson, research: researchJson, conflicts: conflictJson, internships: internshipJson,
+  summary: summaryJson, schoolVisits: { months: [] }, community: { months: [] }, passes: { months: [] },
+  waste: { records: [] }, research: { data: [] }, conflicts: { data: [] }, internships: internshipJson,
 };
+
+/** A copy of those entries as they were when they moved into the database. The site shows it at once and while the database is out of reach. */
+export const LEGACY_ENTRIES = legacySnapshot as unknown as FormEntry[];
+
 import type { WasacRawParam } from '@/app/lib/exploreWaterQuality';
 
 export type DashboardSummary = {
@@ -405,7 +408,7 @@ function normalizeInternships(f: DataFiles): { month: string; academic: number; 
   }));
 }
 
-export function loadDashboardFromBundle(overrides?: Partial<DataFiles>, entries: FormEntry[] = []): LoadedDashboard {
+export function loadDashboardFromBundle(overrides?: Partial<DataFiles>, entries: FormEntry[] = LEGACY_ENTRIES): LoadedDashboard {
   const base: DataFiles = { ...BUNDLED, ...overrides };
   // entries from the staff forms are added on top of the workbook data
   const added = applyEntries(base as unknown as Record<string, unknown>, entries, internshipPipelineJson);

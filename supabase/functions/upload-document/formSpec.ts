@@ -6,8 +6,8 @@
  * scripts/check_form_spec.sh fails if the two copies differ.
  */
 
-/** Entries on the forms start from this date. Everything before it came from the audited workbook. */
-export const FORMS_START_DATE = '2026-11-22';
+/** The earliest date the forms accept. */
+export const FORMS_START_DATE = '2020-01-01';
 
 export type FieldType = 'text' | 'longtext' | 'int' | 'decimal' | 'date' | 'select';
 
@@ -93,7 +93,7 @@ export const FORM_SPECS: FormSpec[] = [
     dateLabel: 'Visit date',
     listKeys: ['school', 'students'],
     fields: [
-      { key: 'school', label: 'School or group', type: 'text', required: true, max: 160, suggest: 'schools' },
+      { key: 'school', label: 'School or group', type: 'text', required: true, max: 400, suggest: 'schools' },
       { key: 'students', label: 'Students', type: 'int', required: true },
       { key: 'school_groups', label: 'School groups', type: 'int', initial: '1', help: 'Usually 1 for one school.' },
       { key: 'teachers', label: 'Teachers', type: 'int' },
@@ -236,7 +236,6 @@ export const FORM_SPECS: FormSpec[] = [
     blurb: '',
     dateLabel: 'Date planted',
     listKeys: ['species', 'trees_planted', 'sector'],
-    start: '2020-01-01',
     rowKeys: ['species', 'common_name', 'trees_planted'],
     fields: [
       { key: 'species', label: 'Species (scientific name)', type: 'text', required: true, max: 120, suggest: 'plantSpecies' },
@@ -254,7 +253,6 @@ export const FORM_SPECS: FormSpec[] = [
     blurb: '',
     dateLabel: 'Date checked',
     listKeys: ['planting_id', 'checkpoint', 'alive', 'dead'],
-    start: '2020-01-01',
     fields: [
       { key: 'planting_id', label: 'Planting', type: 'text', required: true, uuid: true, choose: 'plantings' },
       { key: 'checkpoint', label: 'Checkpoint', type: 'select', required: true, options: ['Week 1', 'Month 1', 'Month 3', 'Month 6'] },
@@ -308,7 +306,7 @@ export function validateEntry(
   const raw = (data && typeof data === 'object' ? data : {}) as Record<string, unknown>;
 
   if (!isRealDate(entryDate)) errors.push(`${spec.dateLabel}: choose a valid date.`);
-  else if (entryDate < start) errors.push(`${spec.dateLabel}: this form starts on ${start}. Earlier records are already in the workbook data.`);
+  else if (entryDate < start) errors.push(`${spec.dateLabel}: the date is too early (not before ${start}).`);
   else if (entryDate > opts.today) errors.push(`${spec.dateLabel}: the date is in the future.`);
 
   const clean: Record<string, string | number> = {};
