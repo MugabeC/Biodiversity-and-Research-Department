@@ -86,6 +86,8 @@ export default function FormClient({ formId }: { formId: string }) {
   const [entries, setEntries] = useState<FormEntry[] | null>(null);
   const [plantingEntries, setPlantingEntries] = useState<FormEntry[]>([]);
   const needsPlantings = formId === 'survival-check';
+  const [query, setQuery] = useState('');
+  const [limit, setLimit] = useState(30);
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const [ok, setOk] = useState('');
@@ -176,6 +178,8 @@ export default function FormClient({ formId }: { formId: string }) {
   const choices = plantingEntries.map(en => ({ value: en.id, label: plantingLabel(en) }));
   const plantingById = new Map(plantingEntries.map(en => [en.id, en]));
   const due = needsPlantings ? checksDue(buildRestoration([...plantingEntries, ...(entries ?? [])])?.plantings ?? [], rwandaToday()) : [];
+  const q = query.trim().toLowerCase();
+  const shown = (entries ?? []).filter(en => !q || en.entry_date.includes(q) || Object.values(en.data).some(v => String(v).toLowerCase().includes(q)));
   const cell = (k: string, en: FormEntry) => (k === 'planting_id' ? (plantingById.get(String(en.data[k])) ? plantingLabel(plantingById.get(String(en.data[k]))!) : '') : en.data[k] ?? '');
 
   return (
@@ -252,34 +256,45 @@ export default function FormClient({ formId }: { formId: string }) {
         </>
       )}
 
-      <h2 className="doc-upload-title" style={{ margin: '1.5rem 0 8px' }}>Saved entries</h2>
+      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', margin: '1.5rem 0 8px' }}>
+        <h2 className="doc-upload-title" style={{ margin: 0 }}>Saved entries{entries ? ` (${entries.length})` : ''}</h2>
+        {entries && entries.length > 5 && (
+          <input type="search" placeholder="Search entries" value={query} onChange={e => { setQuery(e.target.value); setLimit(30); }} className="species-search" style={{ height: 36, maxWidth: 260, paddingLeft: 12 }} aria-label="Search entries" />
+        )}
+      </div>
       {entries === null ? (
         <p className="doc-upload-help">Loading…</p>
       ) : entries.length === 0 ? (
         <p className="doc-upload-help">No entries yet.</p>
       ) : (
-        <table className="report-table entry-table">
-          <thead>
-            <tr>
-              <th>{spec.dateLabel}</th>
-              {spec.listKeys.map(k => <th key={k}>{label(k)}</th>)}
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {entries.slice(0, 50).map(en => (
-              <tr key={en.id}>
-                <td>{en.entry_date}</td>
-                {spec.listKeys.map(k => <td key={k}>{cell(k, en)}</td>)}
-                <td>
-                  <button type="button" className="entry-link" disabled={busy} onClick={() => edit(en)}>Edit</button>
-                  {' · '}
-                  <button type="button" className="entry-link" disabled={busy} onClick={() => remove(en)}>Delete</button>
-                </td>
+        <>
+          <table className="report-table entry-table">
+            <thead>
+              <tr>
+                <th>{spec.dateLabel}</th>
+                {spec.listKeys.map(k => <th key={k}>{label(k)}</th>)}
+                <th></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {shown.slice(0, limit).map(en => (
+                <tr key={en.id}>
+                  <td>{en.entry_date}</td>
+                  {spec.listKeys.map(k => <td key={k}>{cell(k, en)}</td>)}
+                  <td>
+                    <button type="button" className="entry-link" disabled={busy} onClick={() => edit(en)}>Edit</button>
+                    {' · '}
+                    <button type="button" className="entry-link" disabled={busy} onClick={() => remove(en)}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {shown.length === 0 && <p className="doc-upload-help">No entries match.</p>}
+          {shown.length > limit && (
+            <button type="button" className="doc-action-btn doc-action-btn--ghost" style={{ marginTop: 10 }} onClick={() => setLimit(l => l + 30)}>Show more ({shown.length - limit} left)</button>
+          )}
+        </>
       )}
     </div>
   );

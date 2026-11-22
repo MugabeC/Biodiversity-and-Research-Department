@@ -9,7 +9,6 @@
 //   { action: 'sign', filename, size }                    -> { path, token, signedUrl }  (then the browser uploads the file to signedUrl)
 //   { action: 'register', path, filename, title, description } -> { document }          (adds it to the Documents page)
 //   { action: 'delete', id }                              -> { ok: true }                (removes the file and its list entry)
-//   { action: 'publish-data', bundle: { files } }         -> { ok: true, createdAt }     (publishes new dashboard data from the Update page)
 //   { action: 'entry-save', form, entry_date, data, id? } -> { entry }                   (adds or changes one record from a staff form)
 //   { action: 'entry-delete', id }                        -> { ok: true }                (removes a record; it is kept, marked deleted)
 import { createClient } from 'npm:@supabase/supabase-js@2';
@@ -17,11 +16,6 @@ import { validateEntry } from './formSpec.ts';
 
 const BUCKET = 'Biodiversity and Research Department';
 const MAX_BYTES = 25 * 1024 * 1024;
-const DATA_PREFIX = 'data';
-const DATA_FILES = [
-  'summary.json', 'NEP_school_visits.json', 'NEP_community_engagement.json', 'NEP_complementary_passes.json',
-  'Research_ALL.json', 'NEP_internship.json', 'Conflict_Management.json', 'NEP_waste_management.json',
-];
 const TYPES: Record<string, string> = { pdf: 'pdf', doc: 'word', docx: 'word', xls: 'excel', xlsx: 'excel', ppt: 'powerpoint', pptx: 'powerpoint' };
 
 const cors = {
@@ -117,31 +111,6 @@ Deno.serve(async (req: Request) => {
         const { error: deleteError } = await supa.from('library_documents').delete().eq('id', id);
         if (deleteError) throw deleteError;
         return json({ ok: true });
-      }
-
-      case 'publish-data': {
-        const bundle = body.bundle as { files?: Record<string, unknown> } | undefined;
-        const files = bundle?.files as Record<string, any> | undefined; // eslint-disable-line @typescript-eslint/no-explicit-any
-        if (!files || typeof files !== 'object') return json({ error: 'No data received.' }, 400);
-        for (const name of DATA_FILES) {
-          if (!files[name] || typeof files[name] !== 'object') return json({ error: `The data is missing ${name}.` }, 400);
-        }
-        const shapeOk =
-          Array.isArray(files['NEP_school_visits.json'].months) && Array.isArray(files['NEP_community_engagement.json'].months) &&
-          Array.isArray(files['NEP_complementary_passes.json'].months) && Array.isArray(files['Research_ALL.json'].data) &&
-          Array.isArray(files['Conflict_Management.json'].data) && Array.isArray(files['NEP_waste_management.json'].records) &&
-          Array.isArray(files['NEP_internship.json'].applications) && files['summary.json'].taxa && typeof files['summary.json'].taxa === 'object';
-        if (!shapeOk) return json({ error: 'The data does not have the expected structure.' }, 400);
-        const createdAt = new Date().toISOString();
-        const payload = JSON.stringify({ version: 1, createdAt, files: Object.fromEntries(DATA_FILES.map(n => [n, files[n]])) });
-        if (payload.length > 3_000_000) return json({ error: 'The data is larger than expected.' }, 400);
-        const blob = new Blob([payload], { type: 'application/json' });
-        // keep every published version so a mistake can be rolled back
-        const hist = await supa.storage.from(BUCKET).upload(`${DATA_PREFIX}/history/${createdAt.replace(/[:.]/g, '-')}.json`, blob, { contentType: 'application/json', upsert: false });
-        if (hist.error) throw hist.error;
-        const latest = await supa.storage.from(BUCKET).upload(`${DATA_PREFIX}/dashboard-latest.json`, blob, { contentType: 'application/json', upsert: true, cacheControl: '60' });
-        if (latest.error) throw latest.error;
-        return json({ ok: true, createdAt });
       }
 
       case 'entry-save': {

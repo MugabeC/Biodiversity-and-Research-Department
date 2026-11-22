@@ -1,7 +1,7 @@
 // Checks the staff-form rules and the way entries are added to the dashboard data.  Run: npx tsx scripts/test_entries.ts
 import { validateEntry } from '../app/lib/formSpec';
 import { applyEntries, type FormEntry } from '../app/lib/entries';
-import { loadDashboardFromBundle } from '../app/lib/dashboardData';
+import { LEGACY_ENTRIES, loadDashboardFromBundle } from '../app/lib/dashboardData';
 
 let failed = 0;
 const eq = (name: string, got: unknown, want: unknown) => {
@@ -15,7 +15,7 @@ const errs = (form: string, date: unknown, data: unknown) => validateEntry(form,
 // validation
 eq('valid school visit', errs('school-visit', '2026-11-25', { school: 'Test School', students: '40' }), []);
 eq('missing required', errs('school-visit', '2026-11-25', { school: 'Test School' }).length, 1);
-eq('date before start', errs('school-visit', '2026-11-01', { school: 'A', students: 3 }).length, 1);
+eq('date before start', errs('school-visit', '2019-12-31', { school: 'A', students: 3 }).length, 1);
 eq('future date', errs('school-visit', '2026-12-20', { school: 'A', students: 3 }).length, 1);
 eq('phone number refused', errs('conflict-case', '2026-11-25', { issue_type: 'Other', description: 'Call 0788123456 about it', status: 'Open' }).length, 1);
 eq('unknown field refused', errs('waste', '2026-11-25', { total_kg: 5, surprise: 1 }).length, 1);
@@ -37,7 +37,7 @@ const entries: FormEntry[] = [
   mk('waste', '2026-11-24', { total_kg: 50, biodegradable_kg: 20, non_biodegradable_kg: 30 }, 7),
   mk('waste', '2026-12-03', { total_kg: 80 }, 8),
 ];
-const after = loadDashboardFromBundle(undefined, entries);
+const after = loadDashboardFromBundle(undefined, [...LEGACY_ENTRIES, ...entries]);
 const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
 const students = (d: typeof base) => sum(d.schools.monthlyTotals.map(m => m.totalStudents ?? 0));
 const get = <T extends { month: string }>(rows: T[], m: string) => rows.find(r => r.month === m);
@@ -65,7 +65,7 @@ eq('water needs a parameter', errs('water-test', '2026-11-25', { sampling_point:
 eq('water ok', errs('water-test', '2026-11-25', { sampling_point: 'S1 Pond 1', w_ph: '7.1', report_ref: '2025110512345' }), []);
 eq('water keeps 4 decimals', validateEntry('water-test', '2026-11-25', { sampling_point: 'A', w_lead: '0.0049' }, opts).clean?.data.w_lead, 0.0049);
 const wEntries = [mk('water-test', '2026-11-25', { sampling_point: 'S1 Pond 1', w_ph: 7, w_turbidity: 45, w_do: 4, w_lead: 0.004, w_temperature: 22 }, 1)];
-const withWater = loadDashboardFromBundle(undefined, wEntries);
+const withWater = loadDashboardFromBundle(undefined, [...LEGACY_ENTRIES, ...wEntries]);
 const wt = withWater.waterTests[0];
 eq('water test scored', [wt.pass, wt.fail, wt.rate, wt.outside.map(r => r.parameter)], [2, 2, 50, ['Turbidity', 'Dissolved Oxygen']]);
 eq('water overall adds the survey', [withWater.waterOverall?.total, withWater.waterOverall?.tests], [(base.waterOverall?.total ?? 0) + 4, 1]);

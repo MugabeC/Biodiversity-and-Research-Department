@@ -20,6 +20,8 @@ Public website for Nyandungu Eco-Park's Biodiversity and Research Department: da
 
 `/update` (not linked from the menu, hidden from search engines). Forms exist for school visits, community activities, complimentary admissions, internship applications, research requests, conflict cases, waste, water tests, tree planting and survival checks. Wildlife records need no typing.
 
+Every record on the dashboard that comes from staff (school visits, community activities, complimentary admissions, research requests, conflict cases, waste, water tests, tree planting and survival) is a staff entry you can search, edit or delete in the staff tools. Records from before the forms existed were moved in with `scripts/build_legacy_entries.ts`; their dates are the first of the month when only the month was known. `public/data/entries-snapshot.json` is a copy the site shows while the database loads or is out of reach.
+
 The checks on every form live in `app/lib/formSpec.ts`. The server uses an identical copy in `supabase/functions/upload-document/formSpec.ts`. After changing the form definitions, copy the file over, run `scripts/check_form_spec.sh`, and redeploy the function.
 
 ## Working on the code
