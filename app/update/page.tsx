@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { FORM_SPECS } from '@/app/lib/formSpec';
+import { lockStaff } from '@/app/lib/staffAuth';
 
 const SECTIONS: { id: 'community' | 'habitat'; title: string; intro: string }[] = [
   { id: 'community', title: 'Community Conservation', intro: 'School visits, community engagement, complimentary admissions, internship applications, research requests and conflict cases.' },
@@ -16,10 +17,12 @@ const COMING: { title: string; text: string }[] = [
 export default function StaffToolsPage() {
   return (
     <div className="report-page">
-      <h1 className="heading" style={{ margin: '0 0 6px' }}>Staff data tools</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
+        <h1 className="heading" style={{ margin: '0 0 6px' }}>Staff data tools</h1>
+        <button type="button" className="entry-link" onClick={lockStaff}>Lock staff tools</button>
+      </div>
       <p className="doc-upload-help" style={{ marginBottom: '1.5rem', maxWidth: 720 }}>
-        Add records here and the dashboard updates within a minute. You need the staff password, which is asked for once per visit.
-        These forms start from 22 November 2026. Earlier records came from the audited workbook.
+        Add records here and the dashboard updates within a minute. These forms start from 22 November 2026. Earlier records came from the audited workbook.
       </p>
 
       {SECTIONS.map(sec => (
@@ -47,17 +50,6 @@ export default function StaffToolsPage() {
             </div>
           ))}
         </div>
-      </section>
-
-      <section>
-        <h2 className="doc-upload-title" style={{ marginBottom: 4 }}>Bulk upload</h2>
-        <p className="doc-upload-help" style={{ marginBottom: 12, maxWidth: 720 }}>
-          To correct or replace the earlier records, upload the whole data-entry workbook. Records saved from the forms are added on top of it.
-        </p>
-        <Link href="/update/workbook" className="glass-card hub-card" style={{ maxWidth: 360 }}>
-          <span className="hub-card-title">Upload the workbook</span>
-          <span className="doc-upload-help">Check it against its own monthly summary, then publish.</span>
-        </Link>
       </section>
     </div>
   );

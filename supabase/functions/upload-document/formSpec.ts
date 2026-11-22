@@ -54,9 +54,9 @@ export const FORM_SPECS: FormSpec[] = [
       { key: 'school_groups', label: 'School groups', type: 'int', initial: '1', help: 'Usually 1 for one school.' },
       { key: 'teachers', label: 'Teachers', type: 'int' },
       { key: 'other_adults', label: 'Other adults', type: 'int' },
-      { key: 'complimentary', label: 'Complimentary participants', type: 'int', help: 'Counted in complimentary admissions.' },
-      { key: 'programme', label: 'Programme', type: 'text', max: 120, suggest: 'programmes' },
-      { key: 'programme_pupils', label: 'Programme pupils', type: 'int' },
+      { key: 'complimentary', label: 'Free-entry participants (complimentary)', type: 'int', help: 'People in this group who entered free of charge, such as students or teachers whose entry was waived. They are counted in complimentary admissions. Leave empty if everyone paid.' },
+      { key: 'programme', label: 'Special programme', type: 'text', max: 120, suggest: 'programmes', help: 'The name of a special programme run during the visit, for example Catch Them Young. Leave empty if none.' },
+      { key: 'programme_pupils', label: 'Pupils in the special programme', type: 'int', help: 'How many pupils took part in that programme. Leave empty if none.' },
     ],
   },
   {
@@ -74,7 +74,7 @@ export const FORM_SPECS: FormSpec[] = [
       { key: 'women', label: 'Women', type: 'int' },
       { key: 'men', label: 'Men', type: 'int' },
       { key: 'institutions', label: 'Institutions', type: 'int' },
-      { key: 'complimentary', label: 'Complimentary participants', type: 'int', help: 'Counted in complimentary admissions.' },
+      { key: 'complimentary', label: 'Free-entry participants (complimentary)', type: 'int', help: 'People who entered free of charge. They are counted in complimentary admissions. Leave empty if everyone paid.' },
     ],
   },
   {
