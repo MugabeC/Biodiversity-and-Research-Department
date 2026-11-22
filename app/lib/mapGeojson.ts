@@ -1,19 +1,17 @@
-/** Map layer GeoJSON — public Supabase Storage (not bundled in the repo). */
-
-const SUPABASE_STORAGE =
-  'https://dakgnvnaqiosizouuciy.supabase.co/storage/v1/object/public/Biodiversity%20and%20Research%20Department';
-
+/**
+ * Map layer GeoJSON, served from the site itself (public/data/map) so the map keeps working
+ * even if the Supabase project is paused. Large layers are simplified to well under 1 MB.
+ */
 export const MAP_GEOJSON = {
-  boundary: `${SUPABASE_STORAGE}/Surveyed_boundary.geojson`,
-  restored: `${SUPABASE_STORAGE}/Nyandungu.geojson`,
-  trails: `${SUPABASE_STORAGE}/trails.geojson`,
-  drainage: `${SUPABASE_STORAGE}/drainage.geojson`,
-  roads: `${SUPABASE_STORAGE}/roads.geojson`,
-  openGrounds: `${SUPABASE_STORAGE}/open-grounds.geojson`,
-  // Converted from a Strava GPX recording; served from /public.
+  boundary: '/data/map/boundary.geojson',
+  restored: '/data/map/restored.geojson',
+  trails: '/data/map/trails.geojson',
+  drainage: '/data/map/drainage.geojson',
+  roads: '/data/map/roads.geojson',
+  openGrounds: '/data/map/open-grounds.geojson',
+  // Converted from a Strava GPX recording.
   accessTrail: '/data/map/access-trail.geojson',
-  // Survey areas (invasive species removal, pond, macadamia) from the GPS tracks
-  // recorded 16 Nov 2026; closed polygons with sizes. Served from /public.
+  // Survey areas (invasive species removal, pond, macadamia) from the GPS tracks recorded 16 Nov 2026.
   surveyAreas: '/data/map/survey-areas.geojson',
 } as const;
 
