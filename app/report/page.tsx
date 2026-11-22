@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
-import { loadDashboardFromBundle } from '@/app/lib/dashboardData';
+import { useDashboardData } from '@/app/lib/useDashboardData';
 import { normalizeWasteData } from '@/app/components/dashboard/WasteDashboardCharts';
 import { monthSortKey } from '@/app/lib/dashboardUtils';
 
@@ -23,9 +23,10 @@ function fmt(n: number | null | undefined) {
 }
 
 export default function MonthlySummaryPage() {
-  const data = useMemo(() => loadDashboardFromBundle(), []);
+  const { data } = useDashboardData();
 
   const rows: Row[] = useMemo(() => {
+    if (!data) return [];
     const add = (m: Map<string, number>, k: string, v: number | null | undefined) => { if (v != null) m.set(k, (m.get(k) ?? 0) + v); };
     const students = new Map<string, number>(), groups = new Map<string, number>();
     for (const m of data.schools.monthlyTotals) { add(students, m.month, m.totalStudents); add(groups, m.month, m.schoolGroups); }
@@ -66,14 +67,16 @@ export default function MonthlySummaryPage() {
     return Array.from(set).sort((a, b) => monthSortKey(b) - monthSortKey(a));
   }, [rows]);
 
-  const [month, setMonth] = useState(months[0] ?? '');
+  const [picked, setPicked] = useState('');
+  const month = picked && months.includes(picked) ? picked : (months[0] ?? '');
+  const setMonth = setPicked;
   const prev = useMemo(() => {
     const idx = months.indexOf(month);
     return idx >= 0 ? months[idx + 1] ?? null : null;
   }, [months, month]);
 
   const today = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Africa/Kigali' }).format(new Date());
-  const openConflicts = data.conflicts.filter(c => c.status?.toLowerCase() === 'open').length;
+  const openConflicts = (data?.conflicts ?? []).filter(c => c.status?.toLowerCase() === 'open').length;
 
   return (
     <div className="report-page">
@@ -125,8 +128,8 @@ export default function MonthlySummaryPage() {
         <table className="report-table report-table--small">
           <tbody>
             <tr><td>Open conflict cases (all months)</td><td>{openConflicts}</td></tr>
-            <tr><td>Water quality compliance (latest park survey)</td><td>{data.bioWater ? `${data.bioWater.rate}% (${data.bioWater.pass} of ${data.bioWater.total} tests within limits)` : 'no data'}</td></tr>
-            <tr><td>Species recorded (2025 survey)</td><td>{data.summary.totalSpecies}</td></tr>
+            <tr><td>Water quality compliance (latest park survey)</td><td>{data?.bioWater ? `${data.bioWater.rate}% (${data.bioWater.pass} of ${data.bioWater.total} tests within limits)` : 'no data'}</td></tr>
+            <tr><td>Species recorded (2025 survey)</td><td>{data?.summary.totalSpecies ?? 'no data'}</td></tr>
           </tbody>
         </table>
 
