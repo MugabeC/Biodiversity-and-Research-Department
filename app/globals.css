@@ -2816,3 +2816,5 @@ h1.heading {
 .dash-head-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
 .dash-report-link { font-size: 12px; color: var(--accent-text); text-decoration: none; border-bottom: 1px solid transparent; }
 .dash-report-link:hover { border-color: currentColor; }
+.site-footer-staff { color: inherit; opacity: 0.8; text-decoration: none; border-bottom: 1px dotted currentColor; }
+.site-footer-staff:hover { opacity: 1; }
