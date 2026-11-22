@@ -33,6 +33,7 @@ function suggestionsFrom(d: LoadedDashboard | null): Record<string, string[]> {
     issueTypes: top(d.conflicts.map(c => c.issueType)),
     affectedAreas: top(d.conflicts.map(c => c.affectedArea)),
     actionTypes: top(d.conflicts.map(c => c.actionType)),
+    waterPoints: top([...(d.bioWater?.samplingPoints ?? []), ...d.waterTests.map(t => t.point)]),
   };
 }
 

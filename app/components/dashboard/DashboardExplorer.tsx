@@ -175,6 +175,8 @@ export default function DashboardExplorer() {
   const studentTarget = summary?.studentTargetPerQuarter ?? 500;
 
   const { data: loaded, error: dataError } = useDashboardData();
+  const waterTests = loaded?.waterTests ?? [];
+  const waterOverall = loaded?.waterOverall ?? null;
   useEffect(() => {
     if (dataError) { setLoadError(dataError); setLoading(false); return; }
     if (!loaded) return;
@@ -312,14 +314,14 @@ export default function DashboardExplorer() {
       activities: community.length,
       researchRequests: research.length,
       openConflicts: conflicts.filter(row => row.status?.toLowerCase() === 'open').length,
-      waterCompliance: bioWater != null ? `${bioWater.rate}%` : '—',
+      waterCompliance: waterOverall != null ? `${waterOverall.rate}%` : '—',
       wasteKg: Math.round(totalWaste),
       visits: (() => {
         const groups = (schools?.monthlyTotals ?? []).reduce((s, m) => s + (m.schoolGroups ?? 0), 0);
         return groups > 0 ? groups : schools?.individualVisits?.length ?? 0;
       })(),
     };
-  }, [summary, schoolMonthlyRows, wasteMonthly, community, schools, bioWater, research, conflicts]);
+  }, [summary, schoolMonthlyRows, wasteMonthly, community, schools, waterOverall, research, conflicts]);
 
   const filteredSchoolVisits = useMemo(() => {
     if (!schools) return [];
@@ -882,11 +884,11 @@ export default function DashboardExplorer() {
     </div>
   ) : null;
 
-  const waterRate = bioWater?.rate ?? null;
+  const waterRate = waterOverall?.rate ?? null;
   const waterTone: 'ok' | 'warn' | 'bad' = waterRate == null ? 'ok' : waterRate >= 90 ? 'ok' : waterRate >= 70 ? 'warn' : 'bad';
   const attention: { text: string; go: SectionId }[] = [];
   if (kpis.openConflicts > 0) attention.push({ text: `${kpis.openConflicts} open conflict case${kpis.openConflicts === 1 ? '' : 's'}`, go: 'conflicts' });
-  if (bioWater && bioWater.fail > 0) attention.push({ text: `${bioWater.fail} water tests outside limits`, go: 'water' });
+  if (waterOverall && waterOverall.fail > 0) attention.push({ text: `${waterOverall.fail} water results outside limits`, go: 'water' });
   if (insights.belowTarget > 0) attention.push({ text: `${insights.belowTarget} of ${insights.completedCount} completed quarters below the ${studentTarget} student target`, go: 'education' });
 
   return (
@@ -963,7 +965,7 @@ export default function DashboardExplorer() {
               title="Water quality" onOpen={() => go('water')} delay={360}
               value={waterRate != null ? <CountUp value={waterRate} decimals={1} suffix="%" /> : '—'} unit="of tests within limits"
               viz={waterRate != null ? <Ring percent={waterRate} tone={waterTone} /> : null}
-              note={bioWater ? `${bioWater.pass} pass · ${bioWater.fail} outside limits` : ''}
+              note={waterOverall ? `${waterOverall.pass} pass · ${waterOverall.fail} outside limits` : ''}
             />
             <div className="dash-tile dash-tile--static" style={{ animationDelay: '420ms' }}>
               <span className="dash-tile-title">Needs attention</span>
@@ -1226,9 +1228,28 @@ export default function DashboardExplorer() {
 
         {section === 'water' && (
           <>
-            <SectionTitle note={bioWater ? `${bioWater.rate}% of tests were within Rwanda freshwater limits.` : undefined}>
+            <SectionTitle note={waterOverall ? `${waterOverall.rate}% of ${waterOverall.total} results were within Rwanda freshwater limits.` : undefined}>
               Water quality
             </SectionTitle>
+            {waterTests.length > 0 && (
+              <div className="dashboard-charts-grid dashboard-charts-grid--single">
+                <ChartCard title="Latest water tests" content>
+                  <table className="report-table entry-table">
+                    <thead><tr><th>Date sampled</th><th>Sampling point</th><th>Within limits</th><th>Outside limits</th></tr></thead>
+                    <tbody>
+                      {waterTests.slice(0, 20).map(t => (
+                        <tr key={t.id}>
+                          <td>{t.date}</td>
+                          <td>{t.point}</td>
+                          <td>{t.rate != null ? `${t.rate}% (${t.pass} of ${t.pass + t.fail})` : 'no limits apply'}</td>
+                          <td>{t.outside.length ? t.outside.map(r => `${r.parameter} ${r.value}${r.unit ? ` ${r.unit}` : ''} (limit ${r.limit})`).join('; ') : 'none'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </ChartCard>
+              </div>
+            )}
             <div className="dashboard-charts-grid dashboard-charts-grid--single">
               {bioWater && (
                 <ChartCard title="Park water quality: biodiversity survey" content>

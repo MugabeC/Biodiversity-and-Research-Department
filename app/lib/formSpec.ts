@@ -24,12 +24,16 @@ export type Field = {
   suggest?: string;
   /** Start value on a new entry. */
   initial?: string;
+  /** Decimal places kept for decimal fields (default 2). */
+  places?: number;
+  /** Text that may contain long numbers (such as a report number) and is not checked for phone numbers. */
+  allowDigits?: boolean;
 };
 
 export type FormSpec = {
   id: string;
   title: string;
-  section: 'community' | 'habitat';
+  section: 'community' | 'habitat' | 'aquatic';
   blurb: string;
   dateLabel: string;
   /** Keys shown in the list of recent entries. */
@@ -37,6 +41,36 @@ export type FormSpec = {
   fields: Field[];
   note?: string;
 };
+
+/**
+ * The water quality parameters, in the order the park survey reports them. Names must match the parameter names in
+ * public/data/water_quality.json: the limits used to score each test come from that file.
+ */
+export const WATER_PARAMETERS: { key: string; name: string; unit: string }[] = [
+  { key: 'w_temperature', name: 'Water Temperature', unit: '°C' },
+  { key: 'w_ph', name: 'pH', unit: '' },
+  { key: 'w_turbidity', name: 'Turbidity', unit: 'NTU' },
+  { key: 'w_conductivity', name: 'Electrical Conductivity', unit: 'µS/cm' },
+  { key: 'w_tds', name: 'Total Dissolved Solids', unit: 'mg/l' },
+  { key: 'w_do', name: 'Dissolved Oxygen', unit: 'mg/l' },
+  { key: 'w_ammonia', name: 'Ammonia Nitrogen', unit: 'mg/l' },
+  { key: 'w_nitrate', name: 'Nitrate Nitrogen', unit: 'mg/l' },
+  { key: 'w_phosphate', name: 'Phosphate', unit: 'mg/l' },
+  { key: 'w_total_nitrogen', name: 'Total Nitrogen', unit: 'mg/l' },
+  { key: 'w_total_phosphorus', name: 'Total Phosphorus', unit: 'mg/l' },
+  { key: 'w_tss', name: 'Total Suspended Solids', unit: 'mg/l' },
+  { key: 'w_cod', name: 'Chemical Oxygen Demand', unit: 'mg/l' },
+  { key: 'w_bod', name: 'Biochemical Oxygen Demand', unit: 'mg/l' },
+  { key: 'w_iron', name: 'Iron', unit: 'mg/l' },
+  { key: 'w_manganese', name: 'Manganese', unit: 'mg/l' },
+  { key: 'w_lead', name: 'Lead', unit: 'mg/l' },
+  { key: 'w_cadmium', name: 'Cadmium', unit: 'mg/l' },
+  { key: 'w_chromium', name: 'Chromium', unit: 'mg/l' },
+  { key: 'w_oil_grease', name: 'Oil & Grease', unit: 'mg/l' },
+  { key: 'w_total_coliforms', name: 'Total Coliforms', unit: 'cfu/100ml' },
+  { key: 'w_fecal_coliforms', name: 'Fecal Coliforms', unit: 'cfu/100ml' },
+  { key: 'w_ecoli', name: 'Escherichia coli', unit: 'cfu/100ml' },
+];
 
 const PEOPLE_NOTE = 'Do not type phone numbers or personal contact details.';
 
@@ -170,6 +204,21 @@ export const FORM_SPECS: FormSpec[] = [
       { key: 'note', label: 'Note', type: 'text', max: 200 },
     ],
   },
+  {
+    id: 'water-test',
+    title: 'Water quality test',
+    section: 'aquatic',
+    blurb: 'Results from one sampling point on one day. Each result is scored against the Rwanda freshwater limits, and the dashboard shows the share of results within limits.',
+    dateLabel: 'Date sampled',
+    listKeys: ['sampling_point', 'report_ref'],
+    note: 'Fill only the parameters that were tested. Leave the others empty.',
+    fields: [
+      { key: 'sampling_point', label: 'Sampling point', type: 'text', required: true, max: 80, suggest: 'waterPoints' },
+      { key: 'report_ref', label: 'Laboratory report number', type: 'text', max: 80, allowDigits: true },
+      ...WATER_PARAMETERS.map((p): Field => ({ key: p.key, label: `${p.name}${p.unit ? ` (${p.unit})` : ''}`, type: 'decimal', places: 4 })),
+      { key: 'note', label: 'Note', type: 'longtext', max: 400 },
+    ],
+  },
 ];
 
 export const FORM_IDS = FORM_SPECS.map(f => f.id);
@@ -233,8 +282,9 @@ export function validateEntry(
       const n = typeof v === 'number' ? v : Number(String(v).replace(/,/g, '').trim());
       if (!Number.isFinite(n) || n < 0) { errors.push(`${f.label}: enter a number that is 0 or more.`); continue; }
       if (f.type === 'int' && !Number.isInteger(n)) { errors.push(`${f.label}: enter a whole number.`); continue; }
-      if (n > 1_000_000) { errors.push(`${f.label}: the number is too large.`); continue; }
-      clean[f.key] = f.type === 'decimal' ? Math.round(n * 100) / 100 : n;
+      if (n > (f.type === 'decimal' ? 1_000_000_000 : 1_000_000)) { errors.push(`${f.label}: the number is too large.`); continue; }
+      const scale = 10 ** (f.places ?? 2);
+      clean[f.key] = f.type === 'decimal' ? Math.round(n * scale) / scale : n;
     } else if (f.type === 'date') {
       if (!isRealDate(v)) { errors.push(`${f.label}: choose a valid date.`); continue; }
       clean[f.key] = v;
@@ -243,7 +293,7 @@ export function validateEntry(
       const limit = f.max ?? (f.type === 'longtext' ? 600 : 160);
       if (s.length > limit) { errors.push(`${f.label}: at most ${limit} characters.`); continue; }
       if (f.type === 'select' && !(f.options ?? []).includes(s)) { errors.push(`${f.label}: choose one of the options.`); continue; }
-      if (f.type !== 'select' && looksLikePhone(s)) { errors.push(`${f.label}: this looks like a phone number. Remove it.`); continue; }
+      if (f.type !== 'select' && !f.allowDigits && looksLikePhone(s)) { errors.push(`${f.label}: this looks like a phone number. Remove it.`); continue; }
       clean[f.key] = s;
     }
   }
@@ -259,6 +309,7 @@ export function validateEntry(
     errors.push('Resolution date: cannot be before the date reported.');
   }
   if (formId === 'conflict-case' && s('status') === 'Resolved' && !s('resolution_date')) errors.push('Resolution date: required when the status is Resolved.');
+  if (formId === 'water-test' && !WATER_PARAMETERS.some(p => clean[p.key] !== undefined)) errors.push('Fill in at least one parameter.');
   if (formId === 'waste') {
     const bio = n('biodegradable_kg'), non = n('non_biodegradable_kg'), total = n('total_kg');
     if ((bio === undefined) !== (non === undefined)) errors.push('Fill both the biodegradable and the non-biodegradable weight, or neither.');

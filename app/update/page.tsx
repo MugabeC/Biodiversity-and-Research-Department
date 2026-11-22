@@ -4,14 +4,14 @@ import Link from 'next/link';
 import { FORM_SPECS } from '@/app/lib/formSpec';
 import { lockStaff } from '@/app/lib/staffAuth';
 
-const SECTIONS: { id: 'community' | 'habitat'; title: string; intro: string }[] = [
+const SECTIONS: { id: 'community' | 'habitat' | 'aquatic'; title: string; intro: string }[] = [
   { id: 'community', title: 'Community Conservation', intro: 'School visits, community engagement, complimentary admissions, internship applications, research requests and conflict cases.' },
   { id: 'habitat', title: 'Habitat Restoration', intro: 'Waste management. Restoration area, invasive species removal and the planting list are coming next.' },
+  { id: 'aquatic', title: 'Aquatic Ecosystems', intro: 'Water test results. Each result is scored against the Rwanda freshwater limits.' },
 ];
 
 const COMING: { title: string; text: string }[] = [
   { title: 'Wildlife Conservation', text: 'Species records from eBird and iNaturalist for Nyandungu, with monthly and yearly counts.' },
-  { title: 'Aquatic Ecosystems', text: 'Water test results and water quality percentages.' },
 ];
 
 export default function StaffToolsPage() {
