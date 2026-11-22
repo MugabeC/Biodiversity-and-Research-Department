@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { callUploadFunction } from '@/app/documents/UploadPanel';
 import { fetchEntries, type FormEntry } from '@/app/lib/entries';
 import { FORMS_START_DATE, getFormSpec, validateEntry, type Field } from '@/app/lib/formSpec';
-import { getStaffPassword, setStaffPassword } from '@/app/lib/staffAuth';
+import { getStaffPassword, lockStaff } from '@/app/lib/staffAuth';
 import { useDashboardData } from '@/app/lib/useDashboardData';
 import type { LoadedDashboard } from '@/app/lib/dashboardData';
 
@@ -41,7 +41,7 @@ function blankValues(fields: Field[]): Record<string, string> {
 }
 
 function FieldInput({ f, value, onChange, options, disabled }: { f: Field; value: string; onChange: (v: string) => void; options: string[]; disabled: boolean }) {
-  const common = { id: `f-${f.key}`, disabled, value, onChange: (e: React.ChangeEvent<HTMLInputElement & HTMLSelectElement & HTMLTextAreaElement>) => onChange(e.target.value) };
+  const common = { id: `f-${f.key}`, name: `entry-${f.key}`, autoComplete: 'off', disabled, value, onChange: (e: React.ChangeEvent<HTMLInputElement & HTMLSelectElement & HTMLTextAreaElement>) => onChange(e.target.value) };
   if (f.type === 'select') {
     return (
       <select {...common} className="species-search doc-upload-field">
@@ -52,10 +52,10 @@ function FieldInput({ f, value, onChange, options, disabled }: { f: Field; value
   }
   if (f.type === 'longtext') return <textarea {...common} rows={3} maxLength={f.max} className="species-search doc-upload-field entry-textarea" />;
   if (f.type === 'date') return <input {...common} type="date" min={FORMS_START_DATE} className="species-search doc-upload-field" />;
-  if (f.type === 'int' || f.type === 'decimal') return <input {...common} type="text" inputMode={f.type === 'int' ? 'numeric' : 'decimal'} autoComplete="off" className="species-search doc-upload-field" />;
+  if (f.type === 'int' || f.type === 'decimal') return <input {...common} type="text" inputMode={f.type === 'int' ? 'numeric' : 'decimal'} className="species-search doc-upload-field" />;
   return (
     <>
-      <input {...common} type="text" maxLength={f.max} autoComplete="off" list={f.suggest ? `dl-${f.key}` : undefined} className="species-search doc-upload-field" />
+      <input {...common} type="text" maxLength={f.max} list={f.suggest ? `dl-${f.key}` : undefined} className="species-search doc-upload-field" />
       {f.suggest && <datalist id={`dl-${f.key}`}>{options.map(o => <option key={o} value={o} />)}</datalist>}
     </>
   );
@@ -68,14 +68,11 @@ export default function FormClient({ formId }: { formId: string }) {
 
   const [date, setDate] = useState(() => { const t = rwandaToday(); return t < FORMS_START_DATE ? FORMS_START_DATE : t; });
   const [values, setValues] = useState<Record<string, string>>(() => blankValues(spec.fields));
-  const [password, setPassword] = useState('');
   const [editing, setEditing] = useState<string | null>(null);
   const [entries, setEntries] = useState<FormEntry[] | null>(null);
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const [ok, setOk] = useState('');
-
-  useEffect(() => { setPassword(getStaffPassword()); }, []);
 
   const refresh = useCallback(() => {
     fetchEntries(formId).then(setEntries).catch(() => setEntries([]));
@@ -92,33 +89,40 @@ export default function FormClient({ formId }: { formId: string }) {
     setOk('');
     const check = validateEntry(formId, date, values, { today: rwandaToday() });
     if (check.errors.length) return setErrors(check.errors);
-    if (!password) return setErrors(['Enter the staff password.']);
+    const password = getStaffPassword();
+    if (!password) return lockStaff();
     setBusy(true); setErrors([]);
     try {
       await callUploadFunction({ action: 'entry-save', password, form: formId, id: editing ?? undefined, entry_date: check.clean!.entry_date, data: check.clean!.data });
-      setStaffPassword(password);
       setOk(editing ? 'Entry updated. The dashboard shows it within a minute.' : 'Saved. The dashboard shows it within a minute.');
       reset();
       refresh();
     } catch (err) {
-      setErrors([err instanceof Error ? err.message : 'Something went wrong.']);
+      handleError(err);
     } finally {
       setBusy(false);
     }
   }
 
+  /** A wrong or changed password sends the user back to the sign-in box. */
+  function handleError(err: unknown) {
+    const message = err instanceof Error ? err.message : 'Something went wrong.';
+    if (message === 'Wrong password.') return lockStaff();
+    setErrors([message]);
+  }
+
   async function remove(entry: FormEntry) {
-    if (!password) return setErrors(['Enter the staff password first.']);
+    const password = getStaffPassword();
+    if (!password) return lockStaff();
     if (!window.confirm('Delete this entry? The dashboard will stop counting it.')) return;
     setBusy(true); setErrors([]); setOk('');
     try {
       await callUploadFunction({ action: 'entry-delete', password, id: entry.id });
-      setStaffPassword(password);
       if (editing === entry.id) reset();
       setOk('Entry deleted.');
       refresh();
     } catch (err) {
-      setErrors([err instanceof Error ? err.message : 'Something went wrong.']);
+      handleError(err);
     } finally {
       setBusy(false);
     }
@@ -156,11 +160,6 @@ export default function FormClient({ formId }: { formId: string }) {
             </label>
           ))}
         </div>
-
-        <label className="doc-upload-label" htmlFor="f-password" style={{ maxWidth: 320 }}>
-          Staff password *
-          <input id="f-password" type="password" autoComplete="off" value={password} disabled={busy} onChange={e => setPassword(e.target.value)} className="species-search doc-upload-field" />
-        </label>
 
         {errors.length > 0 && <div role="alert">{errors.map((m, i) => <p key={i} className="doc-upload-error">{m}</p>)}</div>}
         {ok && <p className="doc-upload-ok">{ok}</p>}
