@@ -95,7 +95,7 @@ export default function FormClient({ formId }: { formId: string }) {
     setBusy(true); setErrors([]);
     try {
       await callUploadFunction({ action: 'entry-save', password, form: formId, id: editing ?? undefined, entry_date: check.clean!.entry_date, data: check.clean!.data });
-      setOk(editing ? 'Entry updated. The dashboard shows it within a minute.' : 'Saved. The dashboard shows it within a minute.');
+      setOk(editing ? 'Updated.' : 'Saved.');
       reset();
       refresh();
     } catch (err) {
@@ -120,7 +120,7 @@ export default function FormClient({ formId }: { formId: string }) {
     try {
       await callUploadFunction({ action: 'entry-delete', password, id: entry.id });
       if (editing === entry.id) reset();
-      setOk('Entry deleted.');
+      setOk('Deleted.');
       refresh();
     } catch (err) {
       handleError(err);
@@ -142,12 +142,9 @@ export default function FormClient({ formId }: { formId: string }) {
   return (
     <div className="report-page">
       <p className="doc-upload-help" style={{ marginBottom: 8 }}><Link href="/update" className="dash-report-link">← Staff data tools</Link></p>
-      <h1 className="heading" style={{ margin: '0 0 6px' }}>{spec.title}</h1>
-      <p className="doc-upload-help" style={{ marginBottom: spec.note ? 4 : '1.25rem', maxWidth: 720 }}>{spec.blurb}</p>
-      {spec.note && <p className="doc-upload-help" style={{ marginBottom: '1.25rem', maxWidth: 720 }}>{spec.note}</p>}
+      <h1 className="heading" style={{ margin: '0 0 1.25rem' }}>{spec.title}</h1>
 
       <form className="glass-card doc-upload-panel entry-form" onSubmit={submit} noValidate>
-        {editing && <p className="doc-upload-ok">Editing an entry. Save to update it, or cancel to start a new one.</p>}
         <div className="entry-grid">
           <label className="doc-upload-label" htmlFor="f-date">
             {spec.dateLabel} *
@@ -157,7 +154,6 @@ export default function FormClient({ formId }: { formId: string }) {
             <label key={f.key} className={`doc-upload-label${f.type === 'longtext' ? ' entry-wide' : ''}`} htmlFor={`f-${f.key}`}>
               {f.label}{f.required ? ' *' : ''}
               <FieldInput f={f} value={values[f.key] ?? ''} onChange={v => setValues(s => ({ ...s, [f.key]: v }))} options={f.suggest ? suggestions[f.suggest] ?? [] : []} disabled={busy} />
-              {f.help && <span className="doc-upload-meta">{f.help}</span>}
             </label>
           ))}
         </div>
@@ -171,7 +167,7 @@ export default function FormClient({ formId }: { formId: string }) {
         </div>
       </form>
 
-      <h2 className="doc-upload-title" style={{ margin: '1.5rem 0 8px' }}>Entries saved from this form</h2>
+      <h2 className="doc-upload-title" style={{ margin: '1.5rem 0 8px' }}>Saved entries</h2>
       {entries === null ? (
         <p className="doc-upload-help">Loading…</p>
       ) : entries.length === 0 ? (

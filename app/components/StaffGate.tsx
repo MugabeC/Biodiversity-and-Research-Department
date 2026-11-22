@@ -39,10 +39,7 @@ export default function StaffGate({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="report-page">
-      <h1 className="heading" style={{ margin: '0 0 6px' }}>Staff data tools</h1>
-      <p className="doc-upload-help" style={{ marginBottom: '1.25rem', maxWidth: 560 }}>
-        Enter the staff password once to add or change records. It is asked again only when you close the tab or lock the tools.
-      </p>
+      <h1 className="heading" style={{ margin: '0 0 1.25rem' }}>Staff data tools</h1>
       <form className="glass-card doc-upload-panel" onSubmit={signIn} style={{ maxWidth: 420 }}>
         {/* a hidden user name helps a password manager save the password properly */}
         <input type="text" name="username" autoComplete="username" defaultValue="staff" tabIndex={-1} aria-hidden="true" style={{ position: 'absolute', left: -9999, width: 1, height: 1, opacity: 0 }} />

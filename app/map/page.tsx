@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { LayerSpecification, Map as MapLibreMap, StyleSpecification } from 'maplibre-gl';
 import { fetchMapGeoJson, MAP_GEOJSON } from '../lib/mapGeojson';
 import { annotateMeasures } from '../lib/mapStats';
+import { fetchMapObservations, wildlifeDots, type MapObservation } from '../lib/wildlife';
 
 // ── Map style options ─────────────────────────────────────────────────────────
 
@@ -27,6 +28,7 @@ const LAYERS = [
   { id: 'drainage',      label: 'Drainage & Streams', color: '#00B0FF', mapIds: ['drainage'] },
   { id: 'open-grounds',  label: 'Open Grounds',       color: '#8DA750', mapIds: ['open-grounds'] },
   { id: 'roads',         label: 'Roads',               color: '#adb5bd', mapIds: ['roads'] },
+  { id: 'wildlife',      label: 'Wildlife records',    color: '#2EBD59', mapIds: ['wildlife-dots'] },
 ];
 
 const INIT_VISIBILITY: Record<string, boolean> = {
@@ -40,6 +42,7 @@ const INIT_VISIBILITY: Record<string, boolean> = {
   'drainage':      true,
   'open-grounds':  true,
   'roads':         true,
+  'wildlife':      true,
 };
 
 // Survey areas: layer-id prefix, `group` value in the GeoJSON, colour.
@@ -50,7 +53,7 @@ const SURVEY_AREA_GROUPS = [
   { key: 'pond',             group: 'Pond',                     color: '#2962FF' },
 ];
 
-type PanelInfo = { title: string; line: string; meta?: string };
+type PanelInfo = { title: string; line: string; meta?: string; list?: string[] };
 type Props = Record<string, unknown>;
 
 // ── Hover / click info ────────────────────────────────────────────────────────
@@ -90,7 +93,19 @@ const describeLine = (label: string) => (p: Props): PanelInfo => ({
 
 // Layers that give info on hover/click, topmost first. Lines come before the big
 // fills so a trail is still hoverable on top of a garden or the restored area.
+const describeWildlife = (p: Props): PanelInfo => {
+  const species = Number(p.species), records = Number(p.records);
+  const names = String(p.names ?? '').split('|').filter(Boolean).map(n => { const [label, date] = n.split('~'); return `${label}, ${date}`; });
+  return {
+    title: `${species} species · ${records} record${records === 1 ? '' : 's'}`,
+    line: p.first === p.last ? String(p.first) : `${p.first} to ${p.last}`,
+    meta: String(p.source),
+    list: [...names.slice(0, 8), ...(species > 8 ? [`and ${species - 8} more`] : [])],
+  };
+};
+
 const INFO_LAYERS: { id: string; describe: (p: Props) => PanelInfo }[] = [
+  { id: 'wildlife-dots',        describe: describeWildlife },
   { id: 'pond-fill',            describe: describeSurveyArea },
   { id: 'macadamia-fill',       describe: describeSurveyArea },
   { id: 'invasive-removal-fill', describe: describeSurveyArea },
@@ -128,6 +143,11 @@ export default function MapPage() {
   const [hoverInfo,   setHoverInfo]   = useState<PanelInfo | null>(null);
   const [pinnedInfo,  setPinnedInfo]  = useState<PanelInfo | null>(null);
   const shownInfo = pinnedInfo ?? hoverInfo;
+  const [wildlife,   setWildlife]   = useState<MapObservation[]>([]);
+  const [wildYear,   setWildYear]   = useState('all');
+  const [mapLoaded,  setMapLoaded]  = useState(false);
+  const years = Array.from(new Set(wildlife.map(o => o.observed_on.slice(0, 4)))).sort().reverse();
+  const dots = wildlifeDots(wildlife, wildYear === 'all' ? null : wildYear);
 
   // ── Layer toggle ──────────────────────────────────────────────────────────
   const handleToggle = (key: string, layerIds: string[]) => {
@@ -172,6 +192,14 @@ export default function MapPage() {
     const before = m.getStyle().layers.find(l => l.type !== 'raster' && l.type !== ('sky' as string))?.id;
     m.addLayer({ id: 'esri-satellite-layer', type: 'raster', source: 'esri-satellite' }, before);
   };
+
+  // ── Wildlife records: load once, redraw when the year changes ────────────
+  useEffect(() => { fetchMapObservations().then(setWildlife).catch(() => setWildlife([])); }, []);
+  useEffect(() => {
+    const src = map.current?.getSource('wildlife-src') as { setData: (d: unknown) => void } | undefined;
+    if (mapLoaded && src) src.setData(dots);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mapLoaded, wildlife, wildYear]);
 
   // ── Map init ──────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -339,6 +367,25 @@ export default function MapPage() {
           }
         });
 
+        // ── Wildlife records: green dots, size = species at that place ──
+        try {
+          mapInstance.addSource('wildlife-src', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+          mapInstance.addLayer({
+            id: 'wildlife-dots', type: 'circle', source: 'wildlife-src',
+            layout: { visibility: visibilityRef.current['wildlife'] ? 'visible' : 'none' },
+            paint: {
+              'circle-color': '#2EBD59',
+              'circle-opacity': 0.85,
+              'circle-stroke-color': '#ffffff',
+              'circle-stroke-width': 1,
+              'circle-radius': ['interpolate', ['linear'], ['get', 'species'], 1, 4, 5, 7, 20, 12, 60, 18],
+            },
+          } as LayerSpecification);
+          setMapLoaded(true);
+        } catch (e) {
+          console.error('Error adding wildlife records:', e);
+        }
+
         // ── Hover / click info for every layer (shown in the side panel) ──
         const pick = (point: { x: number; y: number }): PanelInfo | undefined => {
           const layers = INFO_LAYERS.map(l => l.id).filter(id => mapInstance.getLayer(id));
@@ -396,6 +443,15 @@ export default function MapPage() {
               </div>
             ))}
           </div>
+          {wildlife.length > 0 && (
+            <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginTop: 12, fontFamily: 'Poppins, sans-serif', fontWeight: 400, fontSize: 13, color: 'var(--text-primary)' }}>
+              Wildlife year
+              <select value={wildYear} onChange={e => setWildYear(e.target.value)} style={{ fontFamily: 'inherit', fontWeight: 400, fontSize: 13, padding: '3px 6px', borderRadius: 6, border: '1px solid var(--border)', background: 'transparent', color: 'inherit' }}>
+                <option value="all">All years</option>
+                {years.map(y => <option key={y} value={y}>{y}</option>)}
+              </select>
+            </label>
+          )}
         </div>
 
         <div className="map-glass-panel map-info-card">
@@ -415,6 +471,7 @@ export default function MapPage() {
           <p className="map-info-title">{shownInfo.title}</p>
           <p className="map-info-line">{shownInfo.line}</p>
           {shownInfo.meta && <p className="map-info-meta">{shownInfo.meta}</p>}
+          {shownInfo.list?.map((l, i) => <p key={i} className="map-info-meta">{l}</p>)}
         </div>
       )}
 
