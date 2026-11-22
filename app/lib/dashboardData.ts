@@ -117,6 +117,8 @@ export type LoadedDashboard = {
   conflicts: ConflictRow[];
   internships: { month: string; academic: number; professional: number; total: number }[];
   internshipPipeline: InternshipPipeline;
+  /** Internship applications received per month (counts only). */
+  applications: { month: string; count: number }[];
   bioWater: BioComplianceSummary | null;
   wasacParams: WasacRawParam[];
   wasacSiteLabels: string[];
@@ -410,6 +412,7 @@ export function loadDashboardFromBundle(): LoadedDashboard {
     conflicts: normalizeConflicts(),
     internships: normalizeInternships(),
     internshipPipeline: internshipPipelineJson as InternshipPipeline,
+    applications: ((internshipJson as { applications?: { month?: string; count?: number | null }[] }).applications ?? []).map(a => ({ month: a.month ?? 'Unknown', count: a.count ?? 0 })),
     bioWater,
     wasacParams: wq.wasac?.parameters ?? [],
     wasacSiteLabels: wq.wasac?.samplingPoints ?? [],
