@@ -71,5 +71,34 @@ eq('water test scored', [wt.pass, wt.fail, wt.rate, wt.outside.map(r => r.parame
 eq('water overall adds the survey', [withWater.waterOverall?.total, withWater.waterOverall?.tests], [(base.waterOverall?.total ?? 0) + 4, 1]);
 eq('no tests means survey only', base.waterOverall?.rate, base.bioWater?.rate);
 
+// tree planting and survival
+import { buildRestoration, checksDue } from '../app/lib/restoration';
+const uuidA = '11111111-1111-4111-8111-111111111111', uuidB = '22222222-2222-4222-8222-222222222222';
+eq('planting ok (earlier date allowed)', errs('planting', '2026-03-30', { species: 'Croton megalocarpus', sector: 'S3', trees_planted: '50' }), []);
+eq('planting needs a sector', errs('planting', '2026-11-25', { species: 'Croton megalocarpus', trees_planted: 5 }).length, 1);
+eq('check needs a real planting id', errs('survival-check', '2026-12-02', { planting_id: 'abc', checkpoint: 'Week 1', alive: 5 }).length, 1);
+eq('check ok', errs('survival-check', '2026-12-02', { planting_id: uuidA, checkpoint: 'Week 1', alive: 5 }), []);
+eq('check needs a count', errs('survival-check', '2026-12-02', { planting_id: uuidA, checkpoint: 'Week 1' }).length >= 1, true);
+const pe = (id: string, d: string, data: Record<string, string | number>, n: number): FormEntry => ({ id, form: 'planting', entry_date: d, data, created_at: `2026-11-2${n}T10:00:00Z`, updated_at: '' });
+const ce = (id: string, d: string, data: Record<string, string | number>, n: number): FormEntry => ({ id, form: 'survival-check', entry_date: d, data, created_at: `2026-12-0${n}T10:00:00Z`, updated_at: '' });
+const rest = buildRestoration([
+  pe(uuidA, '2026-11-01', { species: 'Croton megalocarpus', sector: 'S3', trees_planted: 50 }, 1),
+  pe(uuidB, '2026-11-10', { species: 'Ficus sur', sector: 'S1', trees_planted: 20 }, 2),
+  ce('c1', '2026-11-08', { planting_id: uuidA, checkpoint: 'Week 1', alive: 48, dead: 2 }, 1),
+  ce('c2', '2026-12-01', { planting_id: uuidA, checkpoint: 'Month 1', alive: 45, dead: 3, replaced: 2 }, 2),
+  ce('c3', '2026-12-02', { planting_id: uuidB, checkpoint: 'Month 1', alive: 20 }, 3),
+  ce('orphan', '2026-12-02', { planting_id: '99999999-9999-4999-8999-999999999999', checkpoint: 'Week 1', alive: 5 }, 4),
+]);
+eq('totals', [rest?.totalPlanted, rest?.species, rest?.plantings.length], [70, 2, 2]);
+eq('week 1 survival 96', [rest?.byCheckpoint[0].planted, rest?.byCheckpoint[0].alive, rest?.byCheckpoint[0].rate], [50, 48, 96]);
+eq('month 1 survival (50+20 trees, 65 alive)', [rest?.byCheckpoint[1].planted, rest?.byCheckpoint[1].alive, rest?.byCheckpoint[1].rate], [70, 65, 92.9]);
+eq('month 3 empty', rest?.byCheckpoint[2].rate, null);
+eq('sector S3 uses its latest check', [rest?.bySector.find(r => r.label === 'S3')?.rate, rest?.bySector.find(r => r.label === 'S1')?.rate], [90, 100]);
+eq('orphan check ignored', rest?.plantings.every(p => !p.checks['Week 1'] || p.id === uuidA), true);
+const due = checksDue(rest?.plantings ?? [], '2026-12-10');
+eq('Croton month 3 not due yet', due.some(d => d.planting.species === 'Croton megalocarpus' && d.checkpoint === 'Month 3'), false);
+eq('Ficus week 1 is overdue', due.some(d => d.planting.species === 'Ficus sur' && d.checkpoint === 'Week 1' && d.overdue), true);
+eq('no plantings means no restoration data', buildRestoration([]), null);
+
 if (failed) { console.error(`${failed} check(s) failed`); process.exit(1); }
 console.log('all checks passed');

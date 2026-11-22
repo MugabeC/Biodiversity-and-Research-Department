@@ -150,6 +150,29 @@ Deno.serve(async (req: Request) => {
         const checked = validateEntry(form, body.entry_date, body.data, { today });
         if (!checked.clean) return json({ error: checked.errors.join(' ') }, 400);
         const id = body.id === undefined || body.id === null ? '' : String(body.id);
+        const d = checked.clean.data;
+        if (form === 'survival-check') {
+          const { data: planting, error: pe } = await supa.from('form_entries').select('entry_date, data')
+            .eq('id', String(d.planting_id)).eq('form', 'planting').is('deleted_at', null).maybeSingle();
+          if (pe) throw pe;
+          if (!planting) return json({ error: 'Choose a planting from the list.' }, 400);
+          const planted = Number(planting.data?.trees_planted ?? 0);
+          const total = Number(d.alive ?? 0) + Number(d.dead ?? 0) + Number(d.replaced ?? 0);
+          if (total > planted) return json({ error: `Alive, dead and replaced add up to ${total}, but ${planted} trees were planted.` }, 400);
+          if (checked.clean.entry_date < planting.entry_date) return json({ error: 'The check cannot be before the planting date.' }, 400);
+          let dup = supa.from('form_entries').select('id').eq('form', 'survival-check').is('deleted_at', null)
+            .eq('data->>planting_id', String(d.planting_id)).eq('data->>checkpoint', String(d.checkpoint));
+          if (id) dup = dup.neq('id', id);
+          const { data: existing, error: de } = await dup.limit(1);
+          if (de) throw de;
+          if (existing?.length) return json({ error: 'This checkpoint is already recorded for that planting. Edit the existing entry.' }, 400);
+        }
+        if (form === 'planting' && id) {
+          const { data: checks, error: ce } = await supa.from('form_entries').select('data').eq('form', 'survival-check').is('deleted_at', null).eq('data->>planting_id', id);
+          if (ce) throw ce;
+          const most = Math.max(0, ...(checks ?? []).map(c => Number(c.data?.alive ?? 0) + Number(c.data?.dead ?? 0) + Number(c.data?.replaced ?? 0)));
+          if (most > Number(d.trees_planted ?? 0)) return json({ error: `A survival check already counts ${most} trees. Trees planted cannot be lower.` }, 400);
+        }
         if (id) {
           const { data, error } = await supa.from('form_entries')
             .update({ entry_date: checked.clean.entry_date, data: checked.clean.data, updated_at: new Date().toISOString() })
@@ -167,6 +190,14 @@ Deno.serve(async (req: Request) => {
       case 'entry-delete': {
         const id = String(body.id ?? '');
         if (!id) return json({ error: 'Missing entry.' }, 400);
+        const { data: found, error: fe } = await supa.from('form_entries').select('id, form').eq('id', id).is('deleted_at', null).maybeSingle();
+        if (fe) throw fe;
+        if (!found) return json({ error: 'That entry no longer exists.' }, 404);
+        if (found.form === 'planting') {
+          const { data: used, error: ue } = await supa.from('form_entries').select('id').eq('form', 'survival-check').is('deleted_at', null).eq('data->>planting_id', id).limit(1);
+          if (ue) throw ue;
+          if (used?.length) return json({ error: 'Delete the survival checks of this planting first.' }, 400);
+        }
         const { data, error } = await supa.from('form_entries').update({ deleted_at: new Date().toISOString() }).eq('id', id).is('deleted_at', null).select('id').maybeSingle();
         if (error) throw error;
         if (!data) return json({ error: 'That entry no longer exists.' }, 404);

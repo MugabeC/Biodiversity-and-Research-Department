@@ -28,6 +28,10 @@ export type Field = {
   places?: number;
   /** Text that may contain long numbers (such as a report number) and is not checked for phone numbers. */
   allowDigits?: boolean;
+  /** The value is the id of another entry (checked by the server). */
+  uuid?: boolean;
+  /** The page offers a list of existing entries to choose from. */
+  choose?: string;
 };
 
 export type FormSpec = {
@@ -40,6 +44,8 @@ export type FormSpec = {
   listKeys: string[];
   fields: Field[];
   note?: string;
+  /** Earliest date allowed on this form (default: FORMS_START_DATE). */
+  start?: string;
 };
 
 /**
@@ -219,6 +225,41 @@ export const FORM_SPECS: FormSpec[] = [
       { key: 'note', label: 'Note', type: 'longtext', max: 400 },
     ],
   },
+  {
+    id: 'planting',
+    title: 'Tree planting',
+    section: 'habitat',
+    blurb: '',
+    dateLabel: 'Date planted',
+    listKeys: ['species', 'trees_planted', 'sector'],
+    start: '2020-01-01',
+    fields: [
+      { key: 'species', label: 'Species (scientific name)', type: 'text', required: true, max: 120, suggest: 'plantSpecies' },
+      { key: 'common_name', label: 'Common name', type: 'text', max: 80 },
+      { key: 'sector', label: 'Sector', type: 'select', required: true, options: ['S1', 'S2', 'S3', 'S4', 'S5', 'EA'] },
+      { key: 'trees_planted', label: 'Trees planted', type: 'int', required: true },
+      { key: 'planted_by', label: 'Planted by', type: 'text', max: 120 },
+      { key: 'note', label: 'Note', type: 'text', max: 200 },
+    ],
+  },
+  {
+    id: 'survival-check',
+    title: 'Survival check',
+    section: 'habitat',
+    blurb: '',
+    dateLabel: 'Date checked',
+    listKeys: ['planting_id', 'checkpoint', 'alive'],
+    start: '2020-01-01',
+    fields: [
+      { key: 'planting_id', label: 'Planting', type: 'text', required: true, uuid: true, choose: 'plantings' },
+      { key: 'checkpoint', label: 'Checkpoint', type: 'select', required: true, options: ['Week 1', 'Month 1', 'Month 3', 'Month 6'] },
+      { key: 'alive', label: 'Alive', type: 'int', required: true },
+      { key: 'dead', label: 'Dead', type: 'int' },
+      { key: 'replaced', label: 'Dead and replaced', type: 'int' },
+      { key: 'note', label: 'Note', type: 'text', max: 200 },
+      { key: 'photo_ref', label: 'Photo reference', type: 'text', max: 80, allowDigits: true },
+    ],
+  },
 ];
 
 export const FORM_IDS = FORM_SPECS.map(f => f.id);
@@ -260,7 +301,7 @@ export function validateEntry(
   const spec = getFormSpec(formId);
   if (!spec) return { errors: ['Unknown form.'] };
   const errors: string[] = [];
-  const start = opts.start ?? FORMS_START_DATE;
+  const start = opts.start ?? spec.start ?? FORMS_START_DATE;
   const raw = (data && typeof data === 'object' ? data : {}) as Record<string, unknown>;
 
   if (!isRealDate(entryDate)) errors.push(`${spec.dateLabel}: choose a valid date.`);
@@ -293,7 +334,8 @@ export function validateEntry(
       const limit = f.max ?? (f.type === 'longtext' ? 600 : 160);
       if (s.length > limit) { errors.push(`${f.label}: at most ${limit} characters.`); continue; }
       if (f.type === 'select' && !(f.options ?? []).includes(s)) { errors.push(`${f.label}: choose one of the options.`); continue; }
-      if (f.type !== 'select' && !f.allowDigits && looksLikePhone(s)) { errors.push(`${f.label}: this looks like a phone number. Remove it.`); continue; }
+      if (f.uuid && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s)) { errors.push(`${f.label}: choose one of the options.`); continue; }
+      if (f.type !== 'select' && !f.allowDigits && !f.uuid && looksLikePhone(s)) { errors.push(`${f.label}: this looks like a phone number. Remove it.`); continue; }
       clean[f.key] = s;
     }
   }
@@ -309,6 +351,11 @@ export function validateEntry(
     errors.push('Resolution date: cannot be before the date reported.');
   }
   if (formId === 'conflict-case' && s('status') === 'Resolved' && !s('resolution_date')) errors.push('Resolution date: required when the status is Resolved.');
+  if (formId === 'planting' && n('trees_planted') !== undefined && (n('trees_planted') as number) < 1) errors.push('Trees planted: at least 1.');
+  if (formId === 'survival-check') {
+    const total = (n('alive') ?? 0) + (n('dead') ?? 0) + (n('replaced') ?? 0);
+    if (total < 1) errors.push('Enter how many trees are alive, dead or replaced.');
+  }
   if (formId === 'water-test' && !WATER_PARAMETERS.some(p => clean[p.key] !== undefined)) errors.push('Fill in at least one parameter.');
   if (formId === 'waste') {
     const bio = n('biodegradable_kg'), non = n('non_biodegradable_kg'), total = n('total_kg');
