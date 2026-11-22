@@ -52,10 +52,7 @@ export default function WildlifeStaffPage() {
   return (
     <div className="report-page">
       <p className="doc-upload-help" style={{ marginBottom: 8 }}><Link href="/update" className="dash-report-link">← Staff data tools</Link></p>
-      <h1 className="heading" style={{ margin: '0 0 6px' }}>Wildlife records</h1>
-      <p className="doc-upload-help" style={{ marginBottom: '1.25rem', maxWidth: 720 }}>
-        Species records from iNaturalist and eBird are collected automatically every night and counted on the public Wildlife records page. Nothing is typed in by hand.
-      </p>
+      <h1 className="heading" style={{ margin: '0 0 1.25rem' }}>Wildlife records</h1>
 
       <div className="glass-card doc-upload-panel" style={{ maxWidth: 720 }}>
         <table className="report-table report-table--small">
@@ -68,7 +65,7 @@ export default function WildlifeStaffPage() {
         </table>
         {status?.message && <p className="doc-upload-error">{status.message}</p>}
         <div className="doc-library-card-actions">
-          <button type="button" className="doc-action-btn doc-action-btn--primary" disabled={busy} onClick={syncNow}>{busy ? 'Updating… this takes about a minute' : 'Update now'}</button>
+          <button type="button" className="doc-action-btn doc-action-btn--primary" disabled={busy} onClick={syncNow}>{busy ? 'Updating…' : 'Update now'}</button>
           <Link href="/wildlife" className="doc-action-btn doc-action-btn--ghost">Open the public page</Link>
         </div>
         {msg && <p className="doc-upload-ok">{msg}</p>}
@@ -78,13 +75,11 @@ export default function WildlifeStaffPage() {
       {status && !status.ebird_enabled && (
         <div className="glass-card doc-upload-panel" style={{ maxWidth: 720, marginTop: 16 }}>
           <h2 className="doc-upload-title">Connect eBird</h2>
-          <p className="doc-upload-help">eBird needs a free key.</p>
           <ol className="doc-upload-help" style={{ margin: 0, paddingLeft: 18, lineHeight: 1.7 }}>
             <li>Sign in at <a className="dash-report-link" href="https://ebird.org/api/keygen" target="_blank" rel="noreferrer">ebird.org/api/keygen</a> and request a key.</li>
             <li>In Supabase, open Edge Functions, then Secrets, and add a secret named <code>EBIRD_API_KEY</code> with the key as its value.</li>
             <li>Come back here and press Update now.</li>
           </ol>
-          <p className="doc-upload-meta">eBird&apos;s live service only returns the last 30 days, so records build up from the day it is connected.</p>
         </div>
       )}
     </div>

@@ -108,3 +108,53 @@ export function summarize(obs: Observation[], today: string): WildlifeSummary {
     firstDate: obs.length ? obs[0].observed_on : null,
   };
 }
+
+// ── map dots ──────────────────────────────────────────────────────────────
+export type MapObservation = { source: string; scientific_name: string; common_name: string | null; observed_on: string; lat: number | null; lon: number | null };
+/** eBird records are made at one hotspot, so they are drawn at the hotspot's point. */
+export const EBIRD_POINT = { lon: 30.1461196, lat: -1.9540988 };
+
+export async function fetchMapObservations(): Promise<MapObservation[]> {
+  const out: MapObservation[] = [];
+  for (let offset = 0; ; offset += 1000) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/species_observations?select=source,scientific_name,common_name,observed_on,lat,lon&order=observed_on.asc&limit=1000&offset=${offset}`, { headers, cache: 'no-store' });
+    if (!res.ok) throw new Error('Could not load the wildlife records.');
+    const rows = (await res.json()) as MapObservation[];
+    out.push(...rows);
+    if (rows.length < 1000) return out;
+  }
+}
+
+const CELL = 0.0004; // about 45 metres: records this close share one dot
+
+type DotFeature = { type: 'Feature'; geometry: { type: 'Point'; coordinates: [number, number] }; properties: Record<string, string | number> };
+
+/** One dot per place, with how many species and records were logged there and when. `year` limits the records to one year. */
+export function wildlifeDots(obs: MapObservation[], year: string | null): { type: 'FeatureCollection'; features: DotFeature[] } {
+  const cells = new Map<string, { src: string; lons: number[]; lats: number[]; species: Map<string, { label: string; last: string }>; records: number; first: string; last: string }>();
+  for (const o of obs) {
+    if (year && !o.observed_on.startsWith(year)) continue;
+    const ebird = o.source === 'ebird';
+    const lon = ebird ? EBIRD_POINT.lon : o.lon, lat = ebird ? EBIRD_POINT.lat : o.lat;
+    if (lon == null || lat == null) continue;
+    const key = ebird ? 'ebird' : `${Math.round(lon / CELL)}:${Math.round(lat / CELL)}`;
+    let c = cells.get(key);
+    if (!c) { c = { src: ebird ? 'eBird hotspot' : 'iNaturalist', lons: [], lats: [], species: new Map(), records: 0, first: o.observed_on, last: o.observed_on }; cells.set(key, c); }
+    c.lons.push(lon); c.lats.push(lat); c.records += 1;
+    if (o.observed_on < c.first) c.first = o.observed_on;
+    if (o.observed_on > c.last) c.last = o.observed_on;
+    const prev = c.species.get(o.scientific_name);
+    if (!prev || o.observed_on > prev.last) c.species.set(o.scientific_name, { label: o.common_name ?? o.scientific_name, last: o.observed_on });
+  }
+  const mean = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length;
+  const features: DotFeature[] = [];
+  for (const c of cells.values()) {
+    const names = [...c.species.values()].sort((a, b) => b.last.localeCompare(a.last)).slice(0, 40).map(s => `${s.label}~${s.last}`).join('|');
+    features.push({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [mean(c.lons), mean(c.lats)] },
+      properties: { species: c.species.size, records: c.records, first: c.first, last: c.last, source: c.src, names },
+    });
+  }
+  return { type: 'FeatureCollection', features };
+}
