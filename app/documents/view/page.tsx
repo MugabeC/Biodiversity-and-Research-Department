@@ -7,9 +7,10 @@ export const dynamic = 'force-dynamic';
 export default async function DocumentViewPage({
   searchParams,
 }: {
-  searchParams: { id?: string };
+  searchParams: Promise<{ id?: string }>;
 }) {
-  const doc = await getAnyDocumentById(searchParams.id);
+  const { id } = await searchParams;
+  const doc = await getAnyDocumentById(id);
   if (!doc) notFound();
 
   return (

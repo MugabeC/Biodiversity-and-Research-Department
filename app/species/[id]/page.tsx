@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import Link from 'next/link';
 import SpeciesPhoto from '../../components/SpeciesPhoto';
 import { buildSpeciesWhatsAppMessage, copySpeciesMessage, shareViaWhatsApp } from '../../lib/shareWhatsApp';
@@ -45,9 +45,9 @@ const TAXA_LABELS: Record<string, string> = {
 };
 
 const IUCN_STYLE: Record<string, { bg: string; color: string }> = {
-  LC: { bg: '#e8f5e9', color: '#2e7d32' },
-  NT: { bg: '#f1f8e9', color: '#558b2f' },
-  VU: { bg: '#fff8e1', color: '#e65100' },
+  LC: { bg: '#e8f5e9', color: '#27702d' },
+  NT: { bg: '#f1f8e9', color: '#3f6b1f' },
+  VU: { bg: '#fff8e1', color: '#b34000' },
   EN: { bg: '#fbe9e7', color: '#bf360c' },
   CR: { bg: '#fce4ec', color: '#880e4f' },
   NE: { bg: '#f5f5f5', color: '#616161' },
@@ -154,8 +154,8 @@ function ExternalLinkBtn({ href, label, bg, textColor = '#ffffff' }: {
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
-export default function SpeciesDetailPage({ params }: { params: { id: string } }) {
-  const uid = params.id;
+export default function SpeciesDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id: uid } = use(params);
   const [species, setSpecies]       = useState<RawSpecies | null>(null);
   const [notFound, setNotFound]     = useState(false);
   const [loading, setLoading]       = useState(true);
@@ -435,12 +435,12 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
                 <ExternalLinkBtn
                   href={`https://www.inaturalist.org/search?q=${sciNamePlus}`}
                   label="iNaturalist"
-                  bg="#74ac00"
+                  bg="#527a00"
                 />
                 <ExternalLinkBtn
                   href={`https://www.iucnredlist.org/search?query=${sciNamePlus}`}
                   label="IUCN Red List"
-                  bg="#e8551a"
+                  bg="#c2410c"
                 />
                 <ExternalLinkBtn
                   href={`https://en.wikipedia.org/wiki/${sciNameUnderscore}`}
@@ -489,7 +489,7 @@ export default function SpeciesDetailPage({ params }: { params: { id: string } }
                 borderRadius: '9999px',
                 border: 'none',
                 cursor: 'pointer',
-                background: '#25D366',
+                background: '#0b7a3b',
                 color: '#ffffff',
                 fontFamily: 'Poppins, sans-serif',
                 fontWeight: 600,

@@ -17,7 +17,7 @@ import { applyEntries, type FormEntry } from '@/app/lib/entries';
 import { buildWaterTests, combineWater, type WaterOverall, type WaterTest } from '@/app/lib/waterTests';
 import { buildRestoration, type Restoration } from '@/app/lib/restoration';
 
-/** The workbook-driven data files. They ship with the site, and a newer set can be published from the Update page. */
+/** The data files that ship with the site. */
 export type DataFiles = {
   summary: unknown; schoolVisits: unknown; community: unknown; passes: unknown;
   waste: unknown; research: unknown; conflicts: unknown; internships: unknown;
@@ -26,37 +26,6 @@ const BUNDLED: DataFiles = {
   summary: summaryJson, schoolVisits: schoolVisitsJson, community: communityActivitiesJson, passes: complementaryPassesJson,
   waste: wasteJson, research: researchJson, conflicts: conflictJson, internships: internshipJson,
 };
-/** When the bundled files were last refreshed. A published set only replaces them if it is newer. */
-export const BUNDLED_AT = '2026-11-22T00:00:00Z';
-
-const FILE_KEYS: Record<string, keyof DataFiles> = {
-  'summary.json': 'summary', 'NEP_school_visits.json': 'schoolVisits', 'NEP_community_engagement.json': 'community',
-  'NEP_complementary_passes.json': 'passes', 'NEP_waste_management.json': 'waste', 'Research_ALL.json': 'research',
-  'Conflict_Management.json': 'conflicts', 'NEP_internship.json': 'internships',
-};
-
-export const LIVE_DATA_URL =
-  process.env.NEXT_PUBLIC_LIVE_DATA_URL ??
-  `${SUPABASE_URL}/storage/v1/object/public/Biodiversity%20and%20Research%20Department/data/dashboard-latest.json`;
-
-/** The most recently published data set, if there is one that is newer than the bundled files. */
-export async function fetchLiveDashboardFiles(): Promise<{ files: Partial<DataFiles>; createdAt: string } | null> {
-  try {
-    const res = await fetch(`${LIVE_DATA_URL}${LIVE_DATA_URL.includes('?') ? '&' : '?'}t=${Date.now()}`, { cache: 'no-store' });
-    if (!res.ok) return null;
-    const body = (await res.json()) as { createdAt?: string; files?: Record<string, unknown> };
-    if (!body.createdAt || !body.files) return null;
-    if (Date.parse(body.createdAt) <= Date.parse(BUNDLED_AT)) return null;
-    const files: Partial<DataFiles> = {};
-    for (const [name, key] of Object.entries(FILE_KEYS)) {
-      if (!body.files[name]) return null; // incomplete set: keep the bundled data
-      files[key] = body.files[name];
-    }
-    return { files, createdAt: body.createdAt };
-  } catch {
-    return null;
-  }
-}
 import type { WasacRawParam } from '@/app/lib/exploreWaterQuality';
 
 export type DashboardSummary = {
