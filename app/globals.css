@@ -2843,3 +2843,9 @@ h1.heading {
 .wildlife-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
 @media (max-width: 760px) { .wildlife-two { grid-template-columns: 1fr; } }
 .wildlife-card .doc-upload-meta, .hub-card .doc-upload-meta { font-size: 13px; }
+
+.entry-group { margin: 6px 0 0; font-size: 14px; color: var(--meadow-green); }
+.entry-rows { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+.entry-row { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr) minmax(0, 1fr) auto; gap: 12px 18px; align-items: end; width: 100%; }
+.entry-row-remove { padding-bottom: 14px; }
+@media (max-width: 760px) { .entry-row { grid-template-columns: 1fr 1fr; } }

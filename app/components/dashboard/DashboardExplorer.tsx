@@ -1251,11 +1251,11 @@ export default function DashboardExplorer() {
             <div className="dashboard-charts-grid dashboard-charts-grid--single">
               <ChartCard title="Survival at each check" content>
                 <table className="report-table entry-table">
-                  <thead><tr><th>Check</th><th>Trees checked</th><th>Alive</th><th>Dead</th><th>Dead and replaced</th><th>Survival</th></tr></thead>
+                  <thead><tr><th>Check</th><th>Trees checked</th><th>Alive</th><th>Dead</th><th>Survival</th></tr></thead>
                   <tbody>
                     {restoration.byCheckpoint.map(r => (
                       <tr key={r.label}>
-                        <td>{r.label}</td><td>{r.batches ? r.planted.toLocaleString('en-US') : '—'}</td><td>{r.batches ? r.alive : '—'}</td><td>{r.batches ? r.dead : '—'}</td><td>{r.batches ? r.replaced : '—'}</td>
+                        <td>{r.label}</td><td>{r.batches ? r.planted.toLocaleString('en-US') : '—'}</td><td>{r.batches ? r.alive : '—'}</td><td>{r.batches ? r.dead : '—'}</td>
                         <td>{r.rate != null ? `${r.rate}%${r.rate >= SURVIVAL_TARGET ? '' : ` (target ${SURVIVAL_TARGET}%)`}` : '—'}</td>
                       </tr>
                     ))}

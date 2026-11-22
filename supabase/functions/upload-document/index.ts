@@ -157,8 +157,8 @@ Deno.serve(async (req: Request) => {
           if (pe) throw pe;
           if (!planting) return json({ error: 'Choose a planting from the list.' }, 400);
           const planted = Number(planting.data?.trees_planted ?? 0);
-          const total = Number(d.alive ?? 0) + Number(d.dead ?? 0) + Number(d.replaced ?? 0);
-          if (total > planted) return json({ error: `Alive, dead and replaced add up to ${total}, but ${planted} trees were planted.` }, 400);
+          const total = Number(d.alive ?? 0) + Number(d.dead ?? 0);
+          if (total > planted) return json({ error: `Alive and dead add up to ${total}, but ${planted} trees were planted.` }, 400);
           if (checked.clean.entry_date < planting.entry_date) return json({ error: 'The check cannot be before the planting date.' }, 400);
           let dup = supa.from('form_entries').select('id').eq('form', 'survival-check').is('deleted_at', null)
             .eq('data->>planting_id', String(d.planting_id)).eq('data->>checkpoint', String(d.checkpoint));
@@ -170,7 +170,7 @@ Deno.serve(async (req: Request) => {
         if (form === 'planting' && id) {
           const { data: checks, error: ce } = await supa.from('form_entries').select('data').eq('form', 'survival-check').is('deleted_at', null).eq('data->>planting_id', id);
           if (ce) throw ce;
-          const most = Math.max(0, ...(checks ?? []).map(c => Number(c.data?.alive ?? 0) + Number(c.data?.dead ?? 0) + Number(c.data?.replaced ?? 0)));
+          const most = Math.max(0, ...(checks ?? []).map(c => Number(c.data?.alive ?? 0) + Number(c.data?.dead ?? 0)));
           if (most > Number(d.trees_planted ?? 0)) return json({ error: `A survival check already counts ${most} trees. Trees planted cannot be lower.` }, 400);
         }
         if (id) {
