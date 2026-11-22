@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 const NAV_LINKS = [
   { label: 'Dashboard', href: '/' },
   { label: 'Species Explorer', href: '/species' },
+  { label: 'Wildlife records', href: '/wildlife' },
   { label: 'Map', href: '/map' },
   { label: 'Documents', href: '/documents' },
 ];

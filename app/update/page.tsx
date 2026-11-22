@@ -10,9 +10,6 @@ const SECTIONS: { id: 'community' | 'habitat' | 'aquatic'; title: string; intro:
   { id: 'aquatic', title: 'Aquatic Ecosystems', intro: 'Water test results. Each result is scored against the Rwanda freshwater limits.' },
 ];
 
-const COMING: { title: string; text: string }[] = [
-  { title: 'Wildlife Conservation', text: 'Species records from eBird and iNaturalist for Nyandungu, with monthly and yearly counts.' },
-];
 
 export default function StaffToolsPage() {
   return (
@@ -41,14 +38,13 @@ export default function StaffToolsPage() {
       ))}
 
       <section style={{ marginBottom: '2rem' }}>
-        <h2 className="doc-upload-title" style={{ marginBottom: 4 }}>Coming next</h2>
+        <h2 className="doc-upload-title" style={{ marginBottom: 4 }}>Wildlife Conservation</h2>
+        <p className="doc-upload-help" style={{ marginBottom: 12, maxWidth: 720 }}>Species records come from iNaturalist and eBird on their own, so there is nothing to type in.</p>
         <div className="hub-grid">
-          {COMING.map(c => (
-            <div key={c.title} className="glass-card hub-card hub-card--soon">
-              <span className="hub-card-title">{c.title}</span>
-              <span className="doc-upload-help">{c.text}</span>
-            </div>
-          ))}
+          <Link href="/update/wildlife" className="glass-card hub-card">
+            <span className="hub-card-title">Wildlife records</span>
+            <span className="doc-upload-help">Check the nightly update, update now, and connect eBird.</span>
+          </Link>
         </div>
       </section>
     </div>
