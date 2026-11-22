@@ -7,11 +7,13 @@ export function generateStaticParams() {
 }
 export const dynamicParams = false;
 
-export function generateMetadata({ params }: { params: { form: string } }) {
-  return { title: getFormSpec(params.form)?.title ?? 'Staff form' };
+export async function generateMetadata({ params }: { params: Promise<{ form: string }> }) {
+  const { form } = await params;
+  return { title: getFormSpec(form)?.title ?? 'Staff form' };
 }
 
-export default function Page({ params }: { params: { form: string } }) {
-  if (!getFormSpec(params.form)) notFound();
-  return <FormClient formId={params.form} />;
+export default async function Page({ params }: { params: Promise<{ form: string }> }) {
+  const { form } = await params;
+  if (!getFormSpec(form)) notFound();
+  return <FormClient formId={form} />;
 }

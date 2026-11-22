@@ -43,11 +43,7 @@ export default function WasteDashboardCharts({ data }: { data: WasteFile }) {
   }, [rows]);
 
   const cumulative = useMemo(() => {
-    let sum = 0;
-    return monthly.map(m => {
-      sum += m.total;
-      return { ...m, cumulative: sum };
-    });
+    return monthly.map((m, i) => ({ ...m, cumulative: monthly.slice(0, i + 1).reduce((total, x) => total + x.total, 0) }));
   }, [monthly]);
 
   if (monthly.length === 0) {

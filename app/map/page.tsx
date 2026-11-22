@@ -1,7 +1,8 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import type { LayerSpecification, Map as MapLibreMap, StyleSpecification } from 'maplibre-gl';
+import type { LayerSpecification, Map as MapLibreMap, MapMouseEvent, MapGeoJSONFeature, StyleSpecification } from 'maplibre-gl';
 import { fetchMapGeoJson, MAP_GEOJSON } from '../lib/mapGeojson';
 import { annotateMeasures } from '../lib/mapStats';
 import { fetchMapObservations, wildlifeDots, type MapObservation } from '../lib/wildlife';
@@ -206,7 +207,8 @@ export default function MapPage() {
     if (map.current) return;
 
     const initMap = async () => {
-      const maplibregl = (await import('maplibre-gl')).default;
+      const maplibregl = await import('maplibre-gl');
+      maplibregl.setWorkerUrl(`${window.location.origin}/maplibre/maplibre-gl-worker.mjs`);
 
       const mapInstance = new maplibregl.Map({
         container: mapContainer.current!,
@@ -240,16 +242,15 @@ export default function MapPage() {
             url: 'https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=g8UGiMdXyHomD5NmJULL',
             tileSize: 256,
           });
-          // MapLibre supports sky layers at runtime; bundled typings lag behind for some versions.
-          mapInstance.addLayer({
-            id: 'sky-layer',
-            type: 'sky',
-            paint: {
-              'sky-type': 'atmosphere',
-              'sky-atmosphere-sun': [0.0, 90.0],
-              'sky-atmosphere-sun-intensity': 15,
-            },
-          } as unknown as LayerSpecification);
+          // Sky and haze for the tilted 3D view.
+          mapInstance.setSky({
+            'sky-color': '#88C6FC',
+            'horizon-color': '#ffffff',
+            'fog-color': '#ffffff',
+            'sky-horizon-blend': 0.5,
+            'horizon-fog-blend': 0.5,
+            'fog-ground-blend': 0.5,
+          });
         } catch (e) {
           console.error('Error adding terrain:', e);
         }
@@ -394,18 +395,18 @@ export default function MapPage() {
           const hits = mapInstance.queryRenderedFeatures(
             [[point.x - PICK_PX, point.y - PICK_PX], [point.x + PICK_PX, point.y + PICK_PX]], { layers });
           for (const l of INFO_LAYERS) {
-            const f = hits.find(h => h.layer.id === l.id);
+            const f = hits.find((h: MapGeoJSONFeature) => h.layer.id === l.id);
             if (f) return l.describe(f.properties);
           }
           return undefined;
         };
-        mapInstance.on('mousemove', e => {
+        mapInstance.on('mousemove', (e: MapMouseEvent) => {
           const info = pick(e.point);
           mapInstance.getCanvas().style.cursor = info ? 'pointer' : '';
           setHoverInfo(info ?? null);
         });
         mapInstance.on('mouseout', () => setHoverInfo(null));
-        mapInstance.on('click', e => {
+        mapInstance.on('click', (e: MapMouseEvent) => {
           setPinnedInfo(pick(e.point) ?? null); // click a feature to pin it, click elsewhere to clear
         });
       });
@@ -420,6 +421,7 @@ export default function MapPage() {
 
   return (
     <div className="map-page-root">
+      <h1 style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap' }}>Park map</h1>
 
       {/* Map canvas */}
       <div ref={mapContainer} style={{ width: '100%', height: '100%' }} />
@@ -430,9 +432,9 @@ export default function MapPage() {
           <p className="map-layer-panel-title">Map Layers</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {LAYERS.map(({ id, label, color, mapIds }) => (
-              <div key={id}
+              <button key={id} type="button" role="switch" aria-checked={layerStates[id]}
                 onClick={() => handleToggle(id, mapIds)}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', cursor: 'pointer' }}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', cursor: 'pointer', background: 'none', border: 0, padding: 0, width: '100%', textAlign: 'left', font: 'inherit', color: 'inherit' }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: color, flexShrink: 0, display: 'inline-block' }} />
@@ -441,7 +443,7 @@ export default function MapPage() {
                   </span>
                 </div>
                 <ToggleSwitch on={layerStates[id]} color={color} />
-              </div>
+              </button>
             ))}
           </div>
           {wildlife.length > 0 && (
@@ -459,7 +461,7 @@ export default function MapPage() {
           <p className="map-info-title">Nyandungu Eco-Park</p>
           <p className="map-info-line">183.94 Ha · Kigali, Rwanda</p>
           <p className="map-info-meta">2025 Biodiversity Survey</p>
-          <p className="map-info-meta"><a href="/" style={{ color: 'inherit' }}>See survey results in the dashboard →</a></p>
+          <p className="map-info-meta"><Link href="/" style={{ color: 'inherit' }}>See survey results in the dashboard →</Link></p>
         </div>
       </div>
 

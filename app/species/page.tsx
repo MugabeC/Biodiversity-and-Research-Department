@@ -98,9 +98,9 @@ const TAXA_KEY: Record<string, string> = {
 };
 
 const IUCN_STYLE: Record<string, { bg: string; color: string }> = {
-  LC: { bg: '#e8f5e9', color: '#2e7d32' },
-  NT: { bg: '#f1f8e9', color: '#558b2f' },
-  VU: { bg: '#fff8e1', color: '#e65100' },
+  LC: { bg: '#e8f5e9', color: '#27702d' },
+  NT: { bg: '#f1f8e9', color: '#3f6b1f' },
+  VU: { bg: '#fff8e1', color: '#b34000' },
   EN: { bg: '#fbe9e7', color: '#bf360c' },
   CR: { bg: '#fce4ec', color: '#880e4f' },
   NE: { bg: '#f5f5f5', color: '#616161' },

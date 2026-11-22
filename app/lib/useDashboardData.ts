@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { fetchLiveDashboardFiles, loadDashboardFromBundle, type LoadedDashboard } from '@/app/lib/dashboardData';
+import { loadDashboardFromBundle, type LoadedDashboard } from '@/app/lib/dashboardData';
 import { fetchEntries } from '@/app/lib/entries';
 
 type State = { data: LoadedDashboard | null; error: string | null; source: 'bundled' | 'published'; publishedAt: string | null };
@@ -21,10 +21,10 @@ export function useDashboardData(): State {
       setState({ data: null, error: 'Could not load dashboard data. Refresh the page, or contact the Biodiversity and Research Department.', source: 'bundled', publishedAt: null });
       return;
     }
-    Promise.all([fetchLiveDashboardFiles(), fetchEntries().catch(() => [])]).then(([live, entries]) => {
-      if (cancelled || (!live && entries.length === 0)) return;
+    fetchEntries().catch(() => []).then(entries => {
+      if (cancelled || entries.length === 0) return;
       try {
-        setState({ data: loadDashboardFromBundle(live?.files, entries), error: null, source: live ? 'published' : 'bundled', publishedAt: live?.createdAt ?? null });
+        setState({ data: loadDashboardFromBundle(undefined, entries), error: null, source: 'published', publishedAt: null });
       } catch {
         /* keep the bundled data if the combined set cannot be read */
       }
