@@ -903,9 +903,12 @@ export default function DashboardExplorer() {
               {summary?.parkName ?? 'Nyandungu Eco-Park'} · {summary?.location ?? 'Kigali, Rwanda'} · {summary?.parkSize ?? '183.94 Ha'}
             </p>
           </div>
-          {latestMonth && (
-            <p className="dash-updated"><span className="dash-dot" aria-hidden />Data to {latestMonth}</p>
-          )}
+          <div className="dash-head-right">
+            {latestMonth && (
+              <p className="dash-updated"><span className="dash-dot" aria-hidden />Data to {latestMonth}</p>
+            )}
+            <Link href="/report" className="dash-report-link">Monthly summary (PDF) →</Link>
+          </div>
         </header>
 
         <nav className="dash-tabs" aria-label="Dashboard sections">
