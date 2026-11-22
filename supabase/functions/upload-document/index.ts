@@ -10,7 +10,10 @@
 //   { action: 'register', path, filename, title, description } -> { document }          (adds it to the Documents page)
 //   { action: 'delete', id }                              -> { ok: true }                (removes the file and its list entry)
 //   { action: 'publish-data', bundle: { files } }         -> { ok: true, createdAt }     (publishes new dashboard data from the Update page)
+//   { action: 'entry-save', form, entry_date, data, id? } -> { entry }                   (adds or changes one record from a staff form)
+//   { action: 'entry-delete', id }                        -> { ok: true }                (removes a record; it is kept, marked deleted)
 import { createClient } from 'npm:@supabase/supabase-js@2';
+import { validateEntry } from './formSpec.ts';
 
 const BUCKET = 'Biodiversity and Research Department';
 const MAX_BYTES = 25 * 1024 * 1024;
@@ -139,6 +142,35 @@ Deno.serve(async (req: Request) => {
         const latest = await supa.storage.from(BUCKET).upload(`${DATA_PREFIX}/dashboard-latest.json`, blob, { contentType: 'application/json', upsert: true, cacheControl: '60' });
         if (latest.error) throw latest.error;
         return json({ ok: true, createdAt });
+      }
+
+      case 'entry-save': {
+        const form = String(body.form ?? '');
+        const today = new Date(Date.now() + 2 * 3600 * 1000).toISOString().slice(0, 10); // Rwanda date
+        const checked = validateEntry(form, body.entry_date, body.data, { today });
+        if (!checked.clean) return json({ error: checked.errors.join(' ') }, 400);
+        const id = body.id === undefined || body.id === null ? '' : String(body.id);
+        if (id) {
+          const { data, error } = await supa.from('form_entries')
+            .update({ entry_date: checked.clean.entry_date, data: checked.clean.data, updated_at: new Date().toISOString() })
+            .eq('id', id).eq('form', form).is('deleted_at', null).select().maybeSingle();
+          if (error) throw error;
+          if (!data) return json({ error: 'That entry no longer exists.' }, 404);
+          return json({ entry: data });
+        }
+        const { data, error } = await supa.from('form_entries')
+          .insert({ form, entry_date: checked.clean.entry_date, data: checked.clean.data }).select().single();
+        if (error) throw error;
+        return json({ entry: data });
+      }
+
+      case 'entry-delete': {
+        const id = String(body.id ?? '');
+        if (!id) return json({ error: 'Missing entry.' }, 400);
+        const { data, error } = await supa.from('form_entries').update({ deleted_at: new Date().toISOString() }).eq('id', id).is('deleted_at', null).select('id').maybeSingle();
+        if (error) throw error;
+        if (!data) return json({ error: 'That entry no longer exists.' }, 404);
+        return json({ ok: true });
       }
 
       default:
