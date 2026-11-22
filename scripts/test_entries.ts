@@ -60,5 +60,16 @@ const again = loadDashboardFromBundle();
 eq('base data untouched', students(again), students(base));
 eq('no entries means same files', applyEntries({ a: 1 }, [], null).files, { a: 1 });
 
+// water tests
+eq('water needs a parameter', errs('water-test', '2026-11-25', { sampling_point: 'S1 Pond 1' }).length, 1);
+eq('water ok', errs('water-test', '2026-11-25', { sampling_point: 'S1 Pond 1', w_ph: '7.1', report_ref: '2025110512345' }), []);
+eq('water keeps 4 decimals', validateEntry('water-test', '2026-11-25', { sampling_point: 'A', w_lead: '0.0049' }, opts).clean?.data.w_lead, 0.0049);
+const wEntries = [mk('water-test', '2026-11-25', { sampling_point: 'S1 Pond 1', w_ph: 7, w_turbidity: 45, w_do: 4, w_lead: 0.004, w_temperature: 22 }, 1)];
+const withWater = loadDashboardFromBundle(undefined, wEntries);
+const wt = withWater.waterTests[0];
+eq('water test scored', [wt.pass, wt.fail, wt.rate, wt.outside.map(r => r.parameter)], [2, 2, 50, ['Turbidity', 'Dissolved Oxygen']]);
+eq('water overall adds the survey', [withWater.waterOverall?.total, withWater.waterOverall?.tests], [(base.waterOverall?.total ?? 0) + 4, 1]);
+eq('no tests means survey only', base.waterOverall?.rate, base.bioWater?.rate);
+
 if (failed) { console.error(`${failed} check(s) failed`); process.exit(1); }
 console.log('all checks passed');

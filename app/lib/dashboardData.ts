@@ -14,6 +14,7 @@ import waterQualityJson from '@/public/data/water_quality.json';
 import { parseBiodiversitySurvey, type BioComplianceSummary } from '@/app/lib/parseBiodiversityWater';
 import { SUPABASE_URL } from '@/app/lib/documents';
 import { applyEntries, type FormEntry } from '@/app/lib/entries';
+import { buildWaterTests, combineWater, type WaterOverall, type WaterTest } from '@/app/lib/waterTests';
 
 /** The workbook-driven data files. They ship with the site, and a newer set can be published from the Update page. */
 export type DataFiles = {
@@ -163,6 +164,10 @@ export type LoadedDashboard = {
   /** Internship applications received per month (counts only). */
   applications: { month: string; count: number }[];
   bioWater: BioComplianceSummary | null;
+  /** Water tests entered from the staff form, newest first. */
+  waterTests: WaterTest[];
+  /** The park survey and the website tests counted together. */
+  waterOverall: WaterOverall | null;
   wasacParams: WasacRawParam[];
   wasacSiteLabels: string[];
 };
@@ -449,6 +454,8 @@ export function loadDashboardFromBundle(overrides?: Partial<DataFiles>, entries:
     bioWater = null;
   }
 
+  const waterTests = buildWaterTests(entries, bioWater?.parameters ?? []);
+
   return {
     summary: f.summary as DashboardSummary,
     schools: normalizeSchoolVisits(f),
@@ -461,6 +468,8 @@ export function loadDashboardFromBundle(overrides?: Partial<DataFiles>, entries:
     internshipPipeline: (added.pipeline ?? internshipPipelineJson) as InternshipPipeline,
     applications: ((f.internships as { applications?: { month?: string; count?: number | null }[] }).applications ?? []).map(a => ({ month: a.month ?? 'Unknown', count: a.count ?? 0 })),
     bioWater,
+    waterTests,
+    waterOverall: combineWater(bioWater, waterTests),
     wasacParams: wq.wasac?.parameters ?? [],
     wasacSiteLabels: wq.wasac?.samplingPoints ?? [],
   };
