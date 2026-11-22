@@ -330,7 +330,7 @@ function normalizeWaste(f: DataFiles): WasteFile {
       biodegradableKg,
       nonBiodegradableKg,
       splitEstimated: kg != null && !weighed,
-      note: note ?? (kg != null && !weighed ? 'Split estimated (70 / 30)' : null),
+      note,
     };
   });
 
