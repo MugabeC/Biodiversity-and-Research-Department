@@ -14,11 +14,11 @@ export type LibraryDocument = {
   sizeBytes?: number | null;
 };
 
-const SUPABASE_URL = 'https://dakgnvnaqiosizouuciy.supabase.co';
+export const SUPABASE_URL = 'https://dakgnvnaqiosizouuciy.supabase.co';
 /** Publishable (public) key: it can only read the document list; writing needs the upload password. */
 export const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_oQDiC7Y224MSpc2ip23KGg_jjwjMlG9';
 /** Supabase Edge Function that checks the upload password and handles uploads and removals. */
-export const UPLOAD_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/upload-document`;
+export const UPLOAD_FUNCTION_URL = process.env.NEXT_PUBLIC_UPLOAD_FUNCTION_URL ?? `${SUPABASE_URL}/functions/v1/upload-document`;
 export const ACCEPTED_FILE_TYPES = '.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx';
 export const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 

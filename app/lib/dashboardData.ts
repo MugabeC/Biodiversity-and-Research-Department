@@ -12,6 +12,48 @@ import internshipJson from '@/public/data/NEP_internship.json';
 import internshipPipelineJson from '@/public/data/NEP_internship_pipeline.json';
 import waterQualityJson from '@/public/data/water_quality.json';
 import { parseBiodiversitySurvey, type BioComplianceSummary } from '@/app/lib/parseBiodiversityWater';
+import { SUPABASE_URL } from '@/app/lib/documents';
+
+/** The workbook-driven data files. They ship with the site, and a newer set can be published from the Update page. */
+export type DataFiles = {
+  summary: unknown; schoolVisits: unknown; community: unknown; passes: unknown;
+  waste: unknown; research: unknown; conflicts: unknown; internships: unknown;
+};
+const BUNDLED: DataFiles = {
+  summary: summaryJson, schoolVisits: schoolVisitsJson, community: communityActivitiesJson, passes: complementaryPassesJson,
+  waste: wasteJson, research: researchJson, conflicts: conflictJson, internships: internshipJson,
+};
+/** When the bundled files were last refreshed. A published set only replaces them if it is newer. */
+export const BUNDLED_AT = '2026-11-22T00:00:00Z';
+
+const FILE_KEYS: Record<string, keyof DataFiles> = {
+  'summary.json': 'summary', 'NEP_school_visits.json': 'schoolVisits', 'NEP_community_engagement.json': 'community',
+  'NEP_complementary_passes.json': 'passes', 'NEP_waste_management.json': 'waste', 'Research_ALL.json': 'research',
+  'Conflict_Management.json': 'conflicts', 'NEP_internship.json': 'internships',
+};
+
+export const LIVE_DATA_URL =
+  process.env.NEXT_PUBLIC_LIVE_DATA_URL ??
+  `${SUPABASE_URL}/storage/v1/object/public/Biodiversity%20and%20Research%20Department/data/dashboard-latest.json`;
+
+/** The most recently published data set, if there is one that is newer than the bundled files. */
+export async function fetchLiveDashboardFiles(): Promise<{ files: Partial<DataFiles>; createdAt: string } | null> {
+  try {
+    const res = await fetch(`${LIVE_DATA_URL}${LIVE_DATA_URL.includes('?') ? '&' : '?'}t=${Date.now()}`, { cache: 'no-store' });
+    if (!res.ok) return null;
+    const body = (await res.json()) as { createdAt?: string; files?: Record<string, unknown> };
+    if (!body.createdAt || !body.files) return null;
+    if (Date.parse(body.createdAt) <= Date.parse(BUNDLED_AT)) return null;
+    const files: Partial<DataFiles> = {};
+    for (const [name, key] of Object.entries(FILE_KEYS)) {
+      if (!body.files[name]) return null; // incomplete set: keep the bundled data
+      files[key] = body.files[name];
+    }
+    return { files, createdAt: body.createdAt };
+  } catch {
+    return null;
+  }
+}
 import type { WasacRawParam } from '@/app/lib/exploreWaterQuality';
 
 export type DashboardSummary = {
@@ -117,6 +159,8 @@ export type LoadedDashboard = {
   conflicts: ConflictRow[];
   internships: { month: string; academic: number; professional: number; total: number }[];
   internshipPipeline: InternshipPipeline;
+  /** Internship applications received per month (counts only). */
+  applications: { month: string; count: number }[];
   bioWater: BioComplianceSummary | null;
   wasacParams: WasacRawParam[];
   wasacSiteLabels: string[];
@@ -143,14 +187,14 @@ function isSubtotal(label: string | null): boolean {
   return Boolean(label && /subtotal/i.test(label));
 }
 
-function normalizeSchoolVisits(): SchoolVisitsData {
+function normalizeSchoolVisits(f: DataFiles): SchoolVisitsData {
   type NewVisit = {
     school?: string; students?: number | null; school_groups?: number | null; teachers?: number | null;
     other_adults?: number | null; complimentary?: number | null; programme?: string | null; programme_pupils?: number | null;
     teachers_other?: string | null; notes?: string | null;
   };
   type NewMonth = { month?: string; subtotal_students?: number | null; school_groups?: number | null; visits?: NewVisit[] };
-  const newMonths = ((schoolVisitsJson as WrappedMonths<NewMonth>).months ?? []);
+  const newMonths = ((f.schoolVisits as WrappedMonths<NewMonth>).months ?? []);
   if (newMonths.length > 0) {
     const monthlyTotals = newMonths.map(m => ({
       month: cleanString(m.month) ?? 'Unknown',
@@ -175,7 +219,7 @@ function normalizeSchoolVisits(): SchoolVisitsData {
   }
 
   type Old = { Month?: string; 'School / Group'?: string; Students?: number | null; 'Teachers / Other'?: string | null; Notes?: string | null };
-  const rows = ((schoolVisitsJson as WrappedRows<Old>).data ?? []);
+  const rows = ((f.schoolVisits as WrappedRows<Old>).data ?? []);
   const individualVisits = rows.filter(row => !isSubtotal(cleanString(row['School / Group']))).map(row => ({
     month: cleanString(row.Month) ?? 'Unknown',
     school: cleanString(row['School / Group']) ?? 'Unknown',
@@ -194,13 +238,13 @@ function normalizeSchoolVisits(): SchoolVisitsData {
   return { monthlyTotals: Array.from(totals.entries()).map(([month, totalStudents]) => ({ month, totalStudents })), individualVisits };
 }
 
-function normalizeCommunityActivities(): CommunityRow[] {
+function normalizeCommunityActivities(f: DataFiles): CommunityRow[] {
   type NewActivity = {
     activity?: string; participant_group?: string | null; participants?: number | null;
     women?: number | null; men?: number | null; institutions?: number | null; complimentary?: number | null; notes?: string | null;
   };
   type NewMonth = { month?: string; activities?: NewActivity[] };
-  return ((communityActivitiesJson as WrappedMonths<NewMonth>).months ?? []).flatMap(m =>
+  return ((f.community as WrappedMonths<NewMonth>).months ?? []).flatMap(m =>
     (m.activities ?? []).map(a => ({
       month: cleanString(m.month) ?? 'Unknown',
       activity: cleanString(a.activity) ?? 'Untitled activity',
@@ -215,10 +259,10 @@ function normalizeCommunityActivities(): CommunityRow[] {
   );
 }
 
-function normalizeComplementaryPasses(): PassesData {
+function normalizeComplementaryPasses(f: DataFiles): PassesData {
   type NewPass = { group?: string; count?: number | null; notes?: string | null };
   type NewMonth = { month?: string; subtotal?: number | null; passes?: NewPass[] };
-  const newMonths = ((complementaryPassesJson as WrappedMonths<NewMonth>).months ?? []);
+  const newMonths = ((f.passes as WrappedMonths<NewMonth>).months ?? []);
   if (newMonths.length > 0) {
     const detail = newMonths.flatMap(m =>
       (m.passes ?? []).map(p => ({
@@ -236,7 +280,7 @@ function normalizeComplementaryPasses(): PassesData {
   }
 
   type Old = { Month?: string; 'Group / Recipient Name'?: string; 'Number of Passes'?: number | null; Notes?: string | null };
-  const rows = ((complementaryPassesJson as WrappedRows<Old>).data ?? []);
+  const rows = ((f.passes as WrappedRows<Old>).data ?? []);
   const detail = rows.filter(row => parseNumber(row['Number of Passes']) != null).filter(row => !isSubtotal(cleanString(row['Group / Recipient Name']))).map(row => ({
     month: cleanString(row.Month) ?? 'Unknown',
     group: cleanString(row['Group / Recipient Name']) ?? 'Unknown',
@@ -255,14 +299,14 @@ function normalizeComplementaryPasses(): PassesData {
   return { monthlyTotals: Array.from(new Set([...Array.from(monthlyMap.keys()), ...Array.from(subtotals.keys())])).map(month => ({ month, totalPasses: subtotals.get(month) ?? monthlyMap.get(month) ?? 0 })), detail };
 }
 
-function normalizeWaste(): WasteFile {
+function normalizeWaste(f: DataFiles): WasteFile {
   type NewRow = {
     month?: string;
     waste_collected_kg?: number | string | null;
     biodegradable_kg?: number | null;
     non_biodegradable_kg?: number | null;
   };
-  const newRows = (wasteJson as { records?: NewRow[] }).records ?? [];
+  const newRows = (f.waste as { records?: NewRow[] }).records ?? [];
 
   const records = newRows.map(row => {
     const kg = parseNumber(row.waste_collected_kg);
@@ -295,7 +339,7 @@ function normalizeWaste(): WasteFile {
   };
 }
 
-function normalizeResearch(): ResearchRow[] {
+function normalizeResearch(f: DataFiles): ResearchRow[] {
   type Raw = {
     month?: string;
     'Date Received'?: string | null;
@@ -312,7 +356,7 @@ function normalizeResearch(): ResearchRow[] {
     'Assigned contact'?: string | null;
   };
 
-  return ((researchJson as WrappedRows<Raw>).data ?? [])
+  return ((f.research as WrappedRows<Raw>).data ?? [])
     .filter(row => cleanString(row.Names) || cleanString(row['Research Title / Topic']))
     .map(row => ({
       month: cleanString(row.month) ?? 'Unknown',
@@ -331,9 +375,9 @@ function normalizeResearch(): ResearchRow[] {
     }));
 }
 
-function normalizeConflicts(): ConflictRow[] {
+function normalizeConflicts(f: DataFiles): ConflictRow[] {
   type Raw = Record<string, unknown>;
-  const rows = ((conflictJson as WrappedRows<Raw>).data ?? []);
+  const rows = ((f.conflicts as WrappedRows<Raw>).data ?? []);
 
   return rows
     .filter(row => typeof row.id === 'number')
@@ -356,10 +400,10 @@ function normalizeConflicts(): ConflictRow[] {
     }));
 }
 
-function normalizeInternships(): { month: string; academic: number; professional: number; total: number }[] {
+function normalizeInternships(f: DataFiles): { month: string; academic: number; professional: number; total: number }[] {
   type Row = { month?: string; count?: number | null };
   type InternshipFile = { academic_internship?: Row[]; professional_internship?: Row[] };
-  const data = internshipJson as InternshipFile;
+  const data = f.internships as InternshipFile;
 
   const map = new Map<string, { academic: number; professional: number }>();
   for (const row of data.academic_internship ?? []) {
@@ -383,7 +427,8 @@ function normalizeInternships(): { month: string; academic: number; professional
   }));
 }
 
-export function loadDashboardFromBundle(): LoadedDashboard {
+export function loadDashboardFromBundle(overrides?: Partial<DataFiles>): LoadedDashboard {
+  const f: DataFiles = { ...BUNDLED, ...overrides };
   type WaterQualityFile = {
     biodiversitySurvey?: Parameters<typeof parseBiodiversitySurvey>[0];
     wasac?: { parameters?: WasacRawParam[]; samplingPoints?: string[] };
@@ -401,15 +446,16 @@ export function loadDashboardFromBundle(): LoadedDashboard {
   }
 
   return {
-    summary: summaryJson as DashboardSummary,
-    schools: normalizeSchoolVisits(),
-    community: normalizeCommunityActivities(),
-    passes: normalizeComplementaryPasses(),
-    waste: normalizeWaste(),
-    research: normalizeResearch(),
-    conflicts: normalizeConflicts(),
-    internships: normalizeInternships(),
+    summary: f.summary as DashboardSummary,
+    schools: normalizeSchoolVisits(f),
+    community: normalizeCommunityActivities(f),
+    passes: normalizeComplementaryPasses(f),
+    waste: normalizeWaste(f),
+    research: normalizeResearch(f),
+    conflicts: normalizeConflicts(f),
+    internships: normalizeInternships(f),
     internshipPipeline: internshipPipelineJson as InternshipPipeline,
+    applications: ((f.internships as { applications?: { month?: string; count?: number | null }[] }).applications ?? []).map(a => ({ month: a.month ?? 'Unknown', count: a.count ?? 0 })),
     bioWater,
     wasacParams: wq.wasac?.parameters ?? [],
     wasacSiteLabels: wq.wasac?.samplingPoints ?? [],

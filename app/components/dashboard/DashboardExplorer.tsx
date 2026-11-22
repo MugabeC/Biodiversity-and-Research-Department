@@ -15,7 +15,7 @@ import {
   filterWaterExploreRows,
 } from '@/app/lib/exploreWaterQuality';
 import {
-  loadDashboardFromBundle,
+  type LoadedDashboard,
   type CommunityRow,
   type DashboardSummary,
   type ConflictRow,
@@ -32,6 +32,7 @@ import {
   aggregateStudentsByQuarter,
 } from '@/app/lib/dashboardUtils';
 import { useChartColors } from './chartTheme';
+import { useDashboardData } from '@/app/lib/useDashboardData';
 import { normalizeWasteData } from './WasteDashboardCharts';
 import { CountUp, Sparkline, Ring, SegmentBar, GRADIENT_DEFS, SlickTooltip, StatRow, GrowthRows, Waffle, RankRows } from './minimal';
 
@@ -159,11 +160,11 @@ export default function DashboardExplorer() {
   const [wasteData, setWasteData] = useState<WasteFile>([]);
   const [research, setResearch] = useState<ResearchRow[]>([]);
   const [conflicts, setConflicts] = useState<ConflictRow[]>([]);
-  const [internships, setInternships] = useState<ReturnType<typeof loadDashboardFromBundle>['internships']>([]);
-  const [pipeline, setPipeline] = useState<ReturnType<typeof loadDashboardFromBundle>['internshipPipeline'] | null>(null);
+  const [internships, setInternships] = useState<LoadedDashboard['internships']>([]);
+  const [pipeline, setPipeline] = useState<LoadedDashboard['internshipPipeline'] | null>(null);
   const waste = useMemo(() => normalizeWasteData(wasteData), [wasteData]);
-  const [bioWater, setBioWater] = useState<ReturnType<typeof loadDashboardFromBundle>['bioWater']>(null);
-  const [wasacParams, setWasacParams] = useState<ReturnType<typeof loadDashboardFromBundle>['wasacParams']>([]);
+  const [bioWater, setBioWater] = useState<LoadedDashboard['bioWater']>(null);
+  const [wasacParams, setWasacParams] = useState<LoadedDashboard['wasacParams']>([]);
   const [wasacSiteLabels, setWasacSiteLabels] = useState<string[]>([]);
   const [exploreTab, setExploreTab] = useState('schools');
   const [search, setSearch] = useState('');
@@ -173,30 +174,25 @@ export default function DashboardExplorer() {
   useEffect(() => { setSearch(''); }, [section]);
   const studentTarget = summary?.studentTargetPerQuarter ?? 500;
 
+  const { data: loaded, error: dataError } = useDashboardData();
   useEffect(() => {
-    try {
-      const data = loadDashboardFromBundle();
-      setSummary(data.summary);
-      setSchools(data.schools);
-      setCommunity(data.community);
-      setPasses(data.passes);
-      setWasteData(data.waste);
-      setResearch(data.research);
-      setConflicts(data.conflicts);
-      setInternships(data.internships);
-      setPipeline(data.internshipPipeline);
-      setBioWater(data.bioWater);
-      setWasacParams(data.wasacParams);
-      setWasacSiteLabels(data.wasacSiteLabels);
-      setLoadError(null);
-    } catch {
-      setLoadError(
-        'Could not load dashboard data. Run npm run dev:clean to reset the dev server, then refresh.',
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    if (dataError) { setLoadError(dataError); setLoading(false); return; }
+    if (!loaded) return;
+    setSummary(loaded.summary);
+    setSchools(loaded.schools);
+    setCommunity(loaded.community);
+    setPasses(loaded.passes);
+    setWasteData(loaded.waste);
+    setResearch(loaded.research);
+    setConflicts(loaded.conflicts);
+    setInternships(loaded.internships);
+    setPipeline(loaded.internshipPipeline);
+    setBioWater(loaded.bioWater);
+    setWasacParams(loaded.wasacParams);
+    setWasacSiteLabels(loaded.wasacSiteLabels);
+    setLoadError(null);
+    setLoading(false);
+  }, [loaded, dataError]);
 
   const taxaCards = useMemo(() => {
     if (!summary?.taxa) return [];
@@ -903,9 +899,12 @@ export default function DashboardExplorer() {
               {summary?.parkName ?? 'Nyandungu Eco-Park'} · {summary?.location ?? 'Kigali, Rwanda'} · {summary?.parkSize ?? '183.94 Ha'}
             </p>
           </div>
-          {latestMonth && (
-            <p className="dash-updated"><span className="dash-dot" aria-hidden />Data to {latestMonth}</p>
-          )}
+          <div className="dash-head-right">
+            {latestMonth && (
+              <p className="dash-updated"><span className="dash-dot" aria-hidden />Data to {latestMonth}</p>
+            )}
+            <Link href="/report" className="dash-report-link">Monthly summary (PDF) →</Link>
+          </div>
         </header>
 
         <nav className="dash-tabs" aria-label="Dashboard sections">

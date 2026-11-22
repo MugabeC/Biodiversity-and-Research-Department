@@ -249,19 +249,22 @@ def oracle(wb, agg):
             'Community participants': 'participants', 'Research requests': 'research', 'Internship applications': 'applications',
             'Academic starts': 'academic_starts', 'Professional starts': 'professional_starts', 'Waste collected (kg)': 'waste',
             'Conflicts reported': 'conflicts', 'Open conflicts': 'open_conflicts'}
-    bad, checked = [], 0
+    bad, warn, checked = [], [], 0
     for r in it:
         k = month_key(r[0])
         if not k or k == '_admissions': continue
         row = dict(zip(hdr, r))
         want_comp = num(row.get('Complimentary admissions')) or 0
         got_comp = agg['_admissions'].get(month_label(k), 0)
-        if want_comp != got_comp: bad.append((month_label(k), 'Complimentary admissions', want_comp, got_comp))
+        if want_comp != got_comp:
+            # Confirmed rule: the website also counts complimentary participants from school visits and community activities,
+            # so months where Monthly_Summary counts passes only are expected to be lower there (a warning, not an error).
+            (warn if got_comp > want_comp else bad).append((month_label(k), 'Complimentary admissions', want_comp, got_comp))
         for h, a in cols.items():
             want = num(row.get(h)) or 0; got = agg[k].get(a, 0)
             checked += 1
             if want != got: bad.append((month_label(k), h, want, got))
-    return checked, bad
+    return checked, bad, warn
 
 
 def main():
@@ -270,9 +273,10 @@ def main():
     a = ap.parse_args()
     wb = load_workbook(a.xlsx, data_only=True)
     out, agg, notes = build(wb)
-    checked, bad = oracle(wb, agg)
-    print(f'Monthly_Summary cross-check: {checked} figures compared, {len(bad)} differences')
+    checked, bad, warn = oracle(wb, agg)
+    print(f'Monthly_Summary cross-check: {checked} figures compared, {len(bad)} differences, {len(warn)} confirmed-rule warnings')
     for b in bad: print('   DIFFERENCE', b)
+    for w in warn: print('   warning (complimentary admissions also include school and community participants)', w)
     for title, n, diffs in water_check(wb):
         print(f'Water ({title}): {n} readings in the workbook; differences from the site: {len(diffs)}')
         for d in diffs[:12]: print('   ', d)
