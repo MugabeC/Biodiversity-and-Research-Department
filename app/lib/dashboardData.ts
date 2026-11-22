@@ -13,6 +13,7 @@ import internshipPipelineJson from '@/public/data/NEP_internship_pipeline.json';
 import waterQualityJson from '@/public/data/water_quality.json';
 import { parseBiodiversitySurvey, type BioComplianceSummary } from '@/app/lib/parseBiodiversityWater';
 import { SUPABASE_URL } from '@/app/lib/documents';
+import { applyEntries, type FormEntry } from '@/app/lib/entries';
 
 /** The workbook-driven data files. They ship with the site, and a newer set can be published from the Update page. */
 export type DataFiles = {
@@ -427,8 +428,11 @@ function normalizeInternships(f: DataFiles): { month: string; academic: number; 
   }));
 }
 
-export function loadDashboardFromBundle(overrides?: Partial<DataFiles>): LoadedDashboard {
-  const f: DataFiles = { ...BUNDLED, ...overrides };
+export function loadDashboardFromBundle(overrides?: Partial<DataFiles>, entries: FormEntry[] = []): LoadedDashboard {
+  const base: DataFiles = { ...BUNDLED, ...overrides };
+  // entries from the staff forms are added on top of the workbook data
+  const added = applyEntries(base as unknown as Record<string, unknown>, entries, internshipPipelineJson);
+  const f = added.files as unknown as DataFiles;
   type WaterQualityFile = {
     biodiversitySurvey?: Parameters<typeof parseBiodiversitySurvey>[0];
     wasac?: { parameters?: WasacRawParam[]; samplingPoints?: string[] };
@@ -454,7 +458,7 @@ export function loadDashboardFromBundle(overrides?: Partial<DataFiles>): LoadedD
     research: normalizeResearch(f),
     conflicts: normalizeConflicts(f),
     internships: normalizeInternships(f),
-    internshipPipeline: internshipPipelineJson as InternshipPipeline,
+    internshipPipeline: (added.pipeline ?? internshipPipelineJson) as InternshipPipeline,
     applications: ((f.internships as { applications?: { month?: string; count?: number | null }[] }).applications ?? []).map(a => ({ month: a.month ?? 'Unknown', count: a.count ?? 0 })),
     bioWater,
     wasacParams: wq.wasac?.parameters ?? [],

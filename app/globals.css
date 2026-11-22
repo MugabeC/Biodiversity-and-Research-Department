@@ -2818,3 +2818,18 @@ h1.heading {
 .dash-report-link:hover { border-color: currentColor; }
 .site-footer-staff { color: inherit; opacity: 0.8; text-decoration: none; border-bottom: 1px dotted currentColor; }
 .site-footer-staff:hover { opacity: 1; }
+
+/* Staff data tools (forms) */
+.hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.hub-card { display: flex; flex-direction: column; gap: 6px; padding: 16px; text-decoration: none; color: inherit; }
+.hub-card-title { font-size: 16px; color: var(--meadow-green); }
+.hub-card--soon { opacity: 0.65; }
+.entry-form { max-width: 820px; }
+.entry-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 18px; }
+.entry-wide { grid-column: 1 / -1; }
+.entry-textarea { height: auto; padding-top: 10px; resize: vertical; font: inherit; }
+.entry-table td:not(:first-child) { text-align: left; }
+.entry-table th:not(:first-child) { text-align: left; }
+.entry-link { background: none; border: 0; padding: 0; font: inherit; font-size: 13px; color: var(--accent-text); cursor: pointer; text-decoration: underline; }
+.entry-link:disabled { opacity: 0.5; cursor: default; }
+@media (max-width: 640px) { .entry-grid { grid-template-columns: 1fr; } }
