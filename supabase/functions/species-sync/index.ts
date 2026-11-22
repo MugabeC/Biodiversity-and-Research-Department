@@ -102,7 +102,7 @@ async function fetchInaturalist(polys: Polygon[], now: string): Promise<{ rows: 
 
 /** The last 30 days of eBird records at the park hotspot (eBird's live service does not go back further). */
 async function fetchEbird(key: string, now: string): Promise<Row[]> {
-  const res = await fetch(`https://api.ebird.org/v2/data/obs/${EBIRD_HOTSPOT}/recent?back=30&cat=species&maxResults=10000&sppLocale=en`, { headers: { 'X-eBirdApiToken': key } });
+  const res = await fetch(`https://api.ebird.org/v2/data/obs/${EBIRD_HOTSPOT}/recent?back=30&cat=species&maxResults=10000&sppLocale=en`, { headers: { 'X-eBirdApiToken': key, 'User-Agent': 'Mozilla/5.0 (compatible; NyandunguBiodiversity/1.0)', Accept: 'application/json' } });
   if (!res.ok) throw new Error(`eBird answered ${res.status}.`);
   const list = (await res.json()) as Record<string, any>[]; // eslint-disable-line @typescript-eslint/no-explicit-any
   const rows: Row[] = [];
