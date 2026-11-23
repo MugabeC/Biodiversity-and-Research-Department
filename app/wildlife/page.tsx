@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import CitizenMap from '@/app/components/CitizenMap';
 import { chartTooltipProps, useChartColors } from '@/app/components/dashboard/chartTheme';
 import { fetchObservations, rwandaToday, summarize, type Period } from '@/app/lib/wildlife';
 
@@ -100,6 +101,11 @@ export default function WildlifePage() {
             <p className="year-bubble-legend"><i aria-hidden /> Amber ring: share of the year&apos;s species that were first records for the park. Circle size: species recorded.</p>
           </div>
 
+          <div className="glass-card wildlife-card">
+            <h2 className="doc-upload-title">Where records were made</h2>
+            <CitizenMap />
+          </div>
+
           <div className="wildlife-two">
             <div className="glass-card wildlife-card">
               <h2 className="doc-upload-title">Species by group</h2>
@@ -116,10 +122,6 @@ export default function WildlifePage() {
                   ))}</tbody>
                 </table>
               )}
-              <div className="wildlife-btn-row">
-                <a className="dash-report-btn" href={INAT_URL} target="_blank" rel="noreferrer">See all on iNaturalist</a>
-                <a className="dash-report-btn" href={EBIRD_URL} target="_blank" rel="noreferrer">See all on eBird</a>
-              </div>
             </div>
           </div>
         </>
@@ -145,8 +147,7 @@ export default function WildlifePage() {
             </ol>
           </div>
         </div>
-        <p className="doc-upload-help" style={{ margin: '4px 0 10px' }}>See what others have contributed over the years.</p>
-        <div className="wildlife-btn-row">
+        <div className="wildlife-btn-row wildlife-btn-row--center">
           <a className="dash-report-btn" href={INAT_URL} target="_blank" rel="noreferrer">iNaturalist records</a>
           <a className="dash-report-btn" href={EBIRD_URL} target="_blank" rel="noreferrer">eBird records</a>
         </div>
