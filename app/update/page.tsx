@@ -18,27 +18,25 @@ export default function StaffToolsPage() {
         <button type="button" className="entry-link" onClick={lockStaff}>Lock staff tools</button>
       </div>
 
-      {SECTIONS.map(sec => (
-        <section key={sec.id} style={{ marginBottom: '2rem' }}>
-          <h2 className="doc-upload-title" style={{ marginBottom: 12 }}>{sec.title}</h2>
-          <div className="hub-grid">
-            {FORM_SPECS.filter(f => f.section === sec.id).map(f => (
-              <Link key={f.id} href={`/update/forms/${f.id}`} className="glass-card hub-card">
-                <span className="hub-card-title">{f.title}</span>
-              </Link>
-            ))}
+      <div className="hub-sections">
+        {SECTIONS.map(sec => (
+          <section key={sec.id} className={`hub-section hub-section--${sec.id}`}>
+            <h2 className="hub-section-title">{sec.title}</h2>
+            <div className="hub-buttons">
+              {FORM_SPECS.filter(f => f.section === sec.id).map(f => (
+                <Link key={f.id} href={`/update/forms/${f.id}`} className="doc-action-btn doc-action-btn--primary">{f.title}</Link>
+              ))}
+            </div>
+          </section>
+        ))}
+
+        <section className="hub-section hub-section--wildlife">
+          <h2 className="hub-section-title">Wildlife Conservation</h2>
+          <div className="hub-buttons">
+            <Link href="/update/wildlife" className="doc-action-btn doc-action-btn--primary">Wildlife records</Link>
           </div>
         </section>
-      ))}
-
-      <section style={{ marginBottom: '2rem' }}>
-        <h2 className="doc-upload-title" style={{ marginBottom: 12 }}>Wildlife Conservation</h2>
-        <div className="hub-grid">
-          <Link href="/update/wildlife" className="glass-card hub-card">
-            <span className="hub-card-title">Wildlife records</span>
-          </Link>
-        </div>
-      </section>
+      </div>
     </div>
   );
 }

@@ -2987,3 +2987,41 @@ h1.heading {
 .doc-library-card-actions { margin-top: auto; }
 
 .map-layer-list { display: flex; flex-direction: column; gap: 7px; }
+
+/* Staff tools hub */
+.hub-sections { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 32px; }
+.hub-section--community, .hub-section--habitat { grid-column: 1 / -1; }
+.hub-section-title { margin: 0 0 10px; font: 500 14px 'Poppins', sans-serif; color: var(--text-primary); }
+.hub-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 700px) { .hub-sections { grid-template-columns: 1fr; } }
+
+/* Sign-in page */
+.login-page { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; background: var(--page-gradient, #f7f5ef); }
+.login-card { width: 100%; max-width: 360px; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 28px 26px; border-radius: 16px; background: #fff; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(20, 50, 35, 0.08); }
+.login-card .doc-upload-label { width: 100%; }
+.login-title { margin: 4px 0 0; font: 500 16px 'Poppins', sans-serif; text-align: center; color: var(--text-primary); }
+.login-sub { margin: 0 0 6px; font-size: 13px; color: var(--text-secondary); }
+.login-btn { width: 100%; margin-top: 6px; }
+
+/* Top bar: Settings and Sign out */
+.site-nav-user { display: flex; align-items: center; gap: 4px; }
+.site-nav-userbtn { padding: 6px 10px; border: 0; background: none; border-radius: 8px; cursor: pointer; font: 400 13px 'Poppins', sans-serif; color: var(--text-secondary); text-decoration: none; }
+.site-nav-userbtn:hover, .site-nav-userbtn--active { color: var(--accent-text); }
+.site-nav-signout { background: none; border: 0; text-align: left; width: 100%; cursor: pointer; }
+@media (max-width: 900px) { .site-nav-user { display: none; } }
+
+/* Settings page */
+.settings-page { max-width: 1000px; }
+.settings-title { margin: 0 0 10px; font: 500 15px 'Poppins', sans-serif; color: var(--text-primary); }
+.settings-table-wrap { overflow-x: auto; }
+.settings-table td, .settings-table th { vertical-align: middle; font-size: 13px; }
+.settings-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.settings-off td:first-child { color: var(--text-muted); }
+.settings-live { color: #0C6038; font-weight: 500; }
+.settings-select { font: 400 13px 'Poppins', sans-serif; padding: 4px 8px; border: 1px solid var(--border); border-radius: 8px; background: #fff; color: var(--text-primary); }
+.settings-inline { display: flex; gap: 6px; align-items: center; }
+.settings-pw { width: 160px; height: 32px !important; font-size: 13px !important; }
+.settings-active { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 8px; }
+.settings-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: rgba(12, 96, 56, 0.08); font-size: 13px; }
+.settings-chip i { width: 7px; height: 7px; border-radius: 50%; background: #2EBD59; }
+.settings-page .wildlife-two { gap: 18px; }

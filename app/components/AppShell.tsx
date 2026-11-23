@@ -10,6 +10,7 @@ import SpeciesImageCacheProvider from './SpeciesImageCacheProvider';
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isMapPage = pathname === '/map';
+  if (pathname === '/login') return <ThemeProvider>{children}</ThemeProvider>;
 
   return (
     <ThemeProvider>
