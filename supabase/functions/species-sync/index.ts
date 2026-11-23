@@ -11,6 +11,10 @@
 // eBird's "recent" service only goes back 30 days. To load older records, start it with { password, backfill: { from, to } }
 // (dates like 2025-11-23). It reads the hotspot one day at a time, for as long as its time budget allows, and answers with
 // { backfill: { next, limited } }: the day to continue from (null when the whole range is done), and whether eBird asked us to slow down.
+//
+// A long load can also run on its own: the row in public.ebird_backfill holds the next day to read, and a scheduled job
+// (pg_cron, every 5 minutes) calls this function with { continue: true } until the range is done. That call needs no password:
+// it only reads public eBird data for a range already stored in the database.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const SITE = 'https://biodiversity-and-research-departmen-roan.vercel.app';
@@ -145,7 +149,7 @@ async function backfillEbird(key: string, from: string, to: string, now: string,
       });
     }
     day = addDay(day); days += 1;
-    await sleep(400);
+    await sleep(1100); // eBird allows only a slow trickle of history requests
   }
   return { rows, next: day <= to ? day : null, days, limited: false };
 }
@@ -169,6 +173,22 @@ Deno.serve(async (req: Request) => {
   if (typeof body.password === 'string') {
     if (!expected || !(await same(body.password, expected))) { await sleep(1000); return json({ error: 'Wrong password.' }, 401); }
     forced = true;
+  }
+
+  // the scheduled long load: reads the next stretch of days from the stored cursor
+  if (body.continue === true) {
+    const key = Deno.env.get('EBIRD_API_KEY');
+    const { data: cur } = await supa.from('ebird_backfill').select('*').eq('id', 1).maybeSingle();
+    if (!key || !cur?.active || !cur.next_day || !cur.to_day) return json({ ok: true, idle: true });
+    try {
+      const r = await backfillEbird(key, cur.next_day, cur.to_day, new Date().toISOString(), 70_000);
+      await upsertAll(supa, r.rows);
+      await supa.from('ebird_backfill').update({ next_day: r.next ?? cur.next_day, active: r.next !== null, records: (cur.records ?? 0) + r.rows.length, updated_at: new Date().toISOString() }).eq('id', 1);
+      return json({ ok: true, backfill: { records: r.rows.length, days: r.days, next: r.next, limited: r.limited } });
+    } catch (e) {
+      console.error(e);
+      return json({ error: 'The eBird update failed.' }, 502);
+    }
   }
 
   // loading older eBird records: needs the password and does nothing else
