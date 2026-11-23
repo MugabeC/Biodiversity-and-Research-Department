@@ -84,7 +84,7 @@ export default function DocumentLibrary({ documents }: { documents: LibraryDocum
                 <div className="doc-library-card-actions">
                   <Link href={`/documents/view?id=${doc.id}`} className="doc-action-btn doc-action-btn--primary">View</Link>
                   <a href={href} download={doc.filename} className="doc-action-btn doc-action-btn--ghost">Download</a>
-                  {doc.uploaded && <RemoveButton id={doc.id} title={doc.title} />}
+                  <RemoveButton id={doc.id} title={doc.title} builtIn={!doc.uploaded} />
                 </div>
               </article>
             );

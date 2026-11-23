@@ -6,7 +6,6 @@ import { fetchMapGeoJson, MAP_GEOJSON } from '@/app/lib/mapGeojson';
 import { fetchMapObservations, wildlifeDots, type MapObservation } from '@/app/lib/wildlife';
 
 const SATELLITE = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
-const n = (v: number) => v.toLocaleString('en-US');
 
 type Info = { title: string; line: string; source: string; names: string[] };
 
@@ -28,7 +27,6 @@ export default function CitizenMap() {
   const [obs, setObs] = useState<MapObservation[]>([]);
   const [ready, setReady] = useState(false);
   const [year, setYear] = useState<number | null>(null);
-  const [playing, setPlaying] = useState(false);
   const [info, setInfo] = useState<Info | null>(null);
 
   useEffect(() => { fetchMapObservations().then(setObs).catch(() => setObs([])); }, []);
@@ -39,31 +37,11 @@ export default function CitizenMap() {
   }, [obs]);
   const shownYear = year ?? last;
 
-  const totals = useMemo(() => {
-    const names = new Set<string>();
-    let records = 0;
-    for (const o of obs) if (Number(o.observed_on.slice(0, 4)) <= shownYear) { names.add(o.scientific_name); records += 1; }
-    return { species: names.size, records };
-  }, [obs, shownYear]);
-
   // draw the dots for the chosen year
   useEffect(() => {
     const src = map.current?.getSource('citizen-src') as { setData: (d: unknown) => void } | undefined;
     if (ready && src && shownYear) src.setData(wildlifeDots(obs, String(shownYear), true));
   }, [ready, obs, shownYear]);
-
-  // play: step through the years, then stop at the latest
-  useEffect(() => {
-    if (!playing) return;
-    const t = setInterval(() => {
-      setYear(y => {
-        const next = (y ?? last) + 1;
-        if (next >= last) setPlaying(false);
-        return Math.min(next, last);
-      });
-    }, 1300);
-    return () => clearInterval(t);
-  }, [playing, last]);
 
   useEffect(() => {
     if (map.current || !box.current) return;
@@ -80,7 +58,7 @@ export default function CitizenMap() {
           layers: [{ id: 'sat', type: 'raster', source: 'sat' }],
         } as StyleSpecification,
         center: [30.1491, -1.9555],
-        zoom: 14.6,
+        zoom: 14.2,
         cooperativeGestures: true,
       });
       map.current = m;
@@ -90,6 +68,13 @@ export default function CitizenMap() {
         try {
           const boundary = await fetchMapGeoJson(MAP_GEOJSON.boundary);
           m.addSource('boundary-src', { type: 'geojson', data: boundary });
+          let minX = 180, minY = 90, maxX = -180, maxY = -90;
+          const walk = (c: unknown) => {
+            if (Array.isArray(c) && typeof c[0] === 'number') { const [x, y] = c as number[]; minX = Math.min(minX, x); maxX = Math.max(maxX, x); minY = Math.min(minY, y); maxY = Math.max(maxY, y); }
+            else if (Array.isArray(c)) c.forEach(walk);
+          };
+          for (const f of (boundary as { features?: { geometry?: { coordinates?: unknown } }[] }).features ?? []) walk(f.geometry?.coordinates);
+          if (maxX > minX) m.fitBounds([[minX, minY], [maxX, maxY]], { padding: 28, duration: 0 });
           m.addLayer({ id: 'boundary', type: 'line', source: 'boundary-src', paint: { 'line-color': '#E53935', 'line-width': 1.5 } } as LayerSpecification);
         } catch (e) { console.error(e); }
         m.addSource('citizen-src', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
@@ -98,7 +83,7 @@ export default function CitizenMap() {
           paint: {
             'circle-color': '#2EBD59', 'circle-opacity': 0.65,
             'circle-stroke-color': '#ffffff', 'circle-stroke-width': 0.6, 'circle-stroke-opacity': 0.7,
-            'circle-radius': ['interpolate', ['linear'], ['get', 'species'], 1, 3.5, 5, 5, 20, 7, 60, 10],
+            'circle-radius': ['interpolate', ['linear'], ['get', 'records'], 1, 3.5, 5, 5.5, 20, 8, 60, 12, 200, 17],
           },
         } as LayerSpecification);
         const pick = (e: MapMouseEvent) => {
@@ -128,23 +113,15 @@ export default function CitizenMap() {
           </div>
         )}
       </div>
-      <div className="citizen-map-controls">
-        <button
-          type="button"
-          className="doc-action-btn doc-action-btn--primary"
-          disabled={!canSlide}
-          onClick={() => { if (!playing && shownYear >= last) setYear(first); setPlaying(p => !p); }}
-        >
-          {playing ? 'Pause' : 'Play'}
-        </button>
-        <input
-          type="range" min={first} max={last || 1} step={1} value={shownYear || 0} disabled={!canSlide}
-          aria-label="Show records up to this year"
-          onChange={e => { setPlaying(false); setYear(Number(e.target.value)); }}
-        />
-        <span className="citizen-map-year">{first && first !== shownYear ? `${first} to ${shownYear}` : shownYear || ''}</span>
-      </div>
-      <p className="citizen-map-note">{n(totals.species)} species · {n(totals.records)} records up to {shownYear || 'now'}. Bigger dots mean more species recorded at that place. Hover or tap a dot to see the species.</p>
+      {canSlide && (
+        <ol className="year-steps" aria-label="Show records up to this year">
+          {Array.from({ length: last - first + 1 }, (_, i) => first + i).map(y => (
+            <li key={y} className={y <= shownYear ? 'on' : ''}>
+              <button type="button" aria-pressed={y === shownYear} onClick={() => setYear(y)}><i aria-hidden /><span>{y}</span></button>
+            </li>
+          ))}
+        </ol>
+      )}
     </div>
   );
 }

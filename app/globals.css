@@ -2920,7 +2920,7 @@ h1.heading {
 .map-style-btn, .map-btn-3d { font-size: 12px; padding: 5px 14px; }
 .map-bottom-dock { bottom: 12px; left: 12px; right: 12px; }
 .map-bottom-dock-row { justify-content: flex-start; }
-.map-page-root .maplibregl-ctrl-bottom-left { bottom: 54px; left: 12px; }
+.map-page-root .maplibregl-ctrl-bottom-left { bottom: 66px; left: 12px; }
 @media (max-height: 760px) { .map-info-card { display: none; } }
 
 /* Documents: filters, search and upload share one row that stays under the header */
@@ -2943,7 +2943,7 @@ h1.heading {
 @media (max-width: 800px) { .doc-toolbar { position: static; margin: 0 0 1rem; } }
 
 /* Citizen Science map */
-.citizen-map-canvas { position: relative; height: 460px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+.citizen-map-canvas { position: relative; height: 540px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
 .citizen-map-info { position: absolute; left: 10px; top: 10px; z-index: 5; max-width: 260px; padding: 8px 12px; border-radius: 12px; background: rgba(255,255,255,0.94); border: 1px solid var(--border); pointer-events: none; }
 .citizen-map-controls { display: flex; align-items: center; gap: 14px; margin-top: 12px; }
 .citizen-map-controls input[type=range] { flex: 1; accent-color: #0C6038; }
@@ -2964,3 +2964,26 @@ h1.heading {
 .wildlife-stat .doc-upload-help { font-size: 12px; }
 .wildlife-stat .doc-upload-meta, .wildlife-card .wildlife-stat .doc-upload-meta { font-size: 12px !important; color: var(--text-secondary); }
 .wildlife-stat-value { font-size: 28px; }
+
+.year-steps { display: flex; list-style: none; margin: 14px 0 0; padding: 0; }
+.year-steps li { flex: 1; position: relative; text-align: center; }
+.year-steps li::before { content: ''; position: absolute; top: 8px; left: -50%; right: 50%; height: 2px; background: var(--border); }
+.year-steps li:first-child::before { display: none; }
+.year-steps li.on::before { background: #0C6038; }
+.year-steps button { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; width: 100%; padding: 0; background: none; border: 0; cursor: pointer; font: 400 12px 'Poppins', sans-serif; color: var(--text-secondary); }
+.year-steps i { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #0C6038; background: var(--surface, #fff); box-sizing: border-box; }
+.year-steps li.on i { background: #0C6038; }
+.year-steps button[aria-pressed="true"] span { font-weight: 600; color: var(--text-primary); }
+.year-steps button[aria-pressed="true"] i { box-shadow: 0 0 0 4px rgba(12, 96, 56, 0.22); }
+.year-steps button:focus-visible { outline: 2px solid #0C6038; outline-offset: 3px; border-radius: 6px; }
+
+/* Documents: compact cards so three rows fit on a laptop screen */
+.doc-library-grid { gap: 12px; }
+.doc-library-card { position: relative; padding: 12px 14px; min-height: 0 !important; }
+.doc-library-card-head { margin-bottom: 4px; gap: 0; }
+.doc-library-card-head .doc-type-badge { position: absolute; top: 10px; right: 10px; font-size: 9.5px; padding: 2px 7px; }
+.doc-library-card-title { padding-right: 52px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.doc-library-card-desc { margin: 0 0 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; flex: none; }
+.doc-library-card-actions { margin-top: auto; }
+
+.map-layer-list { display: flex; flex-direction: column; gap: 7px; }
