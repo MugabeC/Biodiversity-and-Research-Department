@@ -44,6 +44,9 @@ function NavLinkList({
           </li>
         );
       })}
+      {drawer && user && user.role !== 'user' && (
+        <li><Link href="/update" className="site-nav-link" onClick={onNavigate}>Staff tools</Link></li>
+      )}
       {drawer && user?.role === 'admin' && (
         <li><Link href="/settings" className="site-nav-link" onClick={onNavigate}>Settings</Link></li>
       )}
@@ -60,6 +63,9 @@ function UserCluster() {
   if (!user) return null;
   return (
     <div className="site-nav-user">
+      {user.role !== 'user' && (
+        <Link href="/update" className={`site-nav-userbtn${pathname.startsWith('/update') ? ' site-nav-userbtn--active' : ''}`}>Staff tools</Link>
+      )}
       {user.role === 'admin' && (
         <Link href="/settings" className={`site-nav-userbtn${pathname === '/settings' ? ' site-nav-userbtn--active' : ''}`}>Settings</Link>
       )}
