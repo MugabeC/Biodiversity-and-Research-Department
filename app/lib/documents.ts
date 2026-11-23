@@ -19,6 +19,8 @@ export const SUPABASE_URL = 'https://dakgnvnaqiosizouuciy.supabase.co';
 export const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_oQDiC7Y224MSpc2ip23KGg_jjwjMlG9';
 /** Supabase Edge Function that checks the upload password and handles uploads and removals. */
 export const UPLOAD_FUNCTION_URL = process.env.NEXT_PUBLIC_UPLOAD_FUNCTION_URL ?? `${SUPABASE_URL}/functions/v1/upload-document`;
+/** Hides one of the built-in documents from the Documents page. */
+export const HIDE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/hide-document`;
 export const ACCEPTED_FILE_TYPES = '.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx';
 export const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 
@@ -188,6 +190,19 @@ async function queryUploaded(filter: string): Promise<LibraryDocument[]> {
 /** Documents added from the website, newest first. */
 export function fetchUploadedDocuments(): Promise<LibraryDocument[]> {
   return queryUploaded('');
+}
+
+/** Ids of built-in documents that staff have hidden from the page. */
+export async function fetchHiddenDocumentIds(): Promise<Set<string>> {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/hidden_documents?select=id`, {
+      headers: { apikey: SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}` }, cache: 'no-store',
+    });
+    if (!res.ok) return new Set();
+    return new Set(((await res.json()) as { id: string }[]).map(r => r.id));
+  } catch {
+    return new Set();
+  }
 }
 
 /** A built-in document, or one added from the website. */

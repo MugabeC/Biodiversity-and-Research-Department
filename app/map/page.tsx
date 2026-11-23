@@ -30,12 +30,6 @@ const LAYERS = [
   { id: 'roads',         label: 'Roads',               color: '#adb5bd', mapIds: ['roads'] },
 ];
 
-// The layer list is shown in two folding groups so the panel stays short.
-const LAYER_GROUPS: { id: string; label: string; layers: string[] }[] = [
-  { id: 'park',    label: 'Park',    layers: ['park-boundary', 'roads', 'trails', 'access-trail'] },
-  { id: 'habitat', label: 'Habitat', layers: ['restored-area', 'invasive-removal', 'pond', 'macadamia', 'drainage', 'open-grounds'] },
-];
-
 const INIT_VISIBILITY: Record<string, boolean> = {
   'park-boundary': true,
   'restored-area': true,
@@ -135,7 +129,6 @@ export default function MapPage() {
   const [hoverInfo,   setHoverInfo]   = useState<PanelInfo | null>(null);
   const [pinnedInfo,  setPinnedInfo]  = useState<PanelInfo | null>(null);
   const shownInfo = pinnedInfo ?? hoverInfo;
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({ park: true, habitat: false });
 
   // ── Layer toggle ──────────────────────────────────────────────────────────
   const handleToggle = (key: string, layerIds: string[]) => {
@@ -389,32 +382,20 @@ export default function MapPage() {
       <div className="map-left-stack">
         <div className="map-glass-panel map-layer-panel">
           <p className="map-layer-panel-title">Map Layers</p>
-          {LAYER_GROUPS.map(g => (
-            <div key={g.id} className="map-layer-group">
-              <button type="button" className="map-layer-group-head" aria-expanded={openGroups[g.id]}
-                onClick={() => setOpenGroups(prev => ({ ...prev, [g.id]: !prev[g.id] }))}>
-                <span>{g.label}</span>
-                <span className="map-layer-group-count">{g.layers.filter(id => layerStates[id]).length}/{g.layers.length}</span>
-                <i aria-hidden className={openGroups[g.id] ? 'open' : ''} />
-              </button>
-              {openGroups[g.id] && (
-                <div className="map-layer-group-body">
-                  {LAYERS.filter(l => g.layers.includes(l.id)).map(({ id, label, color, mapIds }) => (
-                    <button key={id} type="button" role="switch" aria-checked={layerStates[id]}
-                      onClick={() => handleToggle(id, mapIds)}
-                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', cursor: 'pointer', background: 'none', border: 0, padding: 0, width: '100%', textAlign: 'left', font: 'inherit', color: 'inherit' }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: color, flexShrink: 0, display: 'inline-block' }} />
-                        <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 400, fontSize: '12px', color: 'var(--text-primary)' }}>{label}</span>
-                      </div>
-                      <ToggleSwitch on={layerStates[id]} color={color} />
-                    </button>
-                  ))}
+          <div className="map-layer-list">
+            {LAYERS.map(({ id, label, color, mapIds }) => (
+              <button key={id} type="button" role="switch" aria-checked={layerStates[id]}
+                onClick={() => handleToggle(id, mapIds)}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', cursor: 'pointer', background: 'none', border: 0, padding: 0, width: '100%', textAlign: 'left', font: 'inherit', color: 'inherit' }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: color, flexShrink: 0, display: 'inline-block' }} />
+                  <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 400, fontSize: '12px', color: 'var(--text-primary)' }}>{label}</span>
                 </div>
-              )}
-            </div>
-          ))}
+                <ToggleSwitch on={layerStates[id]} color={color} />
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="map-glass-panel map-info-card">
