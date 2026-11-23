@@ -145,7 +145,7 @@ body {
   color: var(--text-primary);
   transition: color 0.3s ease;
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: clip; /* clip, not hidden: hidden makes the body a scroll box and breaks sticky bars */
 }
 
 .sr-only {
@@ -2813,7 +2813,21 @@ h1.heading {
   .report-page { padding: 0; max-width: none; }
   .report-sheet { border: 0; padding: 0; border-radius: 0; }
 }
-.dash-head-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.dash-head-right { display: flex; flex-direction: row; align-items: center; justify-content: flex-end; gap: 16px; width: 100%; }
+.dash-head { padding-bottom: 0.5rem; }
+.dash-report-btn {
+  display: inline-block; padding: 8px 16px; border-radius: 999px; border: 1px solid #0C6038;
+  background: #0C6038; color: #fff; font: 500 13px 'Poppins', sans-serif; text-decoration: none;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.dash-report-btn:hover { background: #094a2b; transform: translateY(-1px); }
+.dash-report-btn:focus-visible { outline: 2px solid #0C6038; outline-offset: 2px; }
+.dash-attention .dash-attention-btn {
+  display: inline-block; width: auto; margin: 8px 0 0; padding: 9px 16px; border-radius: 999px; border: 1px solid #b3261e;
+  background: #b3261e; color: #fff; font: 500 13px 'Poppins', sans-serif; cursor: pointer; text-align: left;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.dash-attention .dash-attention-btn:hover { background: #8f1d17; transform: translateY(-1px); }
 .dash-report-link { font-size: 12px; color: var(--accent-text); text-decoration: none; border-bottom: 1px solid transparent; }
 .dash-report-link:hover { border-color: currentColor; }
 .site-footer-staff { color: inherit; opacity: 0.8; text-decoration: none; border-bottom: 1px dotted currentColor; }
@@ -2849,3 +2863,33 @@ h1.heading {
 .entry-row { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr) minmax(0, 1fr) auto; gap: 12px 18px; align-items: end; width: 100%; }
 .entry-row-remove { padding-bottom: 14px; }
 @media (max-width: 760px) { .entry-row { grid-template-columns: 1fr 1fr; } }
+
+/* Species Explorer: search and filters stay pinned under the main header */
+.species-sticky {
+  position: sticky; top: var(--nav-height); z-index: 40;
+  display: flex; flex-direction: column; gap: 8px;
+  margin: 0 -12px 10px; padding: 10px 12px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--bg-main) 96%, transparent);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.species-sticky-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.species-search-wrap--inline { margin: 0; flex: 0 1 300px; min-width: 220px; }
+.species-search-wrap--inline .species-search { height: 40px; font-size: 14px; }
+@media (max-width: 800px) { .species-sticky { position: static; margin: 0 0 10px; } .species-search-wrap--inline { flex: 1 1 100%; } }
+
+/* Wildlife: yearly circles */
+.year-bubbles { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(104px, 1fr)); gap: 20px 8px; align-items: end; --ring-rest: color-mix(in srgb, var(--meadow-green) 82%, #000); }
+.year-bubble { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
+.year-bubble-ring { display: grid; place-items: center; border-radius: 50%; padding: 6px; box-sizing: border-box; margin-bottom: 6px; transition: transform 0.25s ease; }
+.year-bubble:hover .year-bubble-ring { transform: scale(1.04); }
+.year-bubble-core { width: 100%; height: 100%; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--ring-rest); color: #fff; line-height: 1.1; }
+.year-bubble-core strong { font: 600 18px 'Poppins', sans-serif; }
+.year-bubble-core span { font-size: 11px; opacity: 0.9; }
+.year-bubble-year { font: 600 15px 'Poppins', sans-serif; color: var(--text-primary); }
+.year-bubble-note { font-size: 11px; color: var(--text-secondary); }
+.year-bubble-legend { margin: 18px 0 0; font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; }
+.year-bubble-legend i { width: 12px; height: 12px; border-radius: 50%; background: #e8a317; display: inline-block; }
+
+.species-toolbar { display: contents; } /* lets the pinned bar stay in view for the whole list */
