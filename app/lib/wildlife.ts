@@ -42,7 +42,7 @@ export type WildlifeSummary = {
   totalObservations: number;
   thisYear: Period;
   thisMonth: Period;
-  monthly: Period[];
+  quarterly: Period[];
   yearly: Period[];
   groups: { group: string; species: number }[];
   recentNew: { name: string; common: string | null; group: string; date: string }[];
@@ -78,15 +78,16 @@ export function summarize(obs: Observation[], today: string): WildlifeSummary {
 
   const monthsAll = build(d => d.slice(0, 7), k => `${MONTH_SHORT[Number(k.slice(5, 7)) - 1]} ${k.slice(2, 4)}`);
   const yearly = build(d => d.slice(0, 4), k => k);
-  // last 24 months, including months with no records
-  const monthly: Period[] = [];
-  const [ty, tm] = [Number(today.slice(0, 4)), Number(today.slice(5, 7))];
-  for (let i = 23; i >= 0; i--) {
-    const idx = ty * 12 + (tm - 1) - i, y = Math.floor(idx / 12), m = (idx % 12) + 1;
-    const key = `${y}-${String(m).padStart(2, '0')}`;
-    monthly.push(monthsAll.find(p => p.key === key) ?? { key, label: `${MONTH_SHORT[m - 1]} ${String(y).slice(2)}`, species: 0, observations: 0, newSpecies: 0 });
+  const qKey = (d: string) => `${d.slice(0, 4)}-Q${Math.floor((Number(d.slice(5, 7)) - 1) / 3) + 1}`;
+  const quartersAll = build(qKey, k => `Q${k.slice(6)} ${k.slice(2, 4)}`);
+  // the last 12 quarters, including quarters with no records; the current quarter is part of the list
+  const quarterly: Period[] = [];
+  const tq = Number(today.slice(0, 4)) * 4 + Math.floor((Number(today.slice(5, 7)) - 1) / 3);
+  for (let i = 11; i >= 0; i--) {
+    const idx = tq - i, y = Math.floor(idx / 4), q = (idx % 4) + 1;
+    const key = `${y}-Q${q}`;
+    quarterly.push(quartersAll.find(p => p.key === key) ?? { key, label: `Q${q} ${String(y).slice(2)}`, species: 0, observations: 0, newSpecies: 0 });
   }
-
   const empty = (key: string, label: string): Period => ({ key, label, species: 0, observations: 0, newSpecies: 0 });
   const groupCount = new Map<string, number>();
   for (const name of first.keys()) { const g = groupLabel(meta.get(name)?.group ?? null); groupCount.set(g, (groupCount.get(g) ?? 0) + 1); }
@@ -99,7 +100,7 @@ export function summarize(obs: Observation[], today: string): WildlifeSummary {
     totalObservations: obs.length,
     thisYear: yearly.find(p => p.key === year) ?? empty(year, year),
     thisMonth: monthsAll.find(p => p.key === monthKey) ?? empty(monthKey, monthKey),
-    monthly,
+    quarterly,
     yearly,
     groups: [...groupCount.entries()].map(([group, species]) => ({ group, species })).sort((a, b) => b.species - a.species),
     recentNew: [...first.entries()].filter(([, d]) => d >= cutoff).sort((a, b) => b[1].localeCompare(a[1]))

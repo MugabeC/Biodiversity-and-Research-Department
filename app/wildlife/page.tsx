@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { chartTooltipProps, useChartColors } from '@/app/components/dashboard/chartTheme';
 import { fetchObservations, fetchSyncStatus, rwandaToday, summarize, type Period, type SyncStatus } from '@/app/lib/wildlife';
 
@@ -19,19 +19,42 @@ function Stat({ label, value, note }: { label: string; value: string; note?: str
   );
 }
 
-function PeriodChart({ data, c }: { data: Period[]; c: ReturnType<typeof useChartColors> }) {
+function QuarterChart({ data, c }: { data: Period[]; c: ReturnType<typeof useChartColors> }) {
   return (
-    <ResponsiveContainer width="100%" height={280}>
-      <BarChart data={data} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
+    <ResponsiveContainer width="100%" height={300}>
+      <LineChart data={data} margin={{ top: 12, right: 16, left: -12, bottom: 0 }}>
         <CartesianGrid stroke={c.grid} vertical={false} />
-        <XAxis dataKey="label" tick={{ fontSize: 11, fill: c.tick }} interval="preserveStartEnd" />
+        <XAxis dataKey="label" tick={{ fontSize: 12, fill: c.tick }} interval={0} />
         <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: c.tick }} />
         <Tooltip {...chartTooltipProps(c)} />
         <Legend wrapperStyle={{ fontSize: 12 }} />
-        <Bar dataKey="species" name="Species recorded" fill={c.primary} radius={[3, 3, 0, 0]} />
-        <Bar dataKey="newSpecies" name="First records" fill={c.accent} radius={[3, 3, 0, 0]} />
-      </BarChart>
+        <Line type="monotone" dataKey="species" name="Species recorded" stroke={c.primary} strokeWidth={2.5} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+        <Line type="monotone" dataKey="newSpecies" name="First records" stroke={c.accent} strokeWidth={2.5} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+      </LineChart>
     </ResponsiveContainer>
+  );
+}
+
+/** One circle per year. Circle area follows the species count; the ring shows how many of them were first records. */
+function YearBubbles({ data }: { data: Period[] }) {
+  const max = Math.max(1, ...data.map(p => p.species));
+  return (
+    <ol className="year-bubbles">
+      {data.map(p => {
+        const size = 60 + Math.sqrt(p.species / max) * 64;
+        const share = p.species ? Math.round((p.newSpecies / p.species) * 100) : 0;
+        return (
+          <li key={p.key} className="year-bubble">
+            <div className="year-bubble-ring" style={{ width: size, height: size, background: `conic-gradient(#e8a317 ${share}%, var(--ring-rest) 0)` }}>
+              <div className="year-bubble-core"><strong>{n(p.species)}</strong>{size >= 84 && <span>species</span>}</div>
+            </div>
+            <span className="year-bubble-year">{p.label}</span>
+            <span className="year-bubble-note">{n(p.newSpecies)} first records</span>
+            <span className="year-bubble-note">{n(p.observations)} observations</span>
+          </li>
+        );
+      })}
+    </ol>
   );
 }
 
@@ -51,10 +74,9 @@ export default function WildlifePage() {
 
   return (
     <div className="report-page wildlife-page">
-      <h1 className="heading" style={{ margin: '0 0 6px' }}>Wildlife records</h1>
+      <h1 className="sr-only">Citizen Science</h1>
       <p className="doc-upload-help" style={{ marginBottom: '1.5rem', maxWidth: 720 }}>
-        Species recorded inside Nyandungu Eco-Park by park staff, researchers and visitors on iNaturalist and eBird. Only records confirmed by other identifiers
-        count. These records are a lower bound: they show what people have photographed and logged, not everything that lives in the park.
+        Species recorded inside Nyandungu Eco-Park by park staff, researchers and visitors on iNaturalist and eBird.
       </p>
 
       {error && <p className="doc-upload-error" role="alert">{error}</p>}
@@ -70,18 +92,14 @@ export default function WildlifePage() {
           </div>
 
           <div className="glass-card wildlife-card">
-            <h2 className="doc-upload-title">Species recorded each month</h2>
-            <p className="doc-upload-help">Different species recorded in the month, and species recorded in the park for the first time that month. Last 24 months.</p>
-            <PeriodChart data={s.monthly} c={c} />
+            <h2 className="doc-upload-title">Species recorded each quarter</h2>
+            <QuarterChart data={s.quarterly} c={c} />
           </div>
 
           <div className="glass-card wildlife-card">
             <h2 className="doc-upload-title">Species recorded each year</h2>
-            <PeriodChart data={s.yearly} c={c} />
-            <table className="report-table" style={{ marginTop: 12 }}>
-              <thead><tr><th>Year</th><th>Species</th><th>First records</th><th>Observations</th></tr></thead>
-              <tbody>{[...s.yearly].reverse().map(p => <tr key={p.key}><td>{p.label}</td><td>{n(p.species)}</td><td>{n(p.newSpecies)}</td><td>{n(p.observations)}</td></tr>)}</tbody>
-            </table>
+            <YearBubbles data={s.yearly} />
+            <p className="year-bubble-legend"><i aria-hidden /> Amber ring: share of the year&apos;s species that were first records for the park. Circle size: species recorded.</p>
           </div>
 
           <div className="wildlife-two">

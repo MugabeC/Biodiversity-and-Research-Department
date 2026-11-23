@@ -891,24 +891,17 @@ export default function DashboardExplorer() {
   const waterTone: 'ok' | 'warn' | 'bad' = waterRate == null ? 'ok' : waterRate >= 90 ? 'ok' : waterRate >= 70 ? 'warn' : 'bad';
   const attention: { text: string; go: SectionId }[] = [];
   if (kpis.openConflicts > 0) attention.push({ text: `${kpis.openConflicts} open conflict case${kpis.openConflicts === 1 ? '' : 's'}`, go: 'conflicts' });
-  if (waterOverall && waterOverall.fail > 0) attention.push({ text: `${waterOverall.fail} water results outside limits`, go: 'water' });
-  if (insights.belowTarget > 0) attention.push({ text: `${insights.belowTarget} of ${insights.completedCount} completed quarters below the ${studentTarget} student target`, go: 'education' });
 
   return (
     <div style={{ paddingBottom: '2rem' }}>
       <div className="dashboard-shell">
         <header className="dash-head">
-          <div>
-            <h1 className="dash-title">Biodiversity and Research Department</h1>
-            <p className="dash-sub">
-              {summary?.parkName ?? 'Nyandungu Eco-Park'} · {summary?.location ?? 'Kigali, Rwanda'} · {summary?.parkSize ?? '183.94 Ha'}
-            </p>
-          </div>
+          <h1 className="sr-only">Biodiversity and Research Department dashboard</h1>
           <div className="dash-head-right">
             {latestMonth && (
               <p className="dash-updated"><span className="dash-dot" aria-hidden />Data to {latestMonth}</p>
             )}
-            <Link href="/report" className="dash-report-link">Monthly summary (PDF) →</Link>
+            <Link href="/report" className="dash-report-btn">Monthly summary (PDF)</Link>
           </div>
         </header>
 
@@ -988,7 +981,7 @@ export default function DashboardExplorer() {
               ) : (
                 <ul className="dash-attention">
                   {attention.map(a => (
-                    <li key={a.text}><button type="button" onClick={() => go(a.go)}>{a.text}<i aria-hidden>→</i></button></li>
+                    <li key={a.text}><button type="button" className="dash-attention-btn" onClick={() => go(a.go)}>{a.text}</button></li>
                   ))}
                 </ul>
               )}

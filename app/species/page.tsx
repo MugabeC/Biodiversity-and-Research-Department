@@ -262,37 +262,37 @@ export default function SpeciesExplorerPage() {
     <div style={{ paddingBottom: '5rem' }}>
       <div className="page-shell page-shell--spacious species-explorer-page">
 
-        <div className="species-page-header">
-          <h1 className="heading species-page-title">Species Explorer</h1>
-          <p className="species-page-subtitle">Nyandungu Eco-Park · 870 Species Recorded</p>
-        </div>
+        <h1 className="sr-only">Species Explorer</h1>
 
         <div className="species-toolbar">
-          <div className="species-search-wrap">
-            <svg className="species-search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <input
-              type="search"
-              className="species-search"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Search name or family…"
-            />
-          </div>
-          <div className="species-quick-filters">
-            <div className="species-quick-filter-row">
-              <FilterLabel>Taxa</FilterLabel>
-              <div className="species-filter-chips species-filter-chips--quick">
-                {TAXA_CHIPS.map(chip => (
-                  <Chip
-                    key={chip}
-                    label={chip}
-                    active={isActive(taxaFilters, chip)}
-                    onClick={() => setTaxaFilters(prev => toggleFilter(prev, chip))}
-                  />
-                ))}
+          <div className="species-sticky">
+            <div className="species-sticky-row">
+              <div className="species-quick-filter-row">
+                <FilterLabel>Taxa</FilterLabel>
+                <div className="species-filter-chips species-filter-chips--quick">
+                  {TAXA_CHIPS.map(chip => (
+                    <Chip
+                      key={chip}
+                      label={chip}
+                      active={isActive(taxaFilters, chip)}
+                      onClick={() => setTaxaFilters(prev => toggleFilter(prev, chip))}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div className="species-search-wrap species-search-wrap--inline">
+                <svg className="species-search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input
+                  type="search"
+                  className="species-search"
+                  aria-label="Search species by name or family"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  placeholder="Search name or family…"
+                />
               </div>
             </div>
             <div className="species-quick-filter-row">
