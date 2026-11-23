@@ -895,15 +895,7 @@ export default function DashboardExplorer() {
   return (
     <div style={{ paddingBottom: '2rem' }}>
       <div className="dashboard-shell">
-        <header className="dash-head">
-          <h1 className="sr-only">Biodiversity and Research Department dashboard</h1>
-          <div className="dash-head-right">
-            {latestMonth && (
-              <p className="dash-updated"><span className="dash-dot" aria-hidden />Data to {latestMonth}</p>
-            )}
-            <Link href="/report" className="dash-report-btn">Monthly summary (PDF)</Link>
-          </div>
-        </header>
+        <h1 className="sr-only">Biodiversity and Research Department dashboard</h1>
 
         <nav className="dash-tabs" aria-label="Dashboard sections">
           {SECTIONS.filter(t => t.id !== 'restoration' || restoration).map(t => (
@@ -916,6 +908,12 @@ export default function DashboardExplorer() {
               {t.label}
             </button>
           ))}
+          <div className="dash-tabs-right">
+            {latestMonth && (
+              <p className="dash-updated"><span className="dash-dot" aria-hidden />Data to {latestMonth}</p>
+            )}
+            <Link href="/report" className="dash-report-btn dash-report-btn--small">Monthly summary (PDF)</Link>
+          </div>
         </nav>
 
         <div className="dash-body" key={section}>

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { chartTooltipProps, useChartColors } from '@/app/components/dashboard/chartTheme';
-import { fetchObservations, fetchSyncStatus, rwandaToday, summarize, type Period, type SyncStatus } from '@/app/lib/wildlife';
+import { fetchObservations, rwandaToday, summarize, type Period } from '@/app/lib/wildlife';
 
 const INAT_URL = 'https://www.inaturalist.org/observations?nelat=-1.944868&nelng=30.163748&swlat=-1.966359&swlng=30.132534';
 const EBIRD_URL = 'https://ebird.org/hotspot/L4235382';
@@ -62,11 +62,9 @@ export default function WildlifePage() {
   const c = useChartColors();
   const [obs, setObs] = useState<Awaited<ReturnType<typeof fetchObservations>> | null>(null);
   const [error, setError] = useState('');
-  const [status, setStatus] = useState<SyncStatus | null>(null);
 
   useEffect(() => {
     fetchObservations().then(setObs).catch(() => setError('Could not load the wildlife records. Please refresh the page.'));
-    fetchSyncStatus().then(setStatus);
   }, []);
 
   const today = rwandaToday();
@@ -110,34 +108,48 @@ export default function WildlifePage() {
               </table>
             </div>
             <div className="glass-card wildlife-card">
-              <h2 className="doc-upload-title">New to the park, last 4 months</h2>
-              {s.recentNew.length === 0 ? <p className="doc-upload-help">No new species in this period.</p> : (
+              <h2 className="doc-upload-title">Newest species in the park</h2>
+              {s.recentNew.length === 0 ? <p className="doc-upload-help">No new species in the last 4 months.</p> : (
                 <table className="report-table report-table--small">
-                  <tbody>{s.recentNew.slice(0, 12).map(r => (
-                    <tr key={r.name}><td>{r.common ? `${r.common} ` : ''}<em>{r.name}</em><br /><span className="doc-upload-meta">{r.group}</span></td><td>{r.date}</td></tr>
+                  <tbody>{s.recentNew.slice(0, 5).map(r => (
+                    <tr key={r.name}><td>{r.common ? `${r.common} ` : ''}<em>{r.name}</em><br /><span className="doc-upload-meta">{r.group}</span></td><td style={{ whiteSpace: 'nowrap' }}>{r.date}</td></tr>
                   ))}</tbody>
                 </table>
               )}
+              <div className="wildlife-btn-row">
+                <a className="dash-report-btn" href={INAT_URL} target="_blank" rel="noreferrer">See all on iNaturalist</a>
+                <a className="dash-report-btn" href={EBIRD_URL} target="_blank" rel="noreferrer">See all on eBird</a>
+              </div>
             </div>
           </div>
         </>
       )}
 
       <div className="glass-card wildlife-card">
-        <h2 className="doc-upload-title">Add your own records</h2>
-        <p className="doc-upload-help" style={{ maxWidth: 720 }}>
-          Anyone can contribute. Photograph a plant or animal inside the park and upload it to iNaturalist (free), or submit a checklist to the Nyandungu hotspot on eBird.
-          An iNaturalist record counts here once other identifiers agree on the species. Records appear on this page within a day.
-        </p>
-        <p style={{ margin: '8px 0 0', fontSize: 14 }}>
-          <a className="dash-report-link" href={INAT_URL} target="_blank" rel="noreferrer">iNaturalist observations in the park →</a>
-          {'   '}
-          <a className="dash-report-link" href={EBIRD_URL} target="_blank" rel="noreferrer">Nyandungu Eco-Park hotspot on eBird →</a>
-        </p>
-        <p className="doc-upload-meta" style={{ marginTop: 12, maxWidth: 720 }}>
-          Observations belong to the people who made them. Data from iNaturalist (research grade) and eBird{status?.ebird_enabled ? '' : ' (eBird is being connected)'}.
-          {status?.last_ok ? ` Last updated ${status.last_ok.slice(0, 10)}.` : ''} Records with hidden locations, planted or captive organisms, and observations not identified to species are left out.
-        </p>
+        <h2 className="doc-upload-title">Join citizen science</h2>
+        <div className="wildlife-two">
+          <div>
+            <h3 className="wildlife-how-title">iNaturalist: plants, animals, insects and fungi</h3>
+            <ol className="wildlife-steps">
+              <li>Create a free account at inaturalist.org, or in the iNaturalist app.</li>
+              <li>Photograph the plant or animal inside the park, with your phone location turned on.</li>
+              <li>Upload the photo and suggest a name. The record counts here once other identifiers agree.</li>
+            </ol>
+          </div>
+          <div>
+            <h3 className="wildlife-how-title">eBird: birds</h3>
+            <ol className="wildlife-steps">
+              <li>Create a free account at ebird.org, or in the eBird app.</li>
+              <li>Start a checklist and choose the Nyandungu Eco-Park hotspot.</li>
+              <li>List every bird you see or hear, then submit the checklist.</li>
+            </ol>
+          </div>
+        </div>
+        <p className="doc-upload-help" style={{ margin: '4px 0 10px' }}>See what others have contributed over the years.</p>
+        <div className="wildlife-btn-row">
+          <a className="dash-report-btn" href={INAT_URL} target="_blank" rel="noreferrer">iNaturalist records</a>
+          <a className="dash-report-btn" href={EBIRD_URL} target="_blank" rel="noreferrer">eBird records</a>
+        </div>
       </div>
     </div>
   );
