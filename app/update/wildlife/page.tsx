@@ -13,6 +13,8 @@ export default function WildlifeStaffPage() {
   const [counts, setCounts] = useState<{ source: string; n: number }[]>([]);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState('');
+  const [loadingYear, setLoadingYear] = useState(false);
+  const [yearMsg, setYearMsg] = useState('');
   const [error, setError] = useState('');
 
   const refresh = useCallback(() => {
@@ -41,6 +43,34 @@ export default function WildlifeStaffPage() {
     }
   }
 
+  /** Loads the last 12 months of eBird records for the hotspot, a few weeks at a time (eBird asks for short pauses). */
+  async function loadYear() {
+    const password = getStaffPassword();
+    if (!password) return lockStaff();
+    setLoadingYear(true); setError(''); setYearMsg('Starting…');
+    const day = (offset: number) => new Date(Date.now() + 2 * 3600 * 1000 - offset * 86400000).toISOString().slice(0, 10);
+    const to = day(0);
+    let from: string | null = day(365), total = 0;
+    try {
+      while (from) {
+        const r = (await callUploadFunction({ action: 'sync-wildlife', password, backfill: { from, to } })) as { backfill?: { records: number; next: string | null; limited: boolean } };
+        if (!r.backfill) throw new Error('The update did not run.');
+        total += r.backfill.records;
+        from = r.backfill.next;
+        setYearMsg(from ? `Loaded up to ${from}. ${total.toLocaleString('en-US')} records so far.${r.backfill.limited ? ' eBird asked for a pause, continuing in a minute.' : ''}`.trim() : '');
+        if (r.backfill.limited) await new Promise(res => setTimeout(res, 75_000));
+      }
+      setYearMsg(`Done. ${total.toLocaleString('en-US')} eBird records loaded for the past year.`);
+      refresh();
+    } catch (e) {
+      if (e instanceof Error && e.message === 'Wrong password.') return lockStaff();
+      setError(e instanceof Error ? e.message : 'Something went wrong.');
+      setYearMsg('');
+    } finally {
+      setLoadingYear(false);
+    }
+  }
+
   const label = (s: string) => (s === 'inaturalist' ? 'iNaturalist' : s === 'ebird' ? 'eBird' : s);
 
   return (
@@ -60,8 +90,12 @@ export default function WildlifeStaffPage() {
         {status?.message && <p className="doc-upload-error">{status.message}</p>}
         <div className="doc-library-card-actions">
           <button type="button" className="doc-action-btn doc-action-btn--primary" disabled={busy} onClick={syncNow}>{busy ? 'Updating…' : 'Update now'}</button>
+          {status?.ebird_enabled && (
+            <button type="button" className="doc-action-btn doc-action-btn--ghost" disabled={loadingYear || busy} onClick={loadYear}>{loadingYear ? 'Loading past year…' : 'Load past year from eBird'}</button>
+          )}
           <Link href="/wildlife" className="doc-action-btn doc-action-btn--ghost">Open the public page</Link>
         </div>
+        {yearMsg && <p className="doc-upload-help" role="status">{yearMsg}</p>}
         {msg && <p className="doc-upload-ok">{msg}</p>}
         {error && <p className="doc-upload-error" role="alert">{error}</p>}
       </div>

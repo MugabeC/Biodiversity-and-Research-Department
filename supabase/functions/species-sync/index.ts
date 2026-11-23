@@ -7,6 +7,10 @@
 // one run every 20 minutes, unless the staff password (secret UPLOAD_PASSWORD) is sent to force a run.
 //
 // Optional secret: EBIRD_API_KEY (free key from https://ebird.org/api/keygen).
+//
+// eBird's "recent" service only goes back 30 days. To load older records, start it with { password, backfill: { from, to } }
+// (dates like 2025-11-23). It reads the hotspot one day at a time, for as long as its time budget allows, and answers with
+// { backfill: { next, limited } }: the day to continue from (null when the whole range is done), and whether eBird asked us to slow down.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const SITE = 'https://biodiversity-and-research-departmen-roan.vercel.app';
@@ -117,6 +121,35 @@ async function fetchEbird(key: string, now: string): Promise<Row[]> {
   return rows;
 }
 
+const DATE = /^\d{4}-\d{2}-\d{2}$/;
+const addDay = (d: string) => new Date(Date.parse(`${d}T00:00:00Z`) + 86400000).toISOString().slice(0, 10);
+
+/** Past records of the hotspot, one day at a time (the live "recent" service stops at 30 days). */
+async function backfillEbird(key: string, from: string, to: string, now: string, budgetMs: number): Promise<{ rows: Row[]; next: string | null; days: number; limited: boolean }> {
+  const rows: Row[] = [];
+  const started = Date.now();
+  let day = from, days = 0;
+  while (day <= to && Date.now() - started < budgetMs) {
+    const [y, m, d] = day.split('-').map(Number);
+    const res = await fetch(`https://api.ebird.org/v2/data/obs/${EBIRD_HOTSPOT}/historic/${y}/${m}/${d}?cat=species&maxResults=10000&sppLocale=en`, {
+      headers: { 'X-eBirdApiToken': key, 'User-Agent': 'Mozilla/5.0 (compatible; NyandunguBiodiversity/1.0)', Accept: 'application/json' },
+    });
+    if (res.status === 429) return { rows, next: day, days, limited: true }; // eBird asks us to slow down: keep what we have and continue later
+    if (!res.ok) throw new Error(`eBird answered ${res.status} for ${day}.`);
+    for (const o of (await res.json()) as Record<string, any>[]) { // eslint-disable-line @typescript-eslint/no-explicit-any
+      if (!o.sciName || !o.obsDt || !o.subId) continue;
+      rows.push({
+        source: 'ebird', source_id: `${o.subId}:${o.speciesCode}`, scientific_name: o.sciName, common_name: o.comName ?? null, taxon_group: 'Aves',
+        observed_on: String(o.obsDt).slice(0, 10), quality: o.obsReviewed ? 'reviewed' : 'unreviewed', status: o.obsValid === false ? 'pending' : 'approved',
+        lat: null, lon: null, last_seen: now,
+      });
+    }
+    day = addDay(day); days += 1;
+    await sleep(400);
+  }
+  return { rows, next: day <= to ? day : null, days, limited: false };
+}
+
 async function upsertAll(supa: ReturnType<typeof createClient>, rows: Row[]) {
   for (let i = 0; i < rows.length; i += 500) {
     const { error } = await supa.from('species_observations').upsert(rows.slice(i, i + 500), { onConflict: 'source,source_id' });
@@ -136,6 +169,25 @@ Deno.serve(async (req: Request) => {
   if (typeof body.password === 'string') {
     if (!expected || !(await same(body.password, expected))) { await sleep(1000); return json({ error: 'Wrong password.' }, 401); }
     forced = true;
+  }
+
+  // loading older eBird records: needs the password and does nothing else
+  const bf = body.backfill as { from?: unknown; to?: unknown } | undefined;
+  if (bf && typeof bf === 'object') {
+    const key = Deno.env.get('EBIRD_API_KEY');
+    const today = new Date(Date.now() + 2 * 3600 * 1000).toISOString().slice(0, 10);
+    if (!forced) return json({ error: 'Password needed.' }, 401);
+    if (!key) return json({ error: 'The eBird key is not set.' }, 400);
+    if (typeof bf.from !== 'string' || typeof bf.to !== 'string' || !DATE.test(bf.from) || !DATE.test(bf.to) || bf.from > bf.to || bf.to > today ||
+        Date.parse(bf.to) - Date.parse(bf.from) > 400 * 86400000) return json({ error: 'Choose a start and end date (at most 400 days, not in the future).' }, 400);
+    try {
+      const r = await backfillEbird(key, bf.from, bf.to, new Date().toISOString(), 90_000);
+      await upsertAll(supa, r.rows);
+      return json({ ok: true, backfill: { records: r.rows.length, days: r.days, next: r.next, limited: r.limited } });
+    } catch (e) {
+      console.error(e);
+      return json({ error: e instanceof Error ? e.message : 'The eBird update failed.' }, 502);
+    }
   }
 
   const { data: status } = await supa.from('species_sync').select('last_run').eq('id', 1).maybeSingle();

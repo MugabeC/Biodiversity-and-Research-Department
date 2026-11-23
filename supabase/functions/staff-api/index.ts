@@ -8,7 +8,7 @@
 // Calls (POST, JSON), every call carries { username, password, action, ... }:
 //   check | sign | register | delete | entry-save | entry-delete   (passed on to upload-document)
 //   hide | restore { id }                                          (built-in documents on the Documents page)
-//   sync-wildlife                                                  (starts the iNaturalist and eBird update now)
+//   sync-wildlife [backfill { from, to }]                          (starts the iNaturalist and eBird update now, or loads older eBird days)
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const cors = {
@@ -70,9 +70,9 @@ Deno.serve(async (req: Request) => {
       const res = await fetch(`${url}/functions/v1/species-sync`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', apikey: serviceKey, Authorization: `Bearer ${serviceKey}` },
-        body: JSON.stringify({ password: shared }),
+        body: JSON.stringify({ password: shared, ...(body.backfill && typeof body.backfill === 'object' ? { backfill: body.backfill } : {}) }),
       });
-      await log({});
+      await log(body.backfill && typeof body.backfill === 'object' ? { backfill: body.backfill } : {});
       return new Response(await res.text(), { status: res.status, headers: { ...cors, 'Content-Type': 'application/json' } });
     }
 
