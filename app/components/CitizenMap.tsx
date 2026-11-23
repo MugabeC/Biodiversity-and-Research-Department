@@ -28,6 +28,7 @@ export default function CitizenMap() {
   const [ready, setReady] = useState(false);
   const [pick, setPick] = useState<{ from: number; to: number } | null>(null); // null = every year
   const anchor = useRef<number | null>(null);
+  const endPress = useRef<{ year: number; moved: boolean } | null>(null); // a press on an end of the chosen years: a plain click picks just that year
   const [info, setInfo] = useState<Info | null>(null);
 
   useEffect(() => { fetchMapObservations().then(setObs).catch(() => setObs([])); }, []);
@@ -125,13 +126,20 @@ export default function CitizenMap() {
           <ol
             className="year-steps"
             aria-label="Years shown on the map"
-            onPointerDown={e => { const y = yearAt(e); if (y == null) return; anchor.current = y; setPick({ from: y, to: y }); }}
-            onPointerMove={e => { if (anchor.current == null || e.buttons === 0) return; const y = yearAt(e); if (y == null) return; setPick({ from: Math.min(anchor.current, y), to: Math.max(anchor.current, y) }); }}
-            onPointerUp={() => { anchor.current = null; }}
-            onPointerCancel={() => { anchor.current = null; }}
+            onPointerDown={e => {
+              const y = yearAt(e);
+              if (y == null) return;
+              // once a stretch of years is chosen, its two ends can be dragged to widen or narrow it
+              if (pick && pick.from !== pick.to && (y === pick.from || y === pick.to)) { anchor.current = y === pick.from ? pick.to : pick.from; endPress.current = { year: y, moved: false }; return; }
+              anchor.current = y;
+              setPick({ from: y, to: y });
+            }}
+            onPointerMove={e => { if (anchor.current == null || e.buttons === 0) return; const y = yearAt(e); if (y == null) return; if (endPress.current && y !== endPress.current.year) endPress.current.moved = true; setPick({ from: Math.min(anchor.current, y), to: Math.max(anchor.current, y) }); }}
+            onPointerUp={() => { if (endPress.current && !endPress.current.moved) setPick({ from: endPress.current.year, to: endPress.current.year }); endPress.current = null; anchor.current = null; }}
+            onPointerCancel={() => { endPress.current = null; anchor.current = null; }}
           >
             {Array.from({ length: last - first + 1 }, (_, i) => first + i).map(y => (
-              <li key={y} data-year={y} className={y >= range.from && y <= range.to ? 'on' : ''}>
+              <li key={y} data-year={y} className={`${y >= range.from && y <= range.to ? 'on' : ''}${pick && pick.from !== pick.to && (y === pick.from || y === pick.to) ? ' end' : ''}`}>
                 <button type="button" aria-pressed={y >= range.from && y <= range.to}
                   onClick={e => { if (e.detail === 0) setPick({ from: y, to: y }); }}>
                   <i aria-hidden /><span>{y}</span>
