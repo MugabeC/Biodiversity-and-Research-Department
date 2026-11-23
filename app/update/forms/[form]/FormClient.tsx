@@ -184,7 +184,7 @@ export default function FormClient({ formId }: { formId: string }) {
 
   return (
     <div className="report-page">
-      <p className="doc-upload-help" style={{ marginBottom: 8 }}><Link href="/update" className="dash-report-link">← Staff data tools</Link></p>
+      <p className="doc-upload-help" style={{ marginBottom: 8 }}><Link href="/update" className="dash-report-link">Staff data tools</Link></p>
       <h1 className="heading" style={{ margin: '0 0 1.25rem' }}>{spec.title}</h1>
 
       <form className="glass-card doc-upload-panel entry-form" onSubmit={submit} noValidate>

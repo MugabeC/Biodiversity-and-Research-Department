@@ -169,3 +169,33 @@ revoke all on function public.app_login(text, text), public.app_check_session(te
 grant execute on function public.app_login(text, text), public.app_check_session(text), public.app_logout(text),
   public.app_list_users(text), public.app_add_user(text, text, text, text), public.app_update_user(text, uuid, text, boolean, text),
   public.app_delete_user(text, uuid), public.app_change_password(text, text, text) to anon, authenticated;
+
+-- ── Staff tools use each person's own account password (migration "staff_personal_login") ──
+create table if not exists public.staff_actions (
+  id bigserial primary key,
+  at timestamptz not null default now(),
+  username text not null,
+  action text not null,
+  detail text
+);
+alter table public.staff_actions enable row level security;
+revoke all on public.staff_actions from anon, authenticated;
+
+-- Checks a staff or admin account for the staff-api function. Only the server (service role) may call it.
+create or replace function public.app_verify_staff(p_username text, p_password text) returns jsonb
+language plpgsql security definer set search_path = public, extensions, pg_temp as $$
+declare k text := public.app_norm(p_username); u public.app_users; fails int;
+begin
+  select count(*) into fails from public.app_login_attempts where username_key = 'staff:' || left(k, 80) and at > now() - interval '15 minutes';
+  if fails >= 8 then return jsonb_build_object('error', 'too_many'); end if;
+  select * into u from public.app_users where username_key = k and not disabled;
+  if u.id is null or u.password_hash <> crypt(coalesce(p_password, ''), u.password_hash) then
+    insert into public.app_login_attempts (username_key) values ('staff:' || left(k, 80));
+    return jsonb_build_object('error', 'invalid');
+  end if;
+  if u.role not in ('staff', 'admin') then return jsonb_build_object('error', 'not_staff'); end if;
+  delete from public.app_login_attempts where username_key = 'staff:' || left(k, 80);
+  return jsonb_build_object('username', u.username, 'role', u.role);
+end $$;
+revoke all on function public.app_verify_staff(text, text) from public, anon, authenticated;
+grant execute on function public.app_verify_staff(text, text) to service_role;

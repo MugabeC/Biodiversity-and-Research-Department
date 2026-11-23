@@ -175,7 +175,7 @@ export function GrowthRows({ rows }: { rows: { label: string; from: number; to: 
               <i className="from" style={{ width: `${(r.from / max) * 100}%` }} />
               <i className="to" style={{ width: `${(r.to / max) * 100}%`, animationDelay: `${i * 70}ms` }} />
             </span>
-            <span className="viz-growth-num">{r.from} → <b>{r.to}</b></span>
+            <span className="viz-growth-num">{r.from} to <b>{r.to}</b></span>
             <em className={change > 0 ? 'up' : ''}>{change > 0 ? `+${change}%` : 'no change'}</em>
           </div>
         );

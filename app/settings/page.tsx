@@ -141,7 +141,7 @@ export default function SettingsPage() {
               {(Object.keys(ROLE_LABEL) as Role[]).map(r => <option key={r} value={r}>{ROLE_LABEL[r]}</option>)}
             </select>
           </label>
-          <p className="doc-upload-meta">View only: the whole website except the staff tools. Staff: also the staff data tools (they still need the staff password). Admin: also this page.</p>
+          <p className="doc-upload-meta">View only: the whole website except the staff tools. Staff: also the staff data tools (they sign in to them with their own password). Admin: also this page.</p>
           <div className="doc-library-card-actions"><button type="submit" className="doc-action-btn doc-action-btn--primary">Add user</button></div>
         </form>
 

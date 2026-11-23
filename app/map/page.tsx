@@ -402,7 +402,7 @@ export default function MapPage() {
           <p className="map-info-title">Nyandungu Eco-Park</p>
           <p className="map-info-line">183.94 Ha · Kigali, Rwanda</p>
           <p className="map-info-meta">2025 Biodiversity Survey</p>
-          <p className="map-info-meta"><Link href="/" style={{ color: 'inherit' }}>See survey results in the dashboard →</Link></p>
+          <p className="map-info-meta"><Link href="/" style={{ color: 'inherit' }}>See survey results in the dashboard</Link></p>
         </div>
       </div>
 
