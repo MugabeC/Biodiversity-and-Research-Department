@@ -2893,3 +2893,33 @@ h1.heading {
 .year-bubble-legend i { width: 12px; height: 12px; border-radius: 50%; background: #e8a317; display: inline-block; }
 
 .species-toolbar { display: contents; } /* lets the pinned bar stay in view for the whole list */
+
+/* Dashboard: date and summary button sit at the right end of the tab row */
+.dash-tabs { margin-top: 1rem; align-items: center; }
+.dash-tabs-right { margin-left: auto; display: flex; align-items: center; gap: 14px; padding: 0 2px 0 16px; white-space: nowrap; }
+.dash-tabs-right .dash-updated { margin: 0; }
+.dash-report-btn--small { padding: 6px 14px; font-size: 12px; }
+
+/* Citizen Science page */
+.wildlife-two { align-items: start; }
+.wildlife-btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.wildlife-how-title { margin: 12px 0 6px; font: 500 14px 'Poppins', sans-serif; color: var(--text-primary); }
+.wildlife-steps { list-style: decimal; margin: 0 0 14px; padding-left: 20px; font-size: 13px; line-height: 1.6; color: var(--text-secondary); }
+
+/* Map: smaller, calmer controls that match the rest of the site (13px body, 12px controls) */
+.map-left-stack { top: 12px; left: 12px; gap: 8px; }
+.map-layer-panel { padding: 12px 14px; min-width: 190px; max-width: 220px; border-radius: 12px; }
+.map-layer-panel-title { font-size: 10px; margin: 0 0 8px; }
+.map-layer-panel button[role="switch"] span { font-size: 12px !important; }
+.map-layer-panel > div { gap: 7px !important; }
+.map-layer-panel label { font-size: 12px !important; margin-top: 8px !important; }
+.map-layer-panel select { font-size: 12px !important; }
+.map-info-card { padding: 8px 12px; border-radius: 12px; }
+.map-info-title { font-size: 12px; }
+.map-info-line { font-size: 11px; }
+.map-info-meta { font-size: 10.5px; }
+.map-style-btn, .map-btn-3d { font-size: 12px; padding: 5px 14px; }
+.map-bottom-dock { bottom: 12px; left: 12px; right: 12px; }
+.map-bottom-dock-row { justify-content: flex-end; }
+.map-page-root .maplibregl-ctrl-bottom-left { bottom: 12px; left: 12px; }
+@media (max-height: 760px) { .map-info-card { display: none; } }

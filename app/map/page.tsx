@@ -29,7 +29,7 @@ const LAYERS = [
   { id: 'drainage',      label: 'Drainage & Streams', color: '#00B0FF', mapIds: ['drainage'] },
   { id: 'open-grounds',  label: 'Open Grounds',       color: '#8DA750', mapIds: ['open-grounds'] },
   { id: 'roads',         label: 'Roads',               color: '#adb5bd', mapIds: ['roads'] },
-  { id: 'wildlife',      label: 'Wildlife records',    color: '#2EBD59', mapIds: ['wildlife-dots'] },
+  { id: 'wildlife',      label: 'Citizen Science',     color: '#2EBD59', mapIds: ['wildlife-dots'] },
 ];
 
 const INIT_VISIBILITY: Record<string, boolean> = {
@@ -448,7 +448,7 @@ export default function MapPage() {
           </div>
           {wildlife.length > 0 && (
             <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginTop: 12, fontFamily: 'Poppins, sans-serif', fontWeight: 400, fontSize: 13, color: 'var(--text-primary)' }}>
-              Wildlife year
+              Year
               <select value={wildYear} onChange={e => setWildYear(e.target.value)} style={{ fontFamily: 'inherit', fontWeight: 400, fontSize: 13, padding: '3px 6px', borderRadius: 6, border: '1px solid var(--border)', background: 'transparent', color: 'inherit' }}>
                 <option value="all">All years</option>
                 {years.map(y => <option key={y} value={y}>{y}</option>)}
@@ -512,14 +512,14 @@ export default function MapPage() {
 function ToggleSwitch({ on, color }: { on: boolean; color: string }) {
   return (
     <div style={{
-      width: '36px', height: '20px', borderRadius: '9999px',
+      width: '28px', height: '16px', borderRadius: '9999px',
       background: on ? color : '#D1D5DB',
       position: 'relative', flexShrink: 0,
       transition: 'background 0.2s ease',
     }}>
       <div style={{
-        position: 'absolute', top: '3px', left: on ? '19px' : '3px',
-        width: '14px', height: '14px', borderRadius: '50%',
+        position: 'absolute', top: '2px', left: on ? '14px' : '2px',
+        width: '12px', height: '12px', borderRadius: '50%',
         background: '#ffffff', boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
         transition: 'left 0.2s ease',
       }} />
