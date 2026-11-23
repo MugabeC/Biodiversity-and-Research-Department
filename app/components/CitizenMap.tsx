@@ -20,13 +20,14 @@ function describe(p: Record<string, unknown>): Info {
   };
 }
 
-/** Where citizen science records were made. A year slider shows the records building up over the years. */
+/** Where citizen science records were made. Click a year, or drag across several, to see only those years. */
 export default function CitizenMap() {
   const box = useRef<HTMLDivElement>(null);
   const map = useRef<MapLibreMap | null>(null);
   const [obs, setObs] = useState<MapObservation[]>([]);
   const [ready, setReady] = useState(false);
-  const [year, setYear] = useState<number | null>(null);
+  const [pick, setPick] = useState<{ from: number; to: number } | null>(null); // null = every year
+  const anchor = useRef<number | null>(null);
   const [info, setInfo] = useState<Info | null>(null);
 
   useEffect(() => { fetchMapObservations().then(setObs).catch(() => setObs([])); }, []);
@@ -35,13 +36,14 @@ export default function CitizenMap() {
     const ys = obs.map(o => Number(o.observed_on.slice(0, 4)));
     return ys.length ? [Math.min(...ys), Math.max(...ys)] : [0, 0];
   }, [obs]);
-  const shownYear = year ?? last;
+  const range = pick ?? { from: first, to: last };
 
-  // draw the dots for the chosen year
+  // draw the dots for the chosen years
   useEffect(() => {
     const src = map.current?.getSource('citizen-src') as { setData: (d: unknown) => void } | undefined;
-    if (ready && src && shownYear) src.setData(wildlifeDots(obs, String(shownYear), true));
-  }, [ready, obs, shownYear]);
+    if (ready && src && range.to) src.setData(wildlifeDots(obs, String(range.from), String(range.to)));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ready, obs, range.from, range.to]);
 
   useEffect(() => {
     if (map.current || !box.current) return;
@@ -100,6 +102,11 @@ export default function CitizenMap() {
   }, []);
 
   const canSlide = last > first;
+  /** The year under the pointer, so a drag across the line picks a range of years. */
+  const yearAt = (e: React.PointerEvent): number | null => {
+    const el = document.elementFromPoint(e.clientX, e.clientY)?.closest('[data-year]');
+    return el ? Number(el.getAttribute('data-year')) : null;
+  };
   return (
     <div className="citizen-map">
       <div className="citizen-map-canvas">
@@ -114,13 +121,26 @@ export default function CitizenMap() {
         )}
       </div>
       {canSlide && (
-        <ol className="year-steps" aria-label="Show records up to this year">
-          {Array.from({ length: last - first + 1 }, (_, i) => first + i).map(y => (
-            <li key={y} className={y <= shownYear ? 'on' : ''}>
-              <button type="button" aria-pressed={y === shownYear} onClick={() => setYear(y)}><i aria-hidden /><span>{y}</span></button>
-            </li>
-          ))}
-        </ol>
+        <div className="year-steps-row">
+          <ol
+            className="year-steps"
+            aria-label="Years shown on the map"
+            onPointerDown={e => { const y = yearAt(e); if (y == null) return; anchor.current = y; setPick({ from: y, to: y }); }}
+            onPointerMove={e => { if (anchor.current == null || e.buttons === 0) return; const y = yearAt(e); if (y == null) return; setPick({ from: Math.min(anchor.current, y), to: Math.max(anchor.current, y) }); }}
+            onPointerUp={() => { anchor.current = null; }}
+            onPointerCancel={() => { anchor.current = null; }}
+          >
+            {Array.from({ length: last - first + 1 }, (_, i) => first + i).map(y => (
+              <li key={y} data-year={y} className={y >= range.from && y <= range.to ? 'on' : ''}>
+                <button type="button" aria-pressed={y >= range.from && y <= range.to}
+                  onClick={e => { if (e.detail === 0) setPick({ from: y, to: y }); }}>
+                  <i aria-hidden /><span>{y}</span>
+                </button>
+              </li>
+            ))}
+          </ol>
+          <button type="button" className="doc-action-btn doc-action-btn--ghost" disabled={pick === null} onClick={() => setPick(null)}>All years</button>
+        </div>
       )}
     </div>
   );

@@ -130,11 +130,12 @@ const CELL = 0.0004; // about 45 metres: records this close share one dot
 
 type DotFeature = { type: 'Feature'; geometry: { type: 'Point'; coordinates: [number, number] }; properties: Record<string, string | number> };
 
-/** One dot per place, with how many species and records were logged there and when. `year` limits the records to that year, or with `through` to that year and every year before it. */
-export function wildlifeDots(obs: MapObservation[], year: string | null, through = false): { type: 'FeatureCollection'; features: DotFeature[] } {
+/** One dot per place, with how many species and records were logged there and when. `from` and `to` (years like "2025") limit the records to those years, both included; leave them null for every year. */
+export function wildlifeDots(obs: MapObservation[], from: string | null, to: string | null = from): { type: 'FeatureCollection'; features: DotFeature[] } {
   const cells = new Map<string, { src: string; lons: number[]; lats: number[]; species: Map<string, { label: string; last: string }>; records: number; first: string; last: string }>();
   for (const o of obs) {
-    if (year && (through ? o.observed_on.slice(0, 4) > year : !o.observed_on.startsWith(year))) continue;
+    const y = o.observed_on.slice(0, 4);
+    if ((from && y < from) || (to && y > to)) continue;
     const ebird = o.source === 'ebird';
     const lon = ebird ? EBIRD_POINT.lon : o.lon, lat = ebird ? EBIRD_POINT.lat : o.lat;
     if (lon == null || lat == null) continue;
