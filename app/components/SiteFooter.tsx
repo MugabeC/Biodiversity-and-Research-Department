@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useSessionUser } from '@/app/lib/useSessionUser';
+import { signOut, useSessionUser } from '@/app/lib/useSessionUser';
 
 export default function SiteFooter() {
   const user = useSessionUser();
@@ -14,7 +14,19 @@ export default function SiteFooter() {
         {user && user.role !== 'user' && (
           <>
             {' · '}
-            <Link href="/update" className="site-footer-staff">Staff: update data</Link>
+            <Link href="/update" className="site-footer-staff">Staff tools</Link>
+          </>
+        )}
+        {user?.role === 'admin' && (
+          <>
+            {' · '}
+            <Link href="/settings" className="site-footer-staff">Settings</Link>
+          </>
+        )}
+        {user && (
+          <>
+            {' · '}
+            <button type="button" className="site-footer-staff site-footer-btn" onClick={signOut}>Sign out</button>
           </>
         )}
       </p>

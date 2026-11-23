@@ -17,10 +17,8 @@ export type LibraryDocument = {
 export const SUPABASE_URL = 'https://dakgnvnaqiosizouuciy.supabase.co';
 /** Publishable (public) key: it can only read the document list; writing needs the upload password. */
 export const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_oQDiC7Y224MSpc2ip23KGg_jjwjMlG9';
-/** Supabase Edge Function that checks the upload password and handles uploads and removals. */
-export const UPLOAD_FUNCTION_URL = process.env.NEXT_PUBLIC_UPLOAD_FUNCTION_URL ?? `${SUPABASE_URL}/functions/v1/upload-document`;
-/** Hides one of the built-in documents from the Documents page. */
-export const HIDE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/hide-document`;
+/** Supabase Edge Function for every staff action. It checks the person's own account password (Staff or Admin account). */
+export const STAFF_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/staff-api`;
 export const ACCEPTED_FILE_TYPES = '.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx';
 export const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 

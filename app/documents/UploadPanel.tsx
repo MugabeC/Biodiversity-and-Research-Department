@@ -6,19 +6,27 @@ import {
   ACCEPTED_FILE_TYPES,
   MAX_UPLOAD_BYTES,
   SUPABASE_PUBLISHABLE_KEY,
-  UPLOAD_FUNCTION_URL,
+  STAFF_FUNCTION_URL,
   formatFileSize,
 } from '@/app/lib/documents';
 
+let accountName: Promise<string> | null = null;
+/** The user name of the signed-in account (the staff functions check it together with the password). */
+function currentUsername(): Promise<string> {
+  accountName ??= fetch('/api/auth/me', { cache: 'no-store' }).then(r => (r.ok ? r.json() : null)).then(u => (u && typeof u.username === 'string' ? u.username : '')).catch(() => '');
+  return accountName;
+}
+
 export async function callUploadFunction(body: Record<string, unknown>): Promise<Record<string, unknown>> {
-  const res = await fetch(UPLOAD_FUNCTION_URL, {
+  const username = typeof body.username === 'string' ? body.username : await currentUsername();
+  const res = await fetch(STAFF_FUNCTION_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       apikey: SUPABASE_PUBLISHABLE_KEY,
       Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
     },
-    body: JSON.stringify(body),
+    body: JSON.stringify({ ...body, username }),
   });
   let data: Record<string, unknown> = {};
   try { data = await res.json(); } catch { /* not JSON */ }
@@ -70,7 +78,7 @@ export default function UploadPanel({ onClose }: { onClose: () => void }) {
     if (!file) return setError('Choose a file first.');
     if (file.size > MAX_UPLOAD_BYTES) return setError('The file is larger than 25 MB.');
     if (!title.trim()) return setError('Please add a title.');
-    if (!password) return setError('Enter the upload password.');
+    if (!password) return setError('Enter your password.');
     setBusy(true); setProgress(0);
     try {
       const signed = await callUploadFunction({ action: 'sign', password, filename: file.name, size: file.size });
@@ -115,7 +123,7 @@ export default function UploadPanel({ onClose }: { onClose: () => void }) {
         <input className="species-search doc-upload-field" value={description} maxLength={600} disabled={busy} onChange={e => setDescription(e.target.value)} />
       </label>
       <label className="doc-upload-label">
-        Upload password
+        Your password
         <input className="species-search doc-upload-field" type="password" autoComplete="off" value={password} disabled={busy} onChange={e => setPassword(e.target.value)} />
       </label>
 

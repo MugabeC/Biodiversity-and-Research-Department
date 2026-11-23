@@ -26,7 +26,7 @@ export default function DocumentViewer({ doc }: { doc: LibraryDocument }) {
     <div className="doc-viewer-page">
       <div className="doc-viewer-toolbar">
         <Link href="/documents" className="doc-action-btn doc-action-btn--ghost">
-          ← Back to documents
+          Back to documents
         </Link>
         <div className="doc-viewer-toolbar-meta">
           <span className={`doc-type-badge doc-type-badge--${doc.type}`}>

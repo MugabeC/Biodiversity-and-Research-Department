@@ -113,7 +113,7 @@ function getExtraPills(s: RawSpecies): { label: string; value: string }[] {
 function BackButton() {
   return (
     <Link href="/species" className="species-back-link">
-      ← Back to Species Explorer
+      Back to Species Explorer
     </Link>
   );
 }

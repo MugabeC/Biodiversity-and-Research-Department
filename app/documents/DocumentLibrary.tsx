@@ -13,11 +13,14 @@ import {
 } from '@/app/lib/documents';
 import RemoveButton from './RemoveButton';
 import UploadPanel from './UploadPanel';
+import { useSessionUser } from '@/app/lib/useSessionUser';
 
 export default function DocumentLibrary({ documents }: { documents: LibraryDocument[] }) {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<DocumentCategory | 'All'>('All');
   const [uploading, setUploading] = useState(false);
+  const user = useSessionUser();
+  const canEdit = !!user && user.role !== 'user'; // only Staff and Admin accounts can add or remove documents
 
   const shown = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -51,13 +54,15 @@ export default function DocumentLibrary({ documents }: { documents: LibraryDocum
             value={query}
             onChange={e => setQuery(e.target.value)}
           />
-          <button type="button" className="doc-action-btn doc-action-btn--primary" onClick={() => setUploading(u => !u)}>
-            {uploading ? 'Close upload' : 'Upload a document'}
-          </button>
+          {canEdit && (
+            <button type="button" className="doc-action-btn doc-action-btn--primary" onClick={() => setUploading(u => !u)}>
+              {uploading ? 'Close upload' : 'Upload a document'}
+            </button>
+          )}
         </div>
       </div>
 
-      {uploading && <UploadPanel onClose={() => setUploading(false)} />}
+      {canEdit && uploading && <UploadPanel onClose={() => setUploading(false)} />}
 
       {shown.length === 0 ? (
         <p className="doc-upload-help">No documents match your search.</p>
@@ -84,7 +89,7 @@ export default function DocumentLibrary({ documents }: { documents: LibraryDocum
                 <div className="doc-library-card-actions">
                   <Link href={`/documents/view?id=${doc.id}`} className="doc-action-btn doc-action-btn--primary">View</Link>
                   <a href={href} download={doc.filename} className="doc-action-btn doc-action-btn--ghost">Download</a>
-                  <RemoveButton id={doc.id} title={doc.title} builtIn={!doc.uploaded} />
+                  {canEdit && <RemoveButton id={doc.id} title={doc.title} builtIn={!doc.uploaded} />}
                 </div>
               </article>
             );

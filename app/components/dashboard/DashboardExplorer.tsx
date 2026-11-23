@@ -104,7 +104,7 @@ function Tile({
 }) {
   return (
     <button type="button" className="dash-tile" onClick={onOpen} style={{ animationDelay: `${delay}ms` }}>
-      <span className="dash-tile-title">{title}<i aria-hidden>→</i></span>
+      <span className="dash-tile-title">{title}</span>
       <span className="dash-tile-value">{value}</span>
       <span className="dash-tile-unit">{unit}</span>
       <span className="dash-tile-viz">{viz}</span>
@@ -1016,8 +1016,8 @@ export default function DashboardExplorer() {
               </ChartCard>
             </div>
             <p className="dash-links">
-              <Link href="/species">Browse all {kpis.species} species →</Link>
-              <Link href="/map">See the survey areas on the map →</Link>
+              <Link href="/species">Browse all {kpis.species} species</Link>
+              <Link href="/map">See the survey areas on the map</Link>
             </p>
             {recordsPanel}
           </>

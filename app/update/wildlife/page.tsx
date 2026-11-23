@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
-import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from '@/app/lib/documents';
+import { callUploadFunction } from '@/app/documents/UploadPanel';
 import { getStaffPassword, lockStaff } from '@/app/lib/staffAuth';
 import { fetchObservations, fetchSyncStatus, type SyncStatus } from '@/app/lib/wildlife';
 
@@ -30,17 +30,11 @@ export default function WildlifeStaffPage() {
     if (!password) return lockStaff();
     setBusy(true); setMsg(''); setError('');
     try {
-      const res = await fetch(`${SUPABASE_URL}/functions/v1/species-sync`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}` },
-        body: JSON.stringify({ password }),
-      });
-      const body = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string; inaturalist?: number | null; ebird?: number | null; notes?: string[] };
-      if (res.status === 401) return lockStaff();
-      if (!res.ok) throw new Error(body.error ?? 'The update did not run.');
+      const body = (await callUploadFunction({ action: 'sync-wildlife', password })) as { ok?: boolean; inaturalist?: number | null; ebird?: number | null; notes?: string[] };
       setMsg(body.ok ? `Updated. ${body.inaturalist ?? 0} iNaturalist records${body.ebird != null ? `, ${body.ebird} eBird records` : ''}.` : `Updated with a problem: ${(body.notes ?? []).join(' ')}`);
       refresh();
     } catch (e) {
+      if (e instanceof Error && e.message === 'Wrong password.') return lockStaff();
       setError(e instanceof Error ? e.message : 'Something went wrong.');
     } finally {
       setBusy(false);
@@ -51,7 +45,7 @@ export default function WildlifeStaffPage() {
 
   return (
     <div className="report-page">
-      <p className="doc-upload-help" style={{ marginBottom: 8 }}><Link href="/update" className="dash-report-link">← Staff data tools</Link></p>
+      <p className="doc-upload-help" style={{ marginBottom: 8 }}><Link href="/update" className="dash-report-link">Staff data tools</Link></p>
       <h1 className="heading" style={{ margin: '0 0 1.25rem' }}>Wildlife records</h1>
 
       <div className="glass-card doc-upload-panel" style={{ maxWidth: 720 }}>

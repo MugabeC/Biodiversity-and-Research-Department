@@ -3025,3 +3025,5 @@ h1.heading {
 .settings-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: rgba(12, 96, 56, 0.08); font-size: 13px; }
 .settings-chip i { width: 7px; height: 7px; border-radius: 50%; background: #2EBD59; }
 .settings-page .wildlife-two { gap: 18px; }
+
+.site-footer-btn { background: none; border: 0; padding: 0; font: inherit; cursor: pointer; }
