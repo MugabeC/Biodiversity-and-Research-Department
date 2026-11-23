@@ -41,10 +41,9 @@ function sendFile(signedUrl: string, file: File, onProgress: (pct: number) => vo
   });
 }
 
-export default function UploadPanel() {
+export default function UploadPanel({ onClose }: { onClose: () => void }) {
   const router = useRouter();
   const fileInput = useRef<HTMLInputElement>(null);
-  const [open, setOpen] = useState(false);
   const [password, setPassword] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -85,17 +84,6 @@ export default function UploadPanel() {
     } finally {
       setBusy(false);
     }
-  }
-
-  if (!open) {
-    return (
-      <div className="doc-upload-bar">
-        <button type="button" className="doc-action-btn doc-action-btn--primary" onClick={() => setOpen(true)}>
-          Upload a document
-        </button>
-        {done && <span className="doc-upload-ok">{done}</span>}
-      </div>
-    );
   }
 
   return (
@@ -143,7 +131,7 @@ export default function UploadPanel() {
         <button type="submit" className="doc-action-btn doc-action-btn--primary" disabled={busy}>
           {busy ? (progress < 100 ? `Uploading… ${progress}%` : 'Finishing…') : 'Upload'}
         </button>
-        <button type="button" className="doc-action-btn doc-action-btn--ghost" disabled={busy} onClick={() => { setOpen(false); setError(''); }}>
+        <button type="button" className="doc-action-btn doc-action-btn--ghost" disabled={busy} onClick={() => { onClose(); setError(''); }}>
           Close
         </button>
       </div>

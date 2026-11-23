@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from 'react';
 import type { LayerSpecification, Map as MapLibreMap, MapMouseEvent, MapGeoJSONFeature, StyleSpecification } from 'maplibre-gl';
 import { fetchMapGeoJson, MAP_GEOJSON } from '../lib/mapGeojson';
 import { annotateMeasures } from '../lib/mapStats';
-import { fetchMapObservations, wildlifeDots, type MapObservation } from '../lib/wildlife';
 
 // ── Map style options ─────────────────────────────────────────────────────────
 
@@ -29,7 +28,12 @@ const LAYERS = [
   { id: 'drainage',      label: 'Drainage & Streams', color: '#00B0FF', mapIds: ['drainage'] },
   { id: 'open-grounds',  label: 'Open Grounds',       color: '#8DA750', mapIds: ['open-grounds'] },
   { id: 'roads',         label: 'Roads',               color: '#adb5bd', mapIds: ['roads'] },
-  { id: 'wildlife',      label: 'Citizen Science',     color: '#2EBD59', mapIds: ['wildlife-dots'] },
+];
+
+// The layer list is shown in two folding groups so the panel stays short.
+const LAYER_GROUPS: { id: string; label: string; layers: string[] }[] = [
+  { id: 'park',    label: 'Park',    layers: ['park-boundary', 'roads', 'trails', 'access-trail'] },
+  { id: 'habitat', label: 'Habitat', layers: ['restored-area', 'invasive-removal', 'pond', 'macadamia', 'drainage', 'open-grounds'] },
 ];
 
 const INIT_VISIBILITY: Record<string, boolean> = {
@@ -43,7 +47,6 @@ const INIT_VISIBILITY: Record<string, boolean> = {
   'drainage':      true,
   'open-grounds':  true,
   'roads':         true,
-  'wildlife':      true,
 };
 
 // Survey areas: layer-id prefix, `group` value in the GeoJSON, colour.
@@ -94,19 +97,7 @@ const describeLine = (label: string) => (p: Props): PanelInfo => ({
 
 // Layers that give info on hover/click, topmost first. Lines come before the big
 // fills so a trail is still hoverable on top of a garden or the restored area.
-const describeWildlife = (p: Props): PanelInfo => {
-  const species = Number(p.species), records = Number(p.records);
-  const names = String(p.names ?? '').split('|').filter(Boolean).map(n => { const [label, date] = n.split('~'); return `${label}, ${date}`; });
-  return {
-    title: `${species} species · ${records} record${records === 1 ? '' : 's'}`,
-    line: p.first === p.last ? String(p.first) : `${p.first} to ${p.last}`,
-    meta: String(p.source),
-    list: [...names.slice(0, 8), ...(species > 8 ? [`and ${species - 8} more`] : [])],
-  };
-};
-
 const INFO_LAYERS: { id: string; describe: (p: Props) => PanelInfo }[] = [
-  { id: 'wildlife-dots',        describe: describeWildlife },
   { id: 'pond-fill',            describe: describeSurveyArea },
   { id: 'macadamia-fill',       describe: describeSurveyArea },
   { id: 'invasive-removal-fill', describe: describeSurveyArea },
@@ -144,11 +135,7 @@ export default function MapPage() {
   const [hoverInfo,   setHoverInfo]   = useState<PanelInfo | null>(null);
   const [pinnedInfo,  setPinnedInfo]  = useState<PanelInfo | null>(null);
   const shownInfo = pinnedInfo ?? hoverInfo;
-  const [wildlife,   setWildlife]   = useState<MapObservation[]>([]);
-  const [wildYear,   setWildYear]   = useState('all');
-  const [mapLoaded,  setMapLoaded]  = useState(false);
-  const years = Array.from(new Set(wildlife.map(o => o.observed_on.slice(0, 4)))).sort().reverse();
-  const dots = wildlifeDots(wildlife, wildYear === 'all' ? null : wildYear);
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({ park: true, habitat: false });
 
   // ── Layer toggle ──────────────────────────────────────────────────────────
   const handleToggle = (key: string, layerIds: string[]) => {
@@ -193,14 +180,6 @@ export default function MapPage() {
     const before = m.getStyle().layers.find(l => l.type !== 'raster' && l.type !== ('sky' as string))?.id;
     m.addLayer({ id: 'esri-satellite-layer', type: 'raster', source: 'esri-satellite' }, before);
   };
-
-  // ── Wildlife records: load once, redraw when the year changes ────────────
-  useEffect(() => { fetchMapObservations().then(setWildlife).catch(() => setWildlife([])); }, []);
-  useEffect(() => {
-    const src = map.current?.getSource('wildlife-src') as { setData: (d: unknown) => void } | undefined;
-    if (mapLoaded && src) src.setData(dots);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mapLoaded, wildlife, wildYear]);
 
   // ── Map init ──────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -368,26 +347,6 @@ export default function MapPage() {
           }
         });
 
-        // ── Wildlife records: green dots, size = species at that place ──
-        try {
-          mapInstance.addSource('wildlife-src', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
-          mapInstance.addLayer({
-            id: 'wildlife-dots', type: 'circle', source: 'wildlife-src',
-            layout: { visibility: visibilityRef.current['wildlife'] ? 'visible' : 'none' },
-            paint: {
-              'circle-color': '#2EBD59',
-              'circle-opacity': 0.6,
-              'circle-stroke-color': '#ffffff',
-              'circle-stroke-width': 0.5,
-              'circle-stroke-opacity': 0.6,
-              'circle-radius': ['interpolate', ['linear'], ['get', 'species'], 1, 3, 5, 4, 20, 5.5, 60, 7.5],
-            },
-          } as LayerSpecification);
-          setMapLoaded(true);
-        } catch (e) {
-          console.error('Error adding wildlife records:', e);
-        }
-
         // ── Hover / click info for every layer (shown in the side panel) ──
         const pick = (point: { x: number; y: number }): PanelInfo | undefined => {
           const layers = INFO_LAYERS.map(l => l.id).filter(id => mapInstance.getLayer(id));
@@ -430,31 +389,32 @@ export default function MapPage() {
       <div className="map-left-stack">
         <div className="map-glass-panel map-layer-panel">
           <p className="map-layer-panel-title">Map Layers</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {LAYERS.map(({ id, label, color, mapIds }) => (
-              <button key={id} type="button" role="switch" aria-checked={layerStates[id]}
-                onClick={() => handleToggle(id, mapIds)}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', cursor: 'pointer', background: 'none', border: 0, padding: 0, width: '100%', textAlign: 'left', font: 'inherit', color: 'inherit' }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: color, flexShrink: 0, display: 'inline-block' }} />
-                  <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 400, fontSize: '13px', color: 'var(--text-primary)' }}>
-                    {label}
-                  </span>
-                </div>
-                <ToggleSwitch on={layerStates[id]} color={color} />
+          {LAYER_GROUPS.map(g => (
+            <div key={g.id} className="map-layer-group">
+              <button type="button" className="map-layer-group-head" aria-expanded={openGroups[g.id]}
+                onClick={() => setOpenGroups(prev => ({ ...prev, [g.id]: !prev[g.id] }))}>
+                <span>{g.label}</span>
+                <span className="map-layer-group-count">{g.layers.filter(id => layerStates[id]).length}/{g.layers.length}</span>
+                <i aria-hidden className={openGroups[g.id] ? 'open' : ''} />
               </button>
-            ))}
-          </div>
-          {wildlife.length > 0 && (
-            <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginTop: 12, fontFamily: 'Poppins, sans-serif', fontWeight: 400, fontSize: 13, color: 'var(--text-primary)' }}>
-              Year
-              <select value={wildYear} onChange={e => setWildYear(e.target.value)} style={{ fontFamily: 'inherit', fontWeight: 400, fontSize: 13, padding: '3px 6px', borderRadius: 6, border: '1px solid var(--border)', background: 'transparent', color: 'inherit' }}>
-                <option value="all">All years</option>
-                {years.map(y => <option key={y} value={y}>{y}</option>)}
-              </select>
-            </label>
-          )}
+              {openGroups[g.id] && (
+                <div className="map-layer-group-body">
+                  {LAYERS.filter(l => g.layers.includes(l.id)).map(({ id, label, color, mapIds }) => (
+                    <button key={id} type="button" role="switch" aria-checked={layerStates[id]}
+                      onClick={() => handleToggle(id, mapIds)}
+                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', cursor: 'pointer', background: 'none', border: 0, padding: 0, width: '100%', textAlign: 'left', font: 'inherit', color: 'inherit' }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: color, flexShrink: 0, display: 'inline-block' }} />
+                        <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 400, fontSize: '12px', color: 'var(--text-primary)' }}>{label}</span>
+                      </div>
+                      <ToggleSwitch on={layerStates[id]} color={color} />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
 
         <div className="map-glass-panel map-info-card">

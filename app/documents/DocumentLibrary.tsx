@@ -12,10 +12,12 @@ import {
   type LibraryDocument,
 } from '@/app/lib/documents';
 import RemoveButton from './RemoveButton';
+import UploadPanel from './UploadPanel';
 
 export default function DocumentLibrary({ documents }: { documents: LibraryDocument[] }) {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<DocumentCategory | 'All'>('All');
+  const [uploading, setUploading] = useState(false);
 
   const shown = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -27,26 +29,35 @@ export default function DocumentLibrary({ documents }: { documents: LibraryDocum
 
   return (
     <>
-      <input
-        type="search"
-        className="species-search"
-        placeholder="Search documents…"
-        value={query}
-        onChange={e => setQuery(e.target.value)}
-        style={{ marginBottom: '1rem', maxWidth: 480 }}
-      />
-      <div className="dash-chips" style={{ marginBottom: '1.75rem' }}>
-        {(['All', ...DOCUMENT_CATEGORIES] as const).map(c => (
-          <button
-            key={c}
-            type="button"
-            className={`dash-chip${category === c ? ' dash-chip--active' : ''}`}
-            onClick={() => setCategory(c)}
-          >
-            {c}
+      <div className="doc-toolbar">
+        <div className="dash-chips" style={{ margin: 0 }}>
+          {(['All', ...DOCUMENT_CATEGORIES] as const).map(c => (
+            <button
+              key={c}
+              type="button"
+              className={`dash-chip${category === c ? ' dash-chip--active' : ''}`}
+              onClick={() => setCategory(c)}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+        <div className="doc-toolbar-right">
+          <input
+            type="search"
+            className="species-search doc-toolbar-search"
+            aria-label="Search documents"
+            placeholder="Search documents…"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+          />
+          <button type="button" className="doc-action-btn doc-action-btn--primary" onClick={() => setUploading(u => !u)}>
+            {uploading ? 'Close upload' : 'Upload a document'}
           </button>
-        ))}
+        </div>
       </div>
+
+      {uploading && <UploadPanel onClose={() => setUploading(false)} />}
 
       {shown.length === 0 ? (
         <p className="doc-upload-help">No documents match your search.</p>
